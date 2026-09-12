@@ -51,7 +51,11 @@ function recordSessionResults() {
     localStorage.setItem('las-revision-question-stats', JSON.stringify(stats));
   } catch { /* Progress is optional when storage is unavailable. */ }
 }
-let questions = shuffleQuestions(questionsForSession());
+function shuffledSessionQuestions() {
+  const selected = shuffleQuestions(questionsForSession());
+  return (mode === 'test' || mode === 'focused-test') ? selected.slice(0, 50) : selected;
+}
+let questions = shuffledSessionQuestions();
 let questionIndex = 0;
 let testAnswers = [];
 
@@ -102,7 +106,7 @@ function renderTestResults() {
   document.getElementById('page-count').textContent = 'Test complete';
   const review = missed.length ? `<div class="wrong-list"><div class="review-heading"><div><span class="results-label">KNOWLEDGE CHECK</span><h2>Review missed questions</h2></div><span class="missed-count">${missed.length} to revisit</span></div>${missed.map((question) => { const index = questions.indexOf(question); return `<article class="wrong-answer"><div class="wrong-question"><span class="question-index">Question ${index + 1}</span><p>${question.question}</p></div><div class="answer-comparison"><div class="answer-line incorrect"><span class="answer-label">Your answer</span><strong>${testAnswers[index] === undefined ? 'No answer selected' : question.options[testAnswers[index]]}</strong></div><div class="answer-line correct"><span class="answer-label">Correct answer</span><strong>${question.options[question.answer]}</strong></div></div><div class="explanation"><span>Why</span><p>${question.explanation}</p></div></article>`; }).join('')}</div>` : '<p class="all-correct">Excellent. You got every question right.</p>';
   document.getElementById('page-content').innerHTML = `<div class="results-summary"><span class="results-label">FINAL SCORE</span><strong>${score} / ${questions.length}</strong><p>${score === questions.length ? 'Excellent work.' : `${questions.length - score} question${questions.length - score === 1 ? '' : 's'} to revisit.`}</p></div>${review}<button class="page-button" id="retry-test">Try again <span><-</span></button>`;
-  document.getElementById('retry-test').addEventListener('click', () => { questionIndex = 0; testAnswers = []; questions = shuffleQuestions(questionsForSession()); renderTest(); });
+  document.getElementById('retry-test').addEventListener('click', () => { questionIndex = 0; testAnswers = []; questions = shuffledSessionQuestions(); renderTest(); });
 }
 
 function renderQuiz() {
