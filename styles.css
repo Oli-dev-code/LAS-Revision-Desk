@@ -7,8 +7,8 @@
 @media(max-width:700px){.mode-tabs{display:grid;grid-template-columns:1fr}.mode-tab{width:100%}.test-options{grid-template-columns:1fr}.mode-view{padding:20px}.mode-view-heading h2{font-size:18px}}
 .brand-logo{display:block;width:205px;height:auto;max-height:58px;object-fit:contain;object-position:left center}
 .focus-symbol{background:#f8e4e1;color:#b35f55}
-.page-header-brand{display:block;width:190px;height:34px;background:url('assets/las-logo.png') left center/contain no-repeat;font-size:0}
-@media(max-width:700px){.brand-logo{width:180px}.page-header-brand{width:165px;height:29px}}
+.page-header-brand{display:none}
+@media(max-width:700px){.brand-logo{width:180px}}
 .course-name{display:block;min-width:0;line-height:1.25}
 #mode-content{display:none}.study-modes{display:block;border-top:0;padding-top:0;margin-bottom:27px}.mode-intro{text-align:center;margin-bottom:18px}.mode-intro h2{font-size:22px;margin-top:7px}.mode-intro p{font-size:12px}.mode-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.mode-tab{width:auto;min-height:122px;padding:19px 18px;box-shadow:none;transition:transform .15s,border-color .15s,background .15s;text-decoration:none;color:inherit}.mode-tab:hover{transform:translateY(-2px);border-color:#80b9af;background:#f6fbf9}.mode-tab.active{background:#e7f2f0}.mode-tab .mode-symbol{height:38px;width:38px;font-size:19px}.mode-tab strong{font-size:15px}.mode-tab small{font-size:11px;margin-top:4px}.mode-tab b{font-size:21px;align-self:flex-start}.mode-intro p span{margin:0 4px}
 
