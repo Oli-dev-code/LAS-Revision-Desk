@@ -116,10 +116,15 @@ function diagramAnswerText(question, answer) {
 
 function renderDiagramTest(question) {
   const labels = shuffleQuestions(question.diagram.labels);
+  const arrows = question.diagram.labels.map((label) => {
+    const horizontal = label.x < 50 || label.x > 50;
+    const start = horizontal ? { x: label.x < 50 ? 4 : 96, y: label.y } : { x: label.x, y: label.y < 50 ? 7 : 93 };
+    return `<line class="diagram-arrow" x1="${start.x}" y1="${start.y}" x2="${label.x}" y2="${label.y}" marker-end="url(#diagram-arrowhead)" />`;
+  }).join('');
   const targets = question.diagram.labels.map((label) => `<div class="diagram-target" data-target-id="${label.id}" style="left:${label.x}%;top:${label.y}%"><span>Drop label</span></div>`).join('');
   const tiles = labels.map((label) => `<button class="diagram-label" draggable="true" data-label-id="${label.id}">${label.name}</button>`).join('');
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">DIAGRAM LABEL</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="diagram-layout"><div class="diagram-board"><img src="${question.diagram.image}" alt="${question.diagram.alt}">${targets}</div><div class="diagram-label-bank">${tiles}</div></div><p class="page-feedback" id="diagram-feedback" aria-live="polite">Drag every label onto a matching target.</p><button class="page-button" id="check-diagram" disabled>Check labels</button><button class="page-button" id="next-question" disabled>${questionIndex === questions.length - 1 ? 'Submit test' : 'Next question'} <span>-></span></button>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">DIAGRAM LABEL</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="diagram-layout"><div class="diagram-board"><img src="${question.diagram.image}" alt="${question.diagram.alt}"><svg class="diagram-arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="diagram-arrowhead" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 z" fill="#176f6b" /></marker></defs>${arrows}</svg>${targets}</div><div class="diagram-label-bank">${tiles}</div></div><p class="page-feedback" id="diagram-feedback" aria-live="polite">Drag every label onto a matching target.</p><button class="page-button" id="check-diagram" disabled>Check labels</button><button class="page-button" id="next-question" disabled>${questionIndex === questions.length - 1 ? 'Submit test' : 'Next question'} <span>-></span></button>`;
   const placements = {};
   const checkButton = document.getElementById('check-diagram');
   const nextButton = document.getElementById('next-question');
