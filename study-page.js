@@ -23,6 +23,21 @@ const params = new URLSearchParams(window.location.search);
 let topic = params.get('topic') || 'body';
 if (!topicNames[topic]) topic = 'body';
 const mode = document.body.dataset.mode;
+const abbreviationGlossary = {
+  ATP: 'adenosine triphosphate',
+  ADH: 'antidiuretic hormone',
+  ANS: 'autonomic nervous system',
+  CNS: 'central nervous system',
+  CSF: 'cerebrospinal fluid',
+  DNA: 'deoxyribonucleic acid',
+  PNS: 'peripheral nervous system',
+  BP: 'blood pressure',
+  CO2: 'carbon dioxide'
+};
+const abbreviationPattern = new RegExp(`\\b(${Object.keys(abbreviationGlossary).sort((a, b) => b.length - a.length).join('|')})\\b`, 'g');
+function withAbbreviationTooltips(text) {
+  return String(text).replace(abbreviationPattern, (abbreviation) => `<span class="abbr-wrap" tabindex="0"><span class="abbr-text">${abbreviation}</span><span class="abbr-info" aria-hidden="true">i</span><span class="abbr-tooltip" role="tooltip">${abbreviationGlossary[abbreviation]}</span></span>`);
+}
 function shuffleQuestions(items) {
   const shuffled = [...items];
   for (let index = shuffled.length - 1; index > 0; index -= 1) {
@@ -104,7 +119,7 @@ function renderDiagramTest(question) {
   const targets = question.diagram.labels.map((label) => `<div class="diagram-target" data-target-id="${label.id}" style="left:${label.x}%;top:${label.y}%"><span>Drop label</span></div>`).join('');
   const tiles = labels.map((label) => `<button class="diagram-label" draggable="true" data-label-id="${label.id}">${label.name}</button>`).join('');
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">DIAGRAM LABEL</p><p class="page-question">${question.question}</p><div class="diagram-layout"><div class="diagram-board"><img src="${question.diagram.image}" alt="${question.diagram.alt}">${targets}</div><div class="diagram-label-bank">${tiles}</div></div><p class="page-feedback" id="diagram-feedback" aria-live="polite">Drag every label onto a matching target.</p><button class="page-button" id="check-diagram" disabled>Check labels</button><button class="page-button" id="next-question" disabled>${questionIndex === questions.length - 1 ? 'Submit test' : 'Next question'} <span>-></span></button>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">DIAGRAM LABEL</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="diagram-layout"><div class="diagram-board"><img src="${question.diagram.image}" alt="${question.diagram.alt}">${targets}</div><div class="diagram-label-bank">${tiles}</div></div><p class="page-feedback" id="diagram-feedback" aria-live="polite">Drag every label onto a matching target.</p><button class="page-button" id="check-diagram" disabled>Check labels</button><button class="page-button" id="next-question" disabled>${questionIndex === questions.length - 1 ? 'Submit test' : 'Next question'} <span>-></span></button>`;
   const placements = {};
   const checkButton = document.getElementById('check-diagram');
   const nextButton = document.getElementById('next-question');
@@ -144,7 +159,7 @@ function renderTest() {
   if (question.type === 'diagram') { renderDiagramTest(question); return; }
   const lastQuestion = questionIndex === questions.length - 1;
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">QUESTION ${(questionIndex + 1).toString().padStart(2, '0')}</p><p class="page-question">${question.question}</p><div class="page-options">${question.options.map((option, index) => `<button data-index="${index}" class="${testAnswers[questionIndex] === index ? 'selected' : ''}">${option}</button>`).join('')}</div><p class="page-feedback" aria-live="polite">Your answer will be marked when you finish the test.</p><button class="page-button" id="next-question" ${testAnswers[questionIndex] === undefined ? 'disabled' : ''}>${lastQuestion ? 'Submit test' : 'Next question'} <span>-></span></button>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">QUESTION ${(questionIndex + 1).toString().padStart(2, '0')}</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="page-options">${question.options.map((option, index) => `<button data-index="${index}" class="${testAnswers[questionIndex] === index ? 'selected' : ''}">${withAbbreviationTooltips(option)}</button>`).join('')}</div><p class="page-feedback" aria-live="polite">Your answer will be marked when you finish the test.</p><button class="page-button" id="next-question" ${testAnswers[questionIndex] === undefined ? 'disabled' : ''}>${lastQuestion ? 'Submit test' : 'Next question'} <span>-></span></button>`;
   document.querySelectorAll('.page-options button').forEach((button) => button.addEventListener('click', () => {
     testAnswers[questionIndex] = Number(button.dataset.index);
     document.querySelectorAll('.page-options button').forEach((item) => item.classList.remove('selected'));
@@ -162,7 +177,7 @@ function renderTestResults() {
   recordSessionResults();
   const missed = questions.filter((question, index) => !answerIsCorrect(question, index));
   document.getElementById('page-count').textContent = 'Test complete';
-  const review = missed.length ? `<div class="wrong-list"><div class="review-heading"><div><span class="results-label">KNOWLEDGE CHECK</span><h2>Review missed questions</h2></div><span class="missed-count">${missed.length} to revisit</span></div>${missed.map((question) => { const index = questions.indexOf(question); const yourAnswer = question.type === 'diagram' ? diagramAnswerText(question, testAnswers[index]) : (testAnswers[index] === undefined ? 'No answer selected' : question.options[testAnswers[index]]); const correctAnswer = question.type === 'diagram' ? 'Place every label on its matching target' : question.options[question.answer]; return `<article class="wrong-answer"><div class="wrong-question"><span class="question-index">Question ${index + 1}</span><p>${question.question}</p></div><div class="answer-comparison"><div class="answer-line incorrect"><span class="answer-label">Your answer</span><strong>${yourAnswer}</strong></div><div class="answer-line correct"><span class="answer-label">Correct answer</span><strong>${correctAnswer}</strong></div></div><div class="explanation"><span>Why</span><p>${question.explanation}</p></div></article>`; }).join('')}</div>` : '<p class="all-correct">Excellent. You got every question right.</p>';
+  const review = missed.length ? `<div class="wrong-list"><div class="review-heading"><div><span class="results-label">KNOWLEDGE CHECK</span><h2>Review missed questions</h2></div><span class="missed-count">${missed.length} to revisit</span></div>${missed.map((question) => { const index = questions.indexOf(question); const yourAnswer = question.type === 'diagram' ? diagramAnswerText(question, testAnswers[index]) : (testAnswers[index] === undefined ? 'No answer selected' : question.options[testAnswers[index]]); const correctAnswer = question.type === 'diagram' ? 'Place every label on its matching target' : question.options[question.answer]; return `<article class="wrong-answer"><div class="wrong-question"><span class="question-index">Question ${index + 1}</span><p>${withAbbreviationTooltips(question.question)}</p></div><div class="answer-comparison"><div class="answer-line incorrect"><span class="answer-label">Your answer</span><strong>${withAbbreviationTooltips(yourAnswer)}</strong></div><div class="answer-line correct"><span class="answer-label">Correct answer</span><strong>${withAbbreviationTooltips(correctAnswer)}</strong></div></div><div class="explanation"><span>Why</span><p>${withAbbreviationTooltips(question.explanation)}</p></div></article>`; }).join('')}</div>` : '<p class="all-correct">Excellent. You got every question right.</p>';
   document.getElementById('page-content').innerHTML = `<div class="results-summary"><span class="results-label">FINAL SCORE</span><strong>${score} / ${questions.length}</strong><p>${score === questions.length ? 'Excellent work.' : `${questions.length - score} question${questions.length - score === 1 ? '' : 's'} to revisit.`}</p></div>${review}<button class="page-button" id="retry-test">Try again <span><-</span></button>`;
   document.getElementById('retry-test').addEventListener('click', () => { questionIndex = 0; testAnswers = []; questions = shuffledSessionQuestions(); renderTest(); });
 }
@@ -170,7 +185,7 @@ function renderTestResults() {
 function renderQuiz() {
   const question = questions[questionIndex % questions.length];
   document.getElementById('page-count').textContent = `Question ${(questionIndex % questions.length) + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">THINK BEFORE REVEALING</p><p class="page-question">${question.question}</p><button class="page-button" id="reveal-answer">Reveal answer</button><div class="answer-box" id="answer-box" hidden><strong>${question.options[question.answer]}</strong><p>${question.explanation}</p></div><button class="page-link" id="next-question">Next question <span>-></span></button>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">THINK BEFORE REVEALING</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><button class="page-button" id="reveal-answer">Reveal answer</button><div class="answer-box" id="answer-box" hidden><strong>${withAbbreviationTooltips(question.options[question.answer])}</strong><p>${withAbbreviationTooltips(question.explanation)}</p></div><button class="page-link" id="next-question">Next question <span>-></span></button>`;
   document.getElementById('reveal-answer').addEventListener('click', () => { document.getElementById('answer-box').hidden = false; document.getElementById('reveal-answer').textContent = 'Answer revealed'; });
   document.getElementById('next-question').addEventListener('click', () => { questionIndex += 1; renderQuiz(); });
 }
