@@ -1,0 +1,10 @@
+/* The dashboard is intentionally focused on choosing a study mode. */
+.dashboard-grid{display:none}
+.lower-grid{display:none}
+.top-actions .streak,.top-actions>.icon-button,.top-actions>.mini-avatar{display:none}
+.profile-switcher{display:none}
+.stats-grid{grid-template-columns:1fr}
+.stats-grid .stat-card:first-child,.stats-grid .stat-card:nth-child(3){display:none}
+.welcome-row{display:none}
+.nav-item[data-view="notes"]{display:none}
+.nav-item[data-view="practice"]{display:none}
