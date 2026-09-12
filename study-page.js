@@ -30,7 +30,28 @@ function shuffleQuestions(items) {
   }
   return shuffled;
 }
-let questions = shuffleQuestions(database.filter((item) => item.topic === topic));
+function savedIncorrectQuestionIds() {
+  if (window.lasProgress?.questionStats) return new Set(window.lasProgress.questionStats().incorrectQuestionIds || []);
+  try { return new Set(JSON.parse(localStorage.getItem('las-revision-question-stats') || '{}').incorrectQuestionIds || []); } catch { return new Set(); }
+}
+function questionsForSession() {
+  const topicQuestions = database.filter((item) => item.topic === topic);
+  return mode === 'focused-test' ? topicQuestions.filter((question) => savedIncorrectQuestionIds().has(question.id)) : topicQuestions;
+}
+function recordSessionResults() {
+  const results = questions.map((question, index) => ({ id: question.id, correct: testAnswers[index] === question.answer }));
+  if (window.lasProgress?.recordQuestionResults) { window.lasProgress.recordQuestionResults(results); return; }
+  try {
+    const stats = JSON.parse(localStorage.getItem('las-revision-question-stats') || '{"answered":0,"correct":0,"incorrectQuestionIds":[]}');
+    const incorrect = new Set(stats.incorrectQuestionIds || []);
+    results.forEach((result) => result.correct ? incorrect.delete(result.id) : incorrect.add(result.id));
+    stats.answered = (stats.answered || 0) + results.length;
+    stats.correct = (stats.correct || 0) + results.filter((result) => result.correct).length;
+    stats.incorrectQuestionIds = [...incorrect];
+    localStorage.setItem('las-revision-question-stats', JSON.stringify(stats));
+  } catch { /* Progress is optional when storage is unavailable. */ }
+}
+let questions = shuffleQuestions(questionsForSession());
 let questionIndex = 0;
 let testAnswers = [];
 
@@ -76,12 +97,12 @@ function renderTest() {
 
 function renderTestResults() {
   const score = questions.reduce((total, question, index) => total + (testAnswers[index] === question.answer ? 1 : 0), 0);
-  window.lasProgress?.recordQuestions(questions.length, score);
+  recordSessionResults();
   const missed = questions.filter((question, index) => testAnswers[index] !== question.answer);
   document.getElementById('page-count').textContent = 'Test complete';
   const review = missed.length ? `<div class="wrong-list"><div class="review-heading"><div><span class="results-label">KNOWLEDGE CHECK</span><h2>Review missed questions</h2></div><span class="missed-count">${missed.length} to revisit</span></div>${missed.map((question) => { const index = questions.indexOf(question); return `<article class="wrong-answer"><div class="wrong-question"><span class="question-index">Question ${index + 1}</span><p>${question.question}</p></div><div class="answer-comparison"><div class="answer-line incorrect"><span class="answer-label">Your answer</span><strong>${testAnswers[index] === undefined ? 'No answer selected' : question.options[testAnswers[index]]}</strong></div><div class="answer-line correct"><span class="answer-label">Correct answer</span><strong>${question.options[question.answer]}</strong></div></div><div class="explanation"><span>Why</span><p>${question.explanation}</p></div></article>`; }).join('')}</div>` : '<p class="all-correct">Excellent. You got every question right.</p>';
   document.getElementById('page-content').innerHTML = `<div class="results-summary"><span class="results-label">FINAL SCORE</span><strong>${score} / ${questions.length}</strong><p>${score === questions.length ? 'Excellent work.' : `${questions.length - score} question${questions.length - score === 1 ? '' : 's'} to revisit.`}</p></div>${review}<button class="page-button" id="retry-test">Try again <span><-</span></button>`;
-  document.getElementById('retry-test').addEventListener('click', () => { questionIndex = 0; testAnswers = []; questions = shuffleQuestions(database.filter((item) => item.topic === topic)); renderTest(); });
+  document.getElementById('retry-test').addEventListener('click', () => { questionIndex = 0; testAnswers = []; questions = shuffleQuestions(questionsForSession()); renderTest(); });
 }
 
 function renderQuiz() {
@@ -93,6 +114,6 @@ function renderQuiz() {
 }
 
 if (mode === 'learn') renderLearn();
-if (mode === 'test' && questions.length) renderTest();
+if ((mode === 'test' || mode === 'focused-test') && questions.length) renderTest();
 if (mode === 'quiz' && questions.length) renderQuiz();
-if ((mode === 'test' || mode === 'quiz') && !questions.length) document.getElementById('page-content').textContent = 'No questions have been added for this topic yet.';
+if ((mode === 'test' || mode === 'focused-test' || mode === 'quiz') && !questions.length) document.getElementById('page-content').textContent = mode === 'focused-test' ? 'No questions currently need focused revision for this topic.' : 'No questions have been added for this topic yet.';

@@ -8,3 +8,4 @@
 .welcome-row{display:none}
 .nav-item[data-view="notes"]{display:none}
 .nav-item[data-view="practice"]{display:none}
+.mode-tabs{grid-template-columns:repeat(4,1fr)}

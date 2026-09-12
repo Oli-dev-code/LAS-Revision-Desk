@@ -6,6 +6,7 @@
 @media(max-width:950px){.study-modes{display:block}.mode-tabs{margin-top:15px}.mode-tab{flex:1}.learn-layout{grid-template-columns:1fr}}
 @media(max-width:700px){.mode-tabs{display:grid;grid-template-columns:1fr}.mode-tab{width:100%}.test-options{grid-template-columns:1fr}.mode-view{padding:20px}.mode-view-heading h2{font-size:18px}}
 .brand-logo{display:block;width:205px;height:auto;max-height:58px;object-fit:contain;object-position:left center}
+.focus-symbol{background:#f8e4e1;color:#b35f55}
 .page-header-brand{display:block;width:190px;height:34px;background:url('assets/las-logo.png') left center/contain no-repeat;font-size:0}
 @media(max-width:700px){.brand-logo{width:180px}.page-header-brand{width:165px;height:29px}}
 .course-name{display:block;min-width:0;line-height:1.25}

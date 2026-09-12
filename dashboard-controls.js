@@ -51,6 +51,7 @@
       document.querySelector('.mode-tab[href^="learn"]').href = `learn.html?topic=${topic}`;
       document.querySelector('.mode-tab[href^="test"]').href = `test.html?topic=${topic}`;
       document.querySelector('.mode-tab[href^="quiz"]').href = `quiz.html?topic=${topic}`;
+      document.querySelector('.mode-tab[href^="focused-test"]').href = `focused-test.html?topic=${topic}`;
     }));
   }
 }());
