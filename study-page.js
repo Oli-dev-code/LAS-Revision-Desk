@@ -1,4 +1,5 @@
 const database = window.questionDatabase || [];
+const diagramDatabase = window.diagramQuestionDatabase || [];
 const topicCatalog = window.topicCatalog || [
   { id: 'body', name: 'Introduction to the body', source: 'Introduction to the body AAP April 2025 v2.ppsx' },
   { id: 'cardiovascular', name: 'Cardiovascular system', source: 'L3 CV System v1 September 2020.pdf' },
@@ -36,10 +37,13 @@ function savedIncorrectQuestionIds() {
 }
 function questionsForSession() {
   const topicQuestions = database.filter((item) => item.topic === topic);
-  return mode === 'focused-test' ? topicQuestions.filter((question) => savedIncorrectQuestionIds().has(question.id)) : topicQuestions;
+  const topicDiagrams = diagramDatabase.filter((item) => item.topic === topic);
+  if (mode === 'quiz') return topicQuestions;
+  if (mode === 'focused-test') return [...topicQuestions, ...topicDiagrams].filter((question) => savedIncorrectQuestionIds().has(question.id));
+  return [...topicQuestions, ...topicDiagrams];
 }
 function recordSessionResults() {
-  const results = questions.map((question, index) => ({ id: question.id, correct: testAnswers[index] === question.answer }));
+  const results = questions.map((question, index) => ({ id: question.id, correct: question.type === 'diagram' ? Boolean(testAnswers[index]?.correct) : testAnswers[index] === question.answer }));
   if (window.lasProgress?.recordQuestionResults) { window.lasProgress.recordQuestionResults(results); return; }
   try {
     const stats = JSON.parse(localStorage.getItem('las-revision-question-stats') || '{"answered":0,"correct":0,"incorrectQuestionIds":[]}');
@@ -53,7 +57,11 @@ function recordSessionResults() {
 }
 function shuffledSessionQuestions() {
   const selected = shuffleQuestions(questionsForSession());
-  return (mode === 'test' || mode === 'focused-test') ? selected.slice(0, 50) : selected;
+  if (mode !== 'test' && mode !== 'focused-test') return selected;
+  const diagrams = selected.filter((question) => question.type === 'diagram');
+  const ordinary = selected.filter((question) => question.type !== 'diagram').slice(0, diagrams.length ? 49 : 50);
+  if (diagrams.length) ordinary.splice(Math.floor(Math.random() * (ordinary.length + 1)), 0, diagrams[0]);
+  return ordinary;
 }
 let questions = shuffledSessionQuestions();
 let questionIndex = 0;
@@ -82,8 +90,58 @@ function renderLearn() {
   document.getElementById('page-content').innerHTML = `<p class="page-lead">${materials[topic][0]}</p><div class="reading-section"><span>01</span><div><h2>What to remember</h2><p>${materials[topic][1]}</p></div></div><div class="reading-section"><span>02</span><div><h2>Keep reassessing</h2><p>After every intervention, repeat your assessment. A patient’s condition can change quickly, so record your findings and communicate concerns clearly.</p></div></div>`;
 }
 
+function answerIsCorrect(question, index) {
+  return question.type === 'diagram' ? Boolean(testAnswers[index]?.correct) : testAnswers[index] === question.answer;
+}
+
+function diagramAnswerText(question, answer) {
+  if (!answer?.placements) return 'No labels placed';
+  return question.diagram.labels.map((label) => `${label.name}: ${answer.placements[label.id] === label.id ? 'correct' : 'incorrect'}`).join(' | ');
+}
+
+function renderDiagramTest(question) {
+  const labels = shuffleQuestions(question.diagram.labels);
+  const targets = question.diagram.labels.map((label) => `<div class="diagram-target" data-target-id="${label.id}" style="left:${label.x}%;top:${label.y}%"><span>Drop label</span></div>`).join('');
+  const tiles = labels.map((label) => `<button class="diagram-label" draggable="true" data-label-id="${label.id}">${label.name}</button>`).join('');
+  document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">DIAGRAM LABEL</p><p class="page-question">${question.question}</p><div class="diagram-layout"><div class="diagram-board"><img src="${question.diagram.image}" alt="${question.diagram.alt}">${targets}</div><div class="diagram-label-bank">${tiles}</div></div><p class="page-feedback" id="diagram-feedback" aria-live="polite">Drag every label onto a matching target.</p><button class="page-button" id="check-diagram" disabled>Check labels</button><button class="page-button" id="next-question" disabled>${questionIndex === questions.length - 1 ? 'Submit test' : 'Next question'} <span>-></span></button>`;
+  const placements = {};
+  const checkButton = document.getElementById('check-diagram');
+  const nextButton = document.getElementById('next-question');
+  const refresh = () => {
+    document.querySelectorAll('.diagram-target').forEach((target) => {
+      const labelId = placements[target.dataset.targetId];
+      const label = question.diagram.labels.find((item) => item.id === labelId);
+      target.innerHTML = `<span>${label ? label.name : 'Drop label'}</span>`;
+      target.classList.toggle('filled', Boolean(label));
+    });
+    document.querySelectorAll('.diagram-label').forEach((label) => label.classList.toggle('placed', Object.values(placements).includes(label.dataset.labelId)));
+    checkButton.disabled = Object.keys(placements).length !== question.diagram.labels.length;
+  };
+  document.querySelectorAll('.diagram-label').forEach((label) => label.addEventListener('dragstart', (event) => event.dataTransfer.setData('text/plain', label.dataset.labelId)));
+  document.querySelectorAll('.diagram-target').forEach((target) => {
+    target.addEventListener('dragover', (event) => event.preventDefault());
+    target.addEventListener('drop', (event) => {
+      event.preventDefault();
+      const labelId = event.dataTransfer.getData('text/plain');
+      Object.keys(placements).forEach((targetId) => { if (placements[targetId] === labelId) delete placements[targetId]; });
+      placements[target.dataset.targetId] = labelId;
+      refresh();
+    });
+  });
+  checkButton.addEventListener('click', () => {
+    const correct = question.diagram.labels.every((label) => placements[label.id] === label.id);
+    testAnswers[questionIndex] = { correct, placements: { ...placements } };
+    document.getElementById('diagram-feedback').textContent = correct ? 'All labels are correct.' : 'Some labels are in the wrong place. Review the result at the end of the test.';
+    document.getElementById('diagram-feedback').className = `page-feedback${correct ? '' : ' error'}`;
+    checkButton.disabled = true;
+    nextButton.disabled = false;
+  });
+}
+
 function renderTest() {
   const question = questions[questionIndex];
+  if (question.type === 'diagram') { renderDiagramTest(question); return; }
   const lastQuestion = questionIndex === questions.length - 1;
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
   document.getElementById('page-content').innerHTML = `<p class="question-label">QUESTION ${(questionIndex + 1).toString().padStart(2, '0')}</p><p class="page-question">${question.question}</p><div class="page-options">${question.options.map((option, index) => `<button data-index="${index}" class="${testAnswers[questionIndex] === index ? 'selected' : ''}">${option}</button>`).join('')}</div><p class="page-feedback" aria-live="polite">Your answer will be marked when you finish the test.</p><button class="page-button" id="next-question" ${testAnswers[questionIndex] === undefined ? 'disabled' : ''}>${lastQuestion ? 'Submit test' : 'Next question'} <span>-></span></button>`;
@@ -100,11 +158,11 @@ function renderTest() {
 }
 
 function renderTestResults() {
-  const score = questions.reduce((total, question, index) => total + (testAnswers[index] === question.answer ? 1 : 0), 0);
+  const score = questions.reduce((total, question, index) => total + (answerIsCorrect(question, index) ? 1 : 0), 0);
   recordSessionResults();
-  const missed = questions.filter((question, index) => testAnswers[index] !== question.answer);
+  const missed = questions.filter((question, index) => !answerIsCorrect(question, index));
   document.getElementById('page-count').textContent = 'Test complete';
-  const review = missed.length ? `<div class="wrong-list"><div class="review-heading"><div><span class="results-label">KNOWLEDGE CHECK</span><h2>Review missed questions</h2></div><span class="missed-count">${missed.length} to revisit</span></div>${missed.map((question) => { const index = questions.indexOf(question); return `<article class="wrong-answer"><div class="wrong-question"><span class="question-index">Question ${index + 1}</span><p>${question.question}</p></div><div class="answer-comparison"><div class="answer-line incorrect"><span class="answer-label">Your answer</span><strong>${testAnswers[index] === undefined ? 'No answer selected' : question.options[testAnswers[index]]}</strong></div><div class="answer-line correct"><span class="answer-label">Correct answer</span><strong>${question.options[question.answer]}</strong></div></div><div class="explanation"><span>Why</span><p>${question.explanation}</p></div></article>`; }).join('')}</div>` : '<p class="all-correct">Excellent. You got every question right.</p>';
+  const review = missed.length ? `<div class="wrong-list"><div class="review-heading"><div><span class="results-label">KNOWLEDGE CHECK</span><h2>Review missed questions</h2></div><span class="missed-count">${missed.length} to revisit</span></div>${missed.map((question) => { const index = questions.indexOf(question); const yourAnswer = question.type === 'diagram' ? diagramAnswerText(question, testAnswers[index]) : (testAnswers[index] === undefined ? 'No answer selected' : question.options[testAnswers[index]]); const correctAnswer = question.type === 'diagram' ? 'Place every label on its matching target' : question.options[question.answer]; return `<article class="wrong-answer"><div class="wrong-question"><span class="question-index">Question ${index + 1}</span><p>${question.question}</p></div><div class="answer-comparison"><div class="answer-line incorrect"><span class="answer-label">Your answer</span><strong>${yourAnswer}</strong></div><div class="answer-line correct"><span class="answer-label">Correct answer</span><strong>${correctAnswer}</strong></div></div><div class="explanation"><span>Why</span><p>${question.explanation}</p></div></article>`; }).join('')}</div>` : '<p class="all-correct">Excellent. You got every question right.</p>';
   document.getElementById('page-content').innerHTML = `<div class="results-summary"><span class="results-label">FINAL SCORE</span><strong>${score} / ${questions.length}</strong><p>${score === questions.length ? 'Excellent work.' : `${questions.length - score} question${questions.length - score === 1 ? '' : 's'} to revisit.`}</p></div>${review}<button class="page-button" id="retry-test">Try again <span><-</span></button>`;
   document.getElementById('retry-test').addEventListener('click', () => { questionIndex = 0; testAnswers = []; questions = shuffledSessionQuestions(); renderTest(); });
 }

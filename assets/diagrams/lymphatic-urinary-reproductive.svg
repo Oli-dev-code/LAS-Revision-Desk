@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 520" role="img" aria-labelledby="title desc">
+  <title id="title">Lymphatic, urinary and reproductive systems</title>
+  <desc id="desc">A simplified body diagram showing lymphatic vessels, kidneys, bladder and reproductive organs.</desc>
+  <rect width="720" height="520" fill="#f8fbfa"/>
+  <path d="M360 54c-34 0-58 26-58 59 0 19 9 36 24 46-24 14-45 36-56 70l-21 69 36 11 21-53v139c0 48-4 93-14 131h48l20-112 20 112h48c-10-38-14-83-14-131V256l21 53 36-11-21-69c-11-34-32-56-56-70 15-10 24-27 24-46 0-33-24-59-58-59z" fill="#e8eeee" stroke="#70898a" stroke-width="4"/>
+  <g fill="none" stroke="#3c9b8a" stroke-width="5" stroke-linecap="round"><path d="M360 151v177"/><path d="M360 190 319 222M360 190 401 222M319 222 289 279M401 222 431 279M360 249 322 302M360 249 398 302M322 302 301 367M398 302 419 367"/></g>
+  <g fill="#d28f82" stroke="#774b4b" stroke-width="3"><ellipse cx="329" cy="242" rx="20" ry="14"/><ellipse cx="391" cy="242" rx="20" ry="14"/><path d="M360 273c-18 0-25 18-25 35 0 18 11 29 25 29s25-11 25-29c0-17-7-35-25-35z"/><path d="M342 360c9-12 27-12 36 0l-8 45h-20z"/></g>
+  <g font-family="Arial,sans-serif" font-size="18" font-weight="700" fill="#24494c"><text x="42" y="86">LYMPHATIC</text><text x="42" y="110">VESSELS</text><text x="526" y="208">KIDNEYS</text><text x="520" y="340">BLADDER</text><text x="488" y="456">REPRODUCTIVE</text><text x="526" y="480">ORGANS</text></g>
+  <g stroke="#24494c" stroke-width="2" fill="none"><path d="M160 102 291 190"/><path d="M518 204 411 238"/><path d="M514 335 386 323"/><path d="M478 444 382 393"/></g>
+</svg>
