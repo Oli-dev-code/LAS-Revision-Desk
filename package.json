@@ -40,6 +40,7 @@
       "progress-store.js",
       "topic-catalog.js",
       "assets/diagrams/**/*",
+      "assets/las-logo.png",
       "app.js",
       "electron-main.cjs",
       "package.json"
@@ -48,6 +49,7 @@
       "output": "release"
     },
     "win": {
+      "icon": "assets/las-logo.png",
       "target": [
         "nsis",
         "portable"
