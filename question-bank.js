@@ -287,4 +287,153 @@ addQuestions('lymphatic-urinary-reproductive', [
   ['Where does fertilisation usually occur?', 'Uterine tube|Uterus only|Cervix|Vagina', 0, 'Fertilisation usually occurs in the uterine, or fallopian, tube.']
 ]);
 
+addQuestions('body', [
+  ['The smallest unit of life capable of replication is the _____.', 'cell|organ|tissue|system', 0, 'Cells are the smallest units of life capable of replication.'],
+  ['A group of similar cells working together forms a _____.', 'tissue|molecule|cavity|system', 0, 'Similar specialised cells combine to form tissues.'],
+  ['Different tissues arranged together form an _____.', 'organ|atom|electrolyte|element', 0, 'Organs are structures made from different tissues.'],
+  ['Organs working together form a body _____.', 'system|cell|molecule|membrane', 0, 'Organs cooperate as body systems.'],
+  ['The study of body structure is called _____.', 'anatomy|physiology|metabolism|pathology', 0, 'Anatomy studies body structure.'],
+  ['The study of how the body works is called _____.', 'physiology|anatomy|histology|chemistry', 0, 'Physiology explains how the body and its systems function.'],
+  ['The study of abnormal changes caused by illness or injury is _____.', 'pathophysiology|anatomy|homeostasis|diffusion', 0, 'Pathophysiology considers the effects of disease and injury.'],
+  ['The nucleus contains the cell genetic material called _____.', 'DNA|ATP|bile|plasma', 0, 'DNA contains genetic instructions in the nucleus.'],
+  ['The cell membrane controls what enters and leaves the _____.', 'cell|bone|organ system|blood vessel', 0, 'The cell membrane is a selective barrier.'],
+  ['Most cellular ATP is produced by the _____.', 'mitochondrion|nucleus|lysosome|ribosome', 0, 'Mitochondria produce most usable cellular ATP.'],
+  ['Lysosomes break down and _____ used cell components.', 'recycle|oxygenate|contract|filter', 0, 'Lysosomes digest and recycle cellular material.'],
+  ['ATP is often described as the body’s usable energy _____.', 'store|barrier|receptor|hormone', 0, 'ATP provides immediately usable cellular energy.'],
+  ['The sum of chemical reactions in cells is called _____.', 'metabolism|osmosis|anatomy|ventilation', 0, 'Metabolism is the total of cellular chemical reactions.'],
+  ['Diffusion moves particles from a _____ concentration to a lower concentration.', 'high|low|neutral|fixed', 0, 'Diffusion follows a concentration gradient from high to low.'],
+  ['Osmosis is the movement of _____ across a semi-permeable membrane.', 'water|bone|ATP|protein only', 0, 'Osmosis describes water movement across a semi-permeable membrane.'],
+  ['Active transport requires cellular _____.', 'energy|silence|light|cartilage', 0, 'Active transport uses energy to move substances against a gradient.'],
+  ['Epithelial tissue covers surfaces and _____ organs.', 'lines|pumps|contracts|filters only', 0, 'Epithelial tissue covers the outside and lines internal surfaces.'],
+  ['Bone, cartilage, blood and adipose are examples of _____ tissue.', 'connective|epithelial|nervous|cardiac', 0, 'These are all connective tissue types.'],
+  ['Muscle tissue contracts to produce _____.', 'movement|DNA|urine|CSF', 0, 'Muscle contraction produces movement.'],
+  ['Nervous tissue detects information and carries electrical _____.', 'impulses|enzymes|nutrients|electrolytes only', 0, 'Nervous tissue generates and conducts electrical impulses.'],
+  ['Homeostasis maintains a stable _____ environment.', 'internal|external|skeletal|respiratory only', 0, 'Homeostasis keeps internal conditions within suitable limits.'],
+  ['The cardiovascular system transports oxygen and _____.', 'nutrients|urine|CSF|spermatozoa', 0, 'Blood transports oxygen, nutrients and other substances.'],
+  ['The respiratory system exchanges oxygen and _____.', 'carbon dioxide|urea|bile|lymph', 0, 'Respiration brings in oxygen and removes carbon dioxide.'],
+  ['The urinary system removes metabolic waste in _____.', 'urine|lymph|semen|CSF', 0, 'Urine carries metabolic waste out of the body.'],
+  ['The body systems work together to maintain _____.', 'life and homeostasis|bone length only|one temperature only|cell colour', 0, 'Interdependent systems support life and internal balance.']
+]);
+
+addQuestions('cardiovascular', [
+  ['The right atrium receives blood from the superior and inferior _____.', 'venae cavae|pulmonary veins|coronary arteries|aorta', 0, 'The venae cavae return systemic blood to the right atrium.'],
+  ['The right ventricle pumps blood through the pulmonary valve into the pulmonary _____.', 'trunk|vein|aorta|sinus', 0, 'The pulmonary trunk carries blood from the right ventricle to the lungs.'],
+  ['The left atrium receives oxygenated blood from the pulmonary _____.', 'veins|arteries|trunk|valves', 0, 'Pulmonary veins return oxygenated blood to the left atrium.'],
+  ['The left ventricle ejects blood through the aortic valve into the _____.', 'aorta|vena cava|pulmonary vein|coronary sinus', 0, 'The aorta distributes blood from the left ventricle to the body.'],
+  ['The valve between the right atrium and right ventricle is the _____ valve.', 'tricuspid|mitral|aortic|pulmonary', 0, 'The tricuspid valve lies between the right atrium and ventricle.'],
+  ['The valve between the left atrium and left ventricle is the _____ valve.', 'mitral|tricuspid|pulmonary|aortic', 0, 'The mitral valve lies between the left atrium and ventricle.'],
+  ['The heart muscle is called the _____.', 'myocardium|endocardium|pericardial fluid|septum', 0, 'The myocardium is the muscular heart layer.'],
+  ['The wall separating the two sides of the heart is the _____.', 'septum|aorta|pericardium|coronary artery', 0, 'The septum separates the right and left sides.'],
+  ['Pulmonary circulation carries blood between the heart and the _____.', 'lungs|kidneys|brain|liver only', 0, 'Pulmonary circulation connects the right heart to the lungs and back.'],
+  ['Systemic circulation carries blood between the heart and the body’s _____.', 'tissues|alveoli only|bladder|lymph nodes only', 0, 'Systemic circulation supplies the body tissues.'],
+  ['Arteries carry blood _____ from the heart.', 'away|towards|only around|through the valves', 0, 'Arteries carry blood away from the heart.'],
+  ['Veins carry blood _____ the heart.', 'towards|away from|only into arteries|through alveoli', 0, 'Veins return blood towards the heart.'],
+  ['The smallest vessels where exchange occurs are the _____.', 'capillaries|arteries|veins|venae cavae', 0, 'Capillaries have thin walls for exchange with tissues.'],
+  ['Small vessels that branch from arteries are called _____.', 'arterioles|venules|veins|sinuses', 0, 'Arteries branch into arterioles before capillary beds.'],
+  ['Small vessels that collect blood from capillaries are _____.', 'venules|arterioles|aorta|arteries', 0, 'Venules collect blood leaving capillary beds.'],
+  ['The heart receives its own blood supply through the _____ arteries.', 'coronary|pulmonary|carotid|renal', 0, 'Coronary arteries supply the myocardium.'],
+  ['The liquid part of blood is called _____.', 'plasma|serum only|haemoglobin|lymphocyte', 0, 'Plasma is the liquid medium carrying blood cells and dissolved substances.'],
+  ['Red blood cells transport oxygen using _____.', 'haemoglobin|platelets|plasma proteins only|lymph', 0, 'Haemoglobin binds oxygen in red blood cells.'],
+  ['Platelets help blood to _____.', 'clot|breathe|digest|filter', 0, 'Platelets contribute to clot formation.'],
+  ['Heart relaxation and filling is called _____.', 'diastole|systole|perfusion|diffusion', 0, 'Diastole is the relaxation and filling phase.'],
+  ['Heart contraction and ejection is called _____.', 'systole|diastole|osmosis|filtration', 0, 'Systole is the contraction phase.'],
+  ['The palpable pressure wave produced by heart contraction is the _____.', 'pulse|murmur|valve|septum', 0, 'A pulse is the arterial pressure wave from ventricular contraction.'],
+  ['The force of blood against vessel walls is called blood _____.', 'pressure|volume|flow|clotting', 0, 'Blood pressure is the force exerted on vessel walls.'],
+  ['The cardiovascular system helps distribute _____ around the body.', 'heat|urine|CSF|lymph nodes', 0, 'Circulation distributes heat and contributes to temperature regulation.']
+]);
+
+addQuestions('respiratory', [
+  ['Movement of air into and out of the lungs is called _____.', 'ventilation|filtration|perfusion|digestion', 0, 'Ventilation is the movement of air during breathing.'],
+  ['The respiratory system transfers _____ from the atmosphere to the blood.', 'oxygen|urea|glucose|bile', 0, 'Oxygen diffuses from alveoli into pulmonary blood.'],
+  ['The respiratory system removes _____ from the blood.', 'carbon dioxide|nitrogen|glucose|sodium', 0, 'Carbon dioxide diffuses into alveoli and is exhaled.'],
+  ['The nose warms, moistens and _____ inspired air.', 'filters|pumps|digests|clots', 0, 'The nose filters particles while warming and humidifying air.'],
+  ['The pharynx is shared by the respiratory and _____ systems.', 'digestive|urinary|lymphatic|reproductive', 0, 'The pharynx conducts both air and swallowed food.'],
+  ['The pharynx is divided into the nasopharynx, oropharynx and _____.', 'hypopharynx|bronchiole|alveolus|pleura', 0, 'These are the three regions described in the material.'],
+  ['The epiglottis helps prevent _____ during swallowing.', 'aspiration|ventilation|diffusion|perfusion', 0, 'The epiglottis closes the larynx to protect the lower airway.'],
+  ['The larynx is also known as the _____ box.', 'voice|air|lung|sound', 0, 'The larynx is the voice box.'],
+  ['The trachea is supported by incomplete _____ rings.', 'C-shaped cartilage|bone|muscle|elastic blood', 0, 'C-shaped cartilage rings help keep the trachea open.'],
+  ['The trachea divides at the carina into the two main _____.', 'bronchi|alveoli|pleurae|lobes', 0, 'The main bronchi begin at the carina.'],
+  ['The right main bronchus is shorter, wider and more _____.', 'vertical|horizontal|curved backwards|closed', 0, 'Its more vertical course makes it a common route for inhaled objects.'],
+  ['Bronchi subdivide into smaller _____.', 'bronchioles|arterioles|venules|sinuses', 0, 'Bronchioles are the smaller airway branches.'],
+  ['Bronchioles terminate at the _____.', 'alveoli|larynx|pharynx|tracheal rings', 0, 'Alveoli are the terminal gas-exchange sacs.'],
+  ['Alveolar walls are approximately _____ cell thick.', 'one|two hundred|ten|zero', 0, 'Very thin alveolar walls shorten the diffusion distance.'],
+  ['The large combined surface area of the alveoli helps make gas _____ efficient.', 'exchange|digestion|filtration|clotting', 0, 'Large surface area supports efficient oxygen and carbon dioxide exchange.'],
+  ['Surfactant reduces alveolar surface _____.', 'tension|pressure only|temperature|volume', 0, 'Surfactant helps prevent alveolar collapse by reducing surface tension.'],
+  ['The membrane surrounding each lung is the _____.', 'pleura|peritoneum|meninges|pericardium', 0, 'The pleura surrounds the lungs.'],
+  ['The main muscle of inspiration is the _____.', 'diaphragm|myocardium|biceps|intercostal bone', 0, 'Diaphragm contraction expands the thoracic cavity.'],
+  ['During inspiration, thoracic volume _____.', 'increases|decreases to zero|stays fixed|becomes negative', 0, 'Increasing thoracic volume lowers lung pressure and draws air in.'],
+  ['During inspiration, pressure inside the lungs falls _____ atmospheric pressure.', 'below|above|equal to all|behind', 0, 'Air flows into the lungs when intrapulmonary pressure falls below atmospheric pressure.'],
+  ['Air moved during a normal quiet breath is called _____ volume.', 'tidal|residual|vital|reserve', 0, 'Tidal volume is the air moved in a normal breath.'],
+  ['The vocal cords are located in the _____.', 'larynx|trachea|alveoli|diaphragm', 0, 'The vocal cords in the larynx produce sound.'],
+  ['Removing carbon dioxide helps regulate blood _____ balance.', 'acid-base|bone|fluid only|electrolyte only', 0, 'Carbon dioxide removal influences carbonic acid and blood pH.'],
+  ['Expired air contains more carbon dioxide than _____ air.', 'inspired|filtered|humidified|alveolar only', 0, 'Body metabolism adds carbon dioxide to air before it is expired.'],
+  ['The respiratory system contributes to the sense of _____.', 'smell|balance only|touch|pain only', 0, 'The material identifies smell as an additional respiratory function.']
+]);
+
+addQuestions('nervous', [
+  ['The brain and spinal cord together form the _____ nervous system.', 'central|peripheral|somatic|enteric', 0, 'The CNS consists of the brain and spinal cord.'],
+  ['The network of nerves outside the CNS is the _____ nervous system.', 'peripheral|central|cerebral|meningeal', 0, 'The PNS includes peripheral nerves and ganglia.'],
+  ['Sensory nerves carrying information towards the CNS are called _____.', 'afferent|efferent|autonomic|motor only', 0, 'Afferent pathways carry sensory information towards the CNS.'],
+  ['Motor nerves carrying instructions away from the CNS are called _____.', 'efferent|afferent|sensory|receptor', 0, 'Efferent pathways carry motor instructions away from the CNS.'],
+  ['The branching parts of a neuron that receive input are _____.', 'dendrites|axons|synapses|myelin', 0, 'Dendrites receive incoming information.'],
+  ['The part of a neuron that conducts signals away from the cell body is the _____.', 'axon|dendrite|nucleus|synaptic cleft', 0, 'The axon transmits the impulse away from the cell body.'],
+  ['The neuron cell body contains the nucleus and other _____.', 'organelles|alveoli|valves|vertebrae', 0, 'Organelles in the cell body maintain neuronal function.'],
+  ['The ends of axons that communicate chemically are called synaptic _____.', 'bulbs|nodes|lobes|ducts', 0, 'Synaptic bulbs release chemical signals at the end of an axon.'],
+  ['The insulating covering around some axons is the _____ sheath.', 'myelin|meningeal|pleural|epithelial', 0, 'Myelin protects axons and speeds impulse transmission.'],
+  ['In the peripheral nervous system, myelin is made by _____ cells.', 'Schwann|red blood|platelet|glial bone', 0, 'Schwann cells produce peripheral myelin.'],
+  ['Gaps in the myelin sheath are called nodes of _____.', 'Ranvier|Cajal|Willis|Langerhans', 0, 'Nodes of Ranvier allow rapid transmission along myelinated axons.'],
+  ['Support cells in nervous tissue are called _____.', 'neuroglia|nephrons|lymphocytes|osteocytes', 0, 'Neuroglia support and protect neurons.'],
+  ['The medulla helps regulate heart rate, blood pressure and _____.', 'breathing|digestion only|vision|hearing', 0, 'The medulla contains important automatic control centres.'],
+  ['The pons helps regulate _____ and relays information between brain regions.', 'breathing|urine production|blood clotting|menstruation', 0, 'The pons contributes to breathing regulation and relays information.'],
+  ['The midbrain helps coordinate _____.', 'movement|urine storage|gas exchange|lymph drainage', 0, 'The midbrain contributes to movement coordination.'],
+  ['The cerebellum coordinates skilled movement, posture and _____.', 'balance|speech production only|blood filtration|temperature only', 0, 'Balance is a key cerebellar function.'],
+  ['The thalamus acts as a major sensory _____.', 'relay|muscle|ventricle|membrane', 0, 'The thalamus relays sensory information to the cortex.'],
+  ['The hypothalamus helps regulate body _____ and eating and drinking.', 'temperature|bone density|haemoglobin|lung volume only', 0, 'Temperature, eating and drinking are hypothalamic functions.'],
+  ['The outer grey layer of the cerebrum is the cerebral _____.', 'cortex|medulla|duct|capsule', 0, 'The cerebral cortex is the outer grey matter layer.'],
+  ['The lobe involved in vision is the _____ lobe.', 'occipital|frontal|parietal|temporal', 0, 'The occipital lobe processes visual information.'],
+  ['The lobe associated with hearing and memory is the _____ lobe.', 'temporal|occipital|frontal|parietal', 0, 'The temporal lobe supports hearing and memory.'],
+  ['The tough outer meningeal layer is the _____ mater.', 'dura|pia|arachnoid|synovial', 0, 'Dura mater is the outer protective meningeal layer.'],
+  ['Cerebrospinal fluid is found in the _____ space around the arachnoid mater.', 'subarachnoid|subdural only|pleural|peritoneal', 0, 'CSF circulates in the subarachnoid space.'],
+  ['The spinal cord narrows at its lower end to form the _____ medullaris.', 'conus|cauda|corpus|central', 0, 'The conus medullaris is the tapered lower end of the spinal cord.']
+]);
+
+addQuestions('lymphatic-urinary-reproductive', [
+  ['Excess tissue fluid entering lymphatic vessels becomes _____.', 'lymph|plasma|urine|semen', 0, 'Excess tissue fluid collected by lymphatics is called lymph.'],
+  ['Lymphatic vessels eventually return lymph to the _____ circulation.', 'venous|arterial|pulmonary only|coronary only', 0, 'Lymph returns to large veins near the base of the neck.'],
+  ['Lymph nodes filter _____.', 'lymph|urine|blood only|CSF', 0, 'Lymph nodes filter lymph and expose its contents to immune cells.'],
+  ['Immune cells that recognise foreign antigens include _____.', 'lymphocytes|erythrocytes|platelets|osteocytes', 0, 'Lymphocytes recognise antigens and coordinate specific immune responses.'],
+  ['The spleen filters _____ rather than lymph.', 'blood|urine|CSF|semen', 0, 'The spleen filters blood and removes old red blood cells.'],
+  ['T lymphocytes mature in the _____.', 'thymus|spleen|kidney|pancreas', 0, 'The thymus is the site of T-cell maturation.'],
+  ['Intestinal lymphatic capillaries that absorb fats are called _____.', 'lacteals|nephrons|alveoli|villi only', 0, 'Lacteals absorb dietary fats into the lymphatic system.'],
+  ['Urine is stored in the _____ before elimination.', 'bladder|ureter|kidney cortex|renal artery', 0, 'The bladder stores urine before it is eliminated through the urethra.'],
+  ['The functional unit of the kidney is the _____.', 'nephron|neuron|alveolus|lymph node', 0, 'Each nephron filters blood and helps form urine.'],
+  ['The capillary network where kidney filtration begins is the _____.', 'glomerulus|collecting duct|renal pelvis|ureter', 0, 'The glomerulus filters fluid from the blood.'],
+  ['The glomerulus is surrounded by Bowman’s _____.', 'capsule|duct|medulla|sphincter', 0, 'Bowman capsule collects the initial filtrate.'],
+  ['Useful substances are returned to blood by selective _____.', 'reabsorption|aspiration|ventilation|ejaculation', 0, 'Reabsorption returns water, glucose, amino acids and ions to blood.'],
+  ['Movement of substances from blood into the nephron is tubular _____.', 'secretion|filtration only|absorption|fertilisation', 0, 'Tubular secretion adds selected wastes to the filtrate.'],
+  ['Antidiuretic hormone increases kidney _____ reabsorption.', 'water|protein|red cell|fat', 0, 'ADH increases water reabsorption in collecting ducts.'],
+  ['The tube carrying urine from a kidney to the bladder is the _____.', 'ureter|urethra|vas deferens|fallopian tube', 0, 'The ureter transports urine to the bladder.'],
+  ['The bladder stores _____ before it is eliminated.', 'urine|lymph|ova|sperm', 0, 'The bladder is a muscular urine reservoir.'],
+  ['The muscular bladder wall that contracts during micturition is the _____ muscle.', 'detrusor|diaphragm|myocardial|sphincter only', 0, 'The detrusor contracts to empty the bladder.'],
+  ['The testes produce spermatozoa and the hormone _____.', 'testosterone|oestrogen|progesterone|ADH', 0, 'Testosterone is produced by the testes.'],
+  ['Sperm mature and are stored in the _____.', 'epididymis|ureter|prostate|cervix', 0, 'The epididymis is the site of sperm maturation and storage.'],
+  ['The prostate is an accessory gland contributing fluid to _____.', 'semen|urine|lymph|CSF', 0, 'Prostatic fluid contributes to semen.'],
+  ['The ovaries produce ova and the hormones oestrogen and _____.', 'progesterone|testosterone|ADH|insulin only', 0, 'The ovaries produce progesterone as well as oestrogen.'],
+  ['The uterine tubes are the usual site of _____.', 'fertilisation|implantation only|urine formation|sperm maturation', 0, 'Fertilisation usually occurs in a uterine or fallopian tube.'],
+  ['The uterus supports implantation and _____ development.', 'foetal|neural only|renal only|lymphatic', 0, 'The uterus supports development of the foetus during pregnancy.'],
+  ['After birth, prolactin supports the production of breast _____.', 'milk|lymph|urine|semen', 0, 'Prolactin supports milk production during lactation.']
+]);
+
+addQuestions('cardiovascular', [
+  ['The pulmonary valve lies between the right ventricle and the pulmonary _____.', 'trunk|vein|aorta|atrium', 0, 'The pulmonary valve controls blood leaving the right ventricle for the pulmonary trunk.']
+]);
+
+addQuestions('nervous', [
+  ['The spinal cord carries afferent sensory and _____ motor information.', 'efferent|digestive|lymphatic|endocrine', 0, 'Afferent pathways carry sensory information in and efferent pathways carry motor instructions out.']
+]);
+
+addQuestions('lymphatic-urinary-reproductive', [
+  ['The two main lymphatic ducts return lymph to large _____ near the base of the neck.', 'veins|arteries|bronchi|ureters', 0, 'The lymphatic ducts empty into large veins near the junction of the internal jugular and subclavian veins.']
+]);
+
 window.questionDatabase = questionDatabase;
