@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LAS Revision Desk</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div><strong>LAS</strong><small>Revision desk</small></div>
+      </div>
+
+      <div class="profile-switcher">
+        <div class="avatar">LR</div>
+        <div class="profile-copy"><strong>Study profile</strong><span>Learner</span></div>
+        <button class="icon-button" aria-label="Open profile menu">⌄</button>
+      </div>
+
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <button class="nav-item active" data-view="overview"><span class="nav-icon">⌂</span>Overview</button>
+        <button class="nav-item" data-view="topics"><span class="nav-icon">▦</span>Topic library <span class="nav-count">12</span></button>
+        <button class="nav-item" data-view="practice"><span class="nav-icon">◉</span>Practice</button>
+        <button class="nav-item" data-view="notes"><span class="nav-icon">▤</span>My notes</button>
+      </nav>
+
+      <div class="sidebar-label">Your course</div>
+      <div class="course-progress">
+        <div class="progress-top"><span>Course progress</span><strong>34%</strong></div>
+        <div class="progress-track"><span style="width:34%"></span></div>
+        <p>12 of 35 topics reviewed</p>
+      </div>
+      <div class="course-list">
+        <button class="course-item" data-topic="airway"><span class="status-dot complete">✓</span>Airway management</button>
+        <button class="course-item selected" data-topic="patient-assessment"><span class="status-dot current">2</span>Patient assessment</button>
+        <button class="course-item" data-topic="trauma"><span class="status-dot">3</span>Trauma &amp; shock</button>
+        <button class="course-item" data-topic="medical"><span class="status-dot">4</span>Medical emergencies</button>
+      </div>
+
+      <div class="sidebar-footer"><span class="pulse-dot"></span><span>Synced just now</span><button class="settings" aria-label="Settings">⚙</button></div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="breadcrumb"><span>Workspace</span><b>/</b><strong>Overview</strong></div>
+        <div class="top-actions"><button class="streak"><span>✦</span> 4 day streak</button><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false"><span class="theme-icon">☾</span><span class="theme-label">Dark mode</span></button><button class="icon-button" aria-label="Notifications">♢<i></i></button><div class="mini-avatar">LR</div></div>
+      </header>
+
+      <div class="content-wrap" id="app-content">
+        <section class="welcome-row">
+          <div><p class="eyebrow">Friday, 12 September 2026</p><h1>Good morning.</h1><p class="lede">A focused session now will make your next shift feel easier.</p></div>
+          <button class="button primary" id="start-session"><span>▶</span> Start a study session</button>
+        </section>
+
+        <section class="study-modes" aria-label="Study modes">
+          <div class="mode-intro"><span class="section-kicker">Choose how to revise</span><h2>Pick a study mode</h2><p>Patient assessment <span>·</span> Primary survey &amp; vital signs</p></div>
+          <div class="mode-tabs" role="tablist" aria-label="Study mode">
+            <a class="mode-tab active" href="learn.html?topic=patient-assessment"><span class="mode-symbol learn-symbol">▤</span><span><strong>Learn</strong><small>Read the essentials</small></span><b>→</b></a>
+            <a class="mode-tab" href="test.html?topic=patient-assessment"><span class="mode-symbol test-symbol">✓</span><span><strong>Test</strong><small>Check what you know</small></span><b>→</b></a>
+            <a class="mode-tab" href="quiz.html?topic=patient-assessment"><span class="mode-symbol quiz-symbol">?</span><span><strong>Quiz</strong><small>Reveal as you go</small></span><b>→</b></a>
+          </div>
+        </section>
+
+        <section class="mode-content" id="mode-content" aria-live="polite">
+          <div class="mode-view active" data-mode-view="learn">
+            <div class="mode-view-heading"><div><span class="section-kicker">Learn · 02 / Patient assessment</span><h2>Primary survey &amp; vital signs</h2></div><span class="read-time">18 min read</span></div>
+            <div class="learn-layout"><article class="material-main"><p class="material-lead">The primary survey is a rapid, structured assessment used to identify and manage immediate life threats. Use it whenever a patient appears seriously unwell.</p><div class="material-block"><span class="material-step">01</span><div><h3>Start with a general impression</h3><p>Look at the patient before you touch them. Note their position, work of breathing, skin colour, and whether they appear well, unwell, or critically unwell.</p></div></div><div class="material-block"><span class="material-step">02</span><div><h3>Work through ABCDE</h3><p>Assess Airway, Breathing, Circulation, Disability and Exposure in order. Treat problems as you find them, then reassess before moving on.</p></div></div></article><aside class="key-points"><span class="section-kicker">Key points</span><ul><li><b>A</b><span>Airway: is it open and protected?</span></li><li><b>B</b><span>Breathing: rate, effort, oxygenation</span></li><li><b>C</b><span>Circulation: pulse, skin, bleeding</span></li><li><b>D</b><span>Disability: AVPU, pupils, glucose</span></li><li><b>E</b><span>Exposure: inspect while preserving dignity</span></li></ul><button class="button outline" id="mark-learned">Mark as reviewed <span>✓</span></button></aside></div>
+          </div>
+          <div class="mode-view" data-mode-view="test" hidden>
+            <div class="mode-view-heading"><div><span class="section-kicker">Test · selected topic</span><h2>Topic test</h2></div><span class="question-count" id="test-count">Question 1 of 1</span></div><div class="test-card"><p class="question-number">QUESTION 01</p><p class="test-question" id="test-question">Loading questions...</p><div class="test-options" id="test-options"></div><div class="test-result" aria-live="polite"></div><button class="button primary next-test" id="next-test" disabled>Next question <span>→</span></button></div>
+          </div>
+          <div class="mode-view" data-mode-view="quiz" hidden>
+            <div class="mode-view-heading"><div><span class="section-kicker">Quiz · selected topic</span><h2>Think it through</h2></div><span class="question-count" id="quiz-count">Flash question</span></div><div class="quiz-card"><div class="quiz-card-top"><span class="quiz-badge">?</span><span>Try to answer before revealing the explanation</span></div><p class="test-question" id="quiz-question">Loading questions...</p><div class="quiz-actions"><button class="button outline" id="reveal-answer">Reveal answer</button><button class="text-button" id="quiz-got-it">I knew it <span>✓</span></button></div><div class="revealed-answer" id="revealed-answer" hidden><strong id="quiz-answer">Answer</strong><p id="quiz-explanation"></p></div></div>
+          </div>
+        </section>
+
+        <section class="stats-grid" aria-label="Study statistics">
+          <article class="stat-card"><div class="stat-icon teal">◷</div><div><span class="stat-label">Study time</span><strong>2h 18m</strong><small><em>+24m</em> from last week</small></div></article>
+          <article class="stat-card"><div class="stat-icon amber">✓</div><div><span class="stat-label">Questions answered</span><strong>86</strong><small><em>72%</em> average score</small></div></article>
+          <article class="stat-card"><div class="stat-icon coral">♧</div><div><span class="stat-label">Topics in progress</span><strong>4</strong><small>2 need attention</small></div></article>
+        </section>
+
+        <div class="dashboard-grid">
+          <section class="panel focus-panel">
+            <div class="panel-heading"><div><span class="section-kicker">Continue learning</span><h2>Today’s focus</h2></div><button class="text-button" id="view-topic">View topic <span>→</span></button></div>
+            <div class="focus-content">
+              <div class="topic-number">02</div>
+              <div class="topic-copy"><span class="topic-tag">PATIENT ASSESSMENT</span><h3>Primary survey &amp; vital signs</h3><p>Build a reliable first impression of your patient using the <strong>ABCDE</strong> approach and recognise immediate threats.</p><div class="topic-meta"><span>◷ 18 min read</span><span>▤ 8 key notes</span></div></div>
+              <div class="topic-progress"><div class="ring"><span>65<small>%</small></span></div><span>In progress</span></div>
+            </div>
+            <button class="focus-cta" id="resume-topic"><span>▶</span> Resume topic <kbd>R</kbd></button>
+          </section>
+
+          <section class="panel activity-panel">
+            <div class="panel-heading"><div><span class="section-kicker">Your activity</span><h2>Study rhythm</h2></div><button class="icon-button" aria-label="Activity options">•••</button></div>
+            <div class="chart"><div class="chart-y"><span>60m</span><span>40m</span><span>20m</span><span>0</span></div><div class="chart-area"><div class="chart-gridlines"><i></i><i></i><i></i><i></i></div><div class="bars"><span style="height:26%"><b>Mon</b></span><span style="height:52%"><b>Tue</b></span><span style="height:34%"><b>Wed</b></span><span style="height:78%"><b>Thu</b></span><span class="today" style="height:62%"><b>Fri</b></span><span style="height:12%"><b>Sat</b></span><span style="height:8%"><b>Sun</b></span></div></div></div>
+            <div class="chart-note"><span class="legend-dot"></span> Minutes studied <strong>+18%</strong> this week</div>
+          </section>
+        </div>
+
+        <div class="lower-grid">
+          <section class="panel next-panel"><div class="panel-heading"><div><span class="section-kicker">Keep moving</span><h2>Next up</h2></div><button class="text-button" data-view="topics">See all <span>→</span></button></div><div class="next-list"><button class="next-item"><span class="next-icon orange">!</span><span><strong>Shock &amp; perfusion</strong><small>Trauma &amp; shock · 12 questions</small></span><span class="next-arrow">→</span></button><button class="next-item"><span class="next-icon blue">+</span><span><strong>Respiratory emergencies</strong><small>Medical emergencies · 9 questions</small></span><span class="next-arrow">→</span></button><button class="next-item"><span class="next-icon green">✓</span><span><strong>Medication calculations</strong><small>Clinical skills · 15 questions</small></span><span class="next-arrow">→</span></button></div></section>
+          <section class="panel quiz-panel"><div class="panel-heading"><div><span class="section-kicker">Quick check</span><h2>Test yourself</h2></div><span class="question-count">1 of 3</span></div><p class="question">What is the first priority when assessing an unwell patient?</p><div class="answers"><button data-answer="wrong">Obtain a full medical history</button><button data-answer="correct">Identify and treat immediate life threats</button><button data-answer="wrong">Record a 12-lead ECG</button></div><div class="quiz-feedback" aria-live="polite"></div><button class="text-button quiz-next" id="new-question">New question <span>↗</span></button></section>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status">Study session started</div>
+  <script src="question-bank.js"></script>
+  <script src="topic-catalog.js"></script>
+  <script src="progress-store.js"></script>
+  <script src="app.js"></script>
+  <script src="dashboard-controls.js"></script>
+</body>
+</html>

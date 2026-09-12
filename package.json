@@ -1,0 +1,70 @@
+{
+  "name": "las-revision-desk",
+  "version": "1.0.0",
+  "description": "Desktop revision workspace for LAS AAP training",
+  "main": "electron-main.cjs",
+  "author": "LAS Revision Desk",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "package": "electron-builder --win nsis portable"
+  },
+  "devDependencies": {
+    "electron": "^38.1.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "uk.lasrevision.desk",
+    "productName": "LAS Revision Desk",
+    "files": [
+      "index.html",
+      "learn.html",
+      "test.html",
+      "quiz.html",
+      "topics.html",
+      "styles.css",
+      "dashboard.css",
+      "dashboard-controls.js",
+      "study-page.css",
+      "learn.css",
+      "test.css",
+      "study-page.js",
+      "learn-content.js",
+      "nervous-content.js",
+      "lymphatic-content.js",
+      "learn-page.js",
+      "topics-page.js",
+      "topics.css",
+      "question-bank.js",
+      "progress-store.js",
+      "topic-catalog.js",
+      "assets/diagrams/**/*",
+      "app.js",
+      "electron-main.cjs",
+      "package.json"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "artifactName": "LAS-Revision-Desk-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "LAS Revision Desk",
+      "artifactName": "LAS-Revision-Desk-${version}-Setup-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "LAS-Revision-Desk-${version}-Portable-${arch}.${ext}"
+    }
+  }
+}
