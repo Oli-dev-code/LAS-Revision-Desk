@@ -23,6 +23,13 @@ const params = new URLSearchParams(window.location.search);
 let topic = params.get('topic') || 'body';
 if (!topicNames[topic]) topic = 'body';
 const mode = document.body.dataset.mode;
+if (!window.lasProgress?.revisionTime) {
+  const timerStart = Date.now();
+  let timerSaved = timerStart;
+  const flushRevisionTime = () => { const elapsed = Math.max(0, Date.now() - timerSaved); if (!elapsed) return; try { const today = new Date().toISOString().slice(0, 10); const stored = JSON.parse(localStorage.getItem('las-revision-time-stats') || '{}'); const time = { totalMs: (stored.totalMs || 0) + elapsed, todayDate: today, todayMs: stored.todayDate === today ? (stored.todayMs || 0) + elapsed : elapsed }; localStorage.setItem('las-revision-time-stats', JSON.stringify(time)); } catch { /* Time tracking is optional when storage is unavailable. */ } timerSaved = Date.now(); };
+  window.setInterval(flushRevisionTime, 15000);
+  window.addEventListener('beforeunload', flushRevisionTime);
+}
 const abbreviationGlossary = {
   ATP: 'adenosine triphosphate',
   ADH: 'antidiuretic hormone',
