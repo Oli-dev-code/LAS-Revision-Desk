@@ -14,7 +14,7 @@ addQuestions('body', [
   ['What does physiology study?', 'How the body works|The names of bones only|Disease statistics|Cell colour', 0, 'Physiology explains how the body and its systems function.'],
   ['What is pathophysiology concerned with?', 'Normal sleep|Effects of illness and injury|Naming tissues|Normal exercise only', 1, 'Pathophysiology studies abnormal changes and the effects of illness or injury on the body.'],
   ['What is the smallest unit of life that can replicate?', 'Organ|Tissue|Cell|System', 2, 'Cells provide structure and are the smallest unit of life capable of replication.'],
-  ['Which substances make up much of the body according to the introduction material?', 'Hydrogen, carbon, nitrogen and oxygen|Iron, gold, silver and copper|Calcium, lead, tin and zinc|Sodium, chlorine, iodine and fluorine', 0, 'The introduction highlights hydrogen, carbon, nitrogen and oxygen as major body elements.'],
+  ['Which elements make up much of the body according to the introduction material?', 'Hydrogen, carbon, nitrogen and oxygen|Iron, gold, silver and copper|Calcium, lead, tin and zinc|Sodium, chlorine, iodine and fluorine', 0, 'The introduction highlights hydrogen, carbon, nitrogen and oxygen as major body elements.'],
   ['What do atoms combine to form?', 'Tissues only|Molecules or compounds|Organs directly|Blood vessels', 1, 'Atoms combine to form molecules or compounds such as water.'],
   ['What is the charge of a proton?', 'Negative|Neutral|Positive|Variable', 2, 'Protons have a positive charge; electrons are negative and neutrons neutral.'],
   ['What is the charge of an electron?', 'Positive|Negative|Neutral|Double positive', 1, 'Electrons carry a negative charge.'],
@@ -32,19 +32,19 @@ addQuestions('body', [
   ['What does nervous tissue do?', 'Detects information and carries impulses|Stores urine|Makes bile|Forms joints only', 0, 'Nervous tissue senses information and generates or conducts electrical impulses.'],
   ['What happens when tissues join together?', 'They form organs|They become atoms|They disappear|They form electrons', 0, 'Tissues combine to form organs with specialised functions.'],
   ['What happens when organs work together?', 'They form a body system|They become one cell|They become a molecule|They stop functioning', 0, 'Organs work together in systems with specific functions.'],
-  ['Which system transports oxygen and nutrients?', 'Cardiovascular|Integumentary only|Reproductive only|Nervous only', 0, 'The cardiovascular system transports oxygen, nutrients and waste products.'],
+  ['Which system transports oxygen and nutrients in the blood?', 'Cardiovascular|Integumentary only|Reproductive only|Nervous only', 0, 'The cardiovascular system transports oxygen, nutrients and waste products.'],
   ['Which system is responsible for gas exchange?', 'Respiratory|Urinary|Lymphatic|Musculoskeletal', 0, 'The respiratory system brings in oxygen and removes carbon dioxide.'],
   ['Which system includes the brain and spinal cord?', 'Central nervous|Peripheral nervous only|Digestive|Integumentary', 0, 'The brain and spinal cord make up the central nervous system.'],
   ['Which system includes skin, hair and nails?', 'Integumentary|Respiratory|Cardiovascular|Lymphatic', 0, 'The integumentary system is the body outer layer and includes skin, hair and nails.'],
-  ['Why do body systems need to work together?', 'To keep the person alive and maintain function|To prevent all movement|To stop metabolism|To remove all cells', 0, 'Body systems are interdependent and work together to maintain life.'],
+  ['What is the result of body systems working together?', 'They maintain life and normal function|They prevent all movement|They stop metabolism|They remove all cells', 0, 'Body systems are interdependent and work together to maintain life.'],
   ['Which process allows cells to use oxygen and nutrients to release energy?', 'Cellular respiration|Osmosis only|Blood clotting|Nerve conduction only', 0, 'Cellular respiration uses nutrients and oxygen to produce usable energy such as ATP.']
 ]);
 
 addQuestions('cardiovascular', [
   ['What makes up the cardiovascular system?', 'Heart, blood and vessels|Brain, CSF and nerves|Lungs, bronchi and diaphragm|Kidneys, bladder and ureters', 0, 'The cardiovascular system consists of the heart, blood and blood vessels.'],
   ['What is the main pumping organ?', 'Liver|Heart|Spleen|Kidney', 1, 'The heart pumps blood around the body.'],
-  ['Which side receives deoxygenated blood from the body?', 'Right side|Left side|Both sides at once|Neither side', 0, 'Deoxygenated blood returns to the right side of the heart.'],
-  ['Which side pumps oxygenated blood to the body?', 'Right side|Left side|Pulmonary side only|Neither side', 1, 'The left side pumps oxygenated blood into the systemic circulation.'],
+  ['Which chamber receives deoxygenated blood returning from the body?', 'Right atrium|Left atrium|Right ventricle|Left ventricle', 0, 'Deoxygenated blood returns to the right atrium.'],
+  ['Which chamber pumps oxygenated blood into the systemic circulation?', 'Right atrium|Left atrium|Right ventricle|Left ventricle', 3, 'The left ventricle pumps oxygenated blood into the systemic circulation.'],
   ['Where does the right ventricle send blood?', 'To the lungs|To the brain directly|To the kidneys only|To the aorta', 0, 'The right ventricle sends deoxygenated blood through the pulmonary trunk to the lungs.'],
   ['Where does the left ventricle send blood?', 'To the lungs only|To the body through the aorta|To the right atrium|To the vena cava', 1, 'The left ventricle ejects oxygenated blood into the aorta for the body.'],
   ['Which vessels return blood to the heart?', 'Veins|Arteries|Capillaries only|Bronchi', 0, 'Veins carry blood back towards the heart.'],
@@ -63,19 +63,19 @@ addQuestions('cardiovascular', [
   ['Which valve controls flow into the pulmonary trunk?', 'Aortic valve|Mitral valve|Tricuspid valve|Pulmonary valve', 3, 'The pulmonary valve lies between the right ventricle and pulmonary trunk.'],
   ['What does blood transport?', 'Oxygen, nutrients and waste|Only sound|Only nerve impulses|Only heat', 0, 'Blood transports oxygen, nutrients, hormones and waste products.'],
   ['Which is a function of the cardiovascular system?', 'Temperature regulation|Producing urine directly|Coordinating speech|Digesting food mechanically', 0, 'The cardiovascular system contributes to temperature regulation.'],
-  ['Which function supports host defence?', 'Blood and cardiovascular transport|The aortic valve alone|The diaphragm only|The spinal cord only', 0, 'The cardiovascular system supports host defence through blood and immune components.'],
+  ['How does the cardiovascular system support host defence?', 'Blood transports immune components around the body|The aortic valve destroys bacteria|The diaphragm produces antibodies|The spinal cord filters pathogens', 0, 'The cardiovascular system supports host defence through blood and immune components.'],
   ['Approximately how often does a resting heart beat according to the material?', '70 times per minute|7 times per hour|700 times per minute|Once per minute', 0, 'The introduction material gives around 70 beats per minute as a typical resting figure.'],
   ['What is the heart approximately the size of?', 'A clenched fist|A football|A kidney|A grain of rice', 0, 'The supplied material compares the heart to a clenched fist.'],
   ['What does deoxygenated blood do before returning to the left heart?', 'Passes through the lungs for gas exchange|Passes through the kidneys only|Enters the brain first|Leaves through the skin', 0, 'It travels to the lungs where gas exchange occurs before returning oxygenated to the left heart.'],
   ['Which artery supplies the heart muscle?', 'Coronary artery|Pulmonary vein|Vena cava|Carotid sinus only', 0, 'Coronary arteries supply the heart muscle itself.'],
   ['What does the aorta carry?', 'Oxygenated blood away from the left ventricle|Deoxygenated blood to the lungs|Blood into the right atrium|Lymph to the heart', 0, 'The aorta carries oxygenated blood from the left ventricle to the body.'],
   ['What can poor circulation affect?', 'Delivery of oxygen to tissues|Only hair colour|Only hearing|Only digestion of starch', 0, 'Circulation is essential for delivering oxygen and nutrients to tissues.'],
-  ['Which symptom should be treated as clinically important in a cardiovascular assessment?', 'Chest pain or collapse|Normal appetite|A healed small scratch|Clear speech after rest', 0, 'Chest pain, breathlessness and collapse can indicate serious cardiovascular problems.']
+  ['Which finding should be treated as clinically important in a cardiovascular assessment?', 'Chest pain|Normal appetite|A healed small scratch|Clear speech after rest', 0, 'Chest pain can indicate a serious cardiovascular problem.']
 ]);
 
 addQuestions('respiratory', [
   ['What is the main purpose of gas exchange?', 'Move oxygen into blood and carbon dioxide out|Make urine|Produce bone|Store glucose only', 0, 'Gas exchange brings oxygen into the blood and removes carbon dioxide.'],
-  ['Where does inspired air first enter in the labelled diagram?', 'Nasopharynx or mouth|Aorta|Vena cava|Oesophagus only', 0, 'Air enters through the nasopharynx or mouth before reaching the trachea.'],
+  ['Which two routes can inspired air use to enter the respiratory tract?', 'The nasopharynx and mouth|The aorta and vena cava|The oesophagus and stomach|The bronchi and alveoli', 0, 'Air can enter through the nasopharynx or mouth before reaching the trachea.'],
   ['What does the trachea lead into?', 'The bronchial tree|The left ventricle|The spinal cord|The bladder', 0, 'The trachea divides into the bronchi and branching bronchial tree.'],
   ['What is the function of the bronchial tree?', 'Conduct air through branching airways|Pump blood|Filter urine|Control pupils', 0, 'The bronchial tree distributes air through the lungs.'],
   ['What is the role of the lungs?', 'Gas exchange|Produce CSF|Store bile|Make bones', 0, 'The lungs provide the main surface for respiratory gas exchange.'],
@@ -83,12 +83,12 @@ addQuestions('respiratory', [
   ['What direction does oxygen move during pulmonary gas exchange?', 'From air into blood|From blood into air only|From bone into muscle|From urine into blood', 0, 'Oxygen diffuses from the air spaces into the blood.'],
   ['What direction does carbon dioxide move for exhalation?', 'From blood into the lungs|From lungs into blood only|From bone into air|From skin into stomach', 0, 'Carbon dioxide diffuses from blood into the lungs to be exhaled.'],
   ['What is diffusion?', 'Movement from high to low concentration|Movement from low to high only|Muscle contraction|Blood clotting', 0, 'Diffusion is movement down a concentration gradient.'],
-  ['Which blood component transports oxygen around the body?', 'Blood in the cardiovascular system|Lymph only|CSF only|Urine', 0, 'Oxygen is carried away from the lungs by blood.'],
+  ['Which blood component carries oxygen around the body?', 'Red blood cells|Lymph|Cerebrospinal fluid|Urine', 0, 'Red blood cells carry oxygen around the body using haemoglobin.'],
   ['What waste gas is produced by cells?', 'Carbon dioxide|Oxygen|Nitrogen only|Hydrogen only', 0, 'Carbon dioxide is produced as a waste product of cellular respiration.'],
   ['What does cellular respiration help produce?', 'ATP|CSF|Bile only|Bone marrow only', 0, 'Cells use nutrients and oxygen to produce ATP.'],
-  ['What does the respiratory system help regulate?', 'Blood acidity|Bone length|Urine colour only|Memory storage', 0, 'Carbon dioxide removal contributes to regulation of blood acidity.'],
+  ['Which aspect of blood chemistry does the respiratory system help regulate?', 'Blood acidity|Bone length|Urine colour|Memory storage', 0, 'The respiratory system helps regulate blood acidity by removing carbon dioxide.'],
   ['What does the respiratory system filter?', 'Inspired air|Blood cells|CSF|Urine', 0, 'The airways filter inspired air before it reaches deeper lung structures.'],
-  ['What does the respiratory system help produce?', 'Vocal sounds|Red blood cells only|Urine|Synapses only', 0, 'The respiratory system supports voice production.'],
+  ['Which structure in the respiratory system helps produce vocal sounds?', 'The larynx|The alveoli|The diaphragm|The bronchioles', 0, 'The larynx contains the vocal cords and helps produce vocal sounds.'],
   ['Which sense has receptors in the respiratory system?', 'Smell|Balance only|Touch only|Hearing only', 0, 'The source material notes receptors providing a sense of smell.'],
   ['Where is the diaphragm located in relation to the lungs?', 'Below the lungs|Inside the brain|Above the trachea|Inside the heart', 0, 'The diaphragm forms the muscular floor of the thorax beneath the lungs.'],
   ['What happens when the diaphragm contracts?', 'Thoracic volume increases to draw air in|The heart stops|The airway closes|Blood becomes urine', 0, 'Contraction flattens the diaphragm and increases thoracic volume.'],
@@ -97,11 +97,11 @@ addQuestions('respiratory', [
   ['Which gas is breathed in for cellular use?', 'Oxygen|Carbon dioxide|Methane|Helium', 0, 'Oxygen is taken in and used by cells.'],
   ['Which gas is breathed out as a waste product?', 'Carbon dioxide|Oxygen only|Nitrogen only|Hydrogen', 0, 'Carbon dioxide is removed from the body in exhaled air.'],
   ['What can airway narrowing affect?', 'Movement of air|Bone production|Urine filtration only|Memory storage', 0, 'A narrowed airway can restrict airflow and impair breathing.'],
-  ['Which finding can indicate increased work of breathing?', 'Short sentences and noisy breathing|Warm hands only|Normal speech and relaxed effort|A healed bruise', 0, 'Short sentences and noisy breathing can indicate respiratory compromise.'],
+  ['Which finding can indicate increased work of breathing during an assessment?', 'Speaking only in short sentences|Warm hands|Normal relaxed speech|A healed bruise', 0, 'Speaking only in short sentences can indicate increased work of breathing.'],
   ['What is the relationship between breathing and metabolism?', 'Breathing supplies oxygen for cellular reactions|Breathing stops all metabolism|Metabolism produces no waste|They are unrelated', 0, 'Breathing supplies oxygen and removes carbon dioxide produced by metabolism.'],
   ['Why is a branching airway useful?', 'It distributes air throughout the lungs|It pumps blood|It stores urine|It supports the spinal cord', 0, 'Branching airways deliver air to a large area of lung tissue.'],
   ['What is the respiratory system connected to through gas transport?', 'Cardiovascular circulation|Only the skin|Only the reproductive tract|Only the bones', 0, 'Blood links pulmonary gas exchange with tissue oxygen delivery.'],
-  ['What does the nasopharynx contribute to?', 'An upper airway route for air|Pumping blood|Making ATP directly|Filtering lymph', 0, 'The nasopharynx is part of the upper airway.'],
+  ['What is the role of the nasopharynx in respiration?', 'It provides an upper airway route for air|It pumps blood|It makes ATP directly|It filters lymph', 0, 'The nasopharynx provides an upper airway route for air.'],
   ['What is a serious consequence of ineffective gas exchange?', 'Reduced oxygen delivery to tissues|Improved energy production|Increased bone growth|More urine storage', 0, 'Poor gas exchange can reduce oxygen delivery and impair cellular function.'],
   ['Which statement best summarises the respiratory system?', 'It moves air, exchanges gases and supports regulation|It only creates speech|It only filters blood|It only controls movement', 0, 'The respiratory system has several functions beyond ventilation, including gas exchange and acid-base regulation.']
 ]);
@@ -134,14 +134,14 @@ addQuestions('nervous', [
   ['Where is the diencephalon located?', 'Deep beneath the cerebrum|Inside the spinal cord only|In the lungs|Below the bladder', 0, 'The diencephalon lies deep within the brain beneath the cerebrum.'],
   ['What does the thalamus do?', 'Relays sensory input to the cerebral cortex|Pumps blood|Produces urine|Controls the diaphragm directly', 0, 'The thalamus relays sensory input and contributes to perception.'],
   ['What does the hypothalamus help regulate?', 'Temperature, eating, drinking and autonomic activity|Bone length|Air filtration|Blood clotting only', 0, 'The hypothalamus integrates autonomic activity and regulates several homeostatic behaviours.'],
-  ['How many lobes does each cerebral hemisphere have?', 'Four|Two|Three|Eight', 0, 'Each hemisphere is divided into frontal, parietal, temporal and occipital lobes.'],
+  ['How many major externally visible lobes are usually described in each cerebral hemisphere?', 'Four|Two|Three|Eight', 0, 'Each hemisphere is divided into frontal, parietal, temporal and occipital lobes.'],
   ['What are the three meninges?', 'Dura mater, arachnoid mater and pia mater|Pleura, pericardium and peritoneum|Cortex, medulla and pons|Axon, dendrite and soma', 0, 'The meninges are three protective layers around the brain and spinal cord.'],
   ['What does cerebrospinal fluid do?', 'Protects the CNS and carries nutrients|Pumps blood|Digests food|Moves skeletal muscles', 0, 'CSF protects the brain and spinal cord and carries oxygen, glucose and nutrients.']
 ]);
 
 addQuestions('lymphatic-urinary-reproductive', [
   ['What is a key function of the lymphatic system?', 'Drain tissue fluid and support immunity|Pump blood|Exchange lung gases|Control voluntary movement', 0, 'The lymphatic system drains excess tissue fluid, filters it and helps fight infection.'],
-  ['How does the lymphatic system work with the cardiovascular system?', 'It returns filtered tissue fluid to circulation|It replaces the heart|It carries air to the lungs|It makes bones move', 0, 'Lymphatic drainage returns excess fluid from tissues to the circulation.'],
+  ['How does the lymphatic system work with the cardiovascular system?', 'It returns excess tissue fluid to the bloodstream|It replaces the heart|It carries air to the lungs|It makes bones move', 0, 'Lymphatic drainage returns excess fluid from tissues to the circulation.'],
   ['Where are lymphatic vessels found?', 'Throughout the body|Only in the skull|Only in the lungs|Only in the reproductive tract', 0, 'Lymph vessels are distributed throughout the body.'],
   ['What can lymphatic tissue help with?', 'Immune defence|Gas exchange|Voluntary movement|Speech production', 0, 'Lymphatic tissue and vessels support the immune system.'],
   ['What happens to excess tissue fluid?', 'It is drained by lymph vessels|It becomes bone|It is exhaled|It becomes a nerve impulse', 0, 'Lymph vessels drain excess fluid from tissues.'],
@@ -156,20 +156,20 @@ addQuestions('lymphatic-urinary-reproductive', [
   ['What carries urine from the bladder out of the body?', 'Urethra|Ureter|Aorta|Bronchus', 0, 'The urethra is the outlet from the bladder.'],
   ['What is one role of the kidneys?', 'Filter blood and regulate body fluids|Pump oxygenated blood|Make vocal sounds|Coordinate balance', 0, 'The kidneys filter blood and contribute to fluid and electrolyte regulation.'],
   ['What is a reproductive system function?', 'Support continuation of life|Filter inspired air|Drain all tissue fluid|Control pupil size only', 0, 'Reproductive systems produce gametes and support reproduction.'],
-  ['What does the female reproductive system form?', 'Ova|Spermatozoa|Urine|CSF', 0, 'The female reproductive system forms ova.'],
+  ['Which reproductive cells are produced by the female reproductive system?', 'Ova|Spermatozoa|Urine|Cerebrospinal fluid', 0, 'The female reproductive system produces ova.'],
   ['What do the ovaries produce?', 'Ova and reproductive hormones|Urine|Bile|CSF', 0, 'Ovaries form ova and contribute to hormonal regulation.'],
   ['What is the role of the fallopian tubes?', 'Provide a route from ovary towards uterus|Store urine|Filter lymph|Produce CSF', 0, 'Fallopian tubes transport the ovum towards the uterus and are part of the reproductive tract.'],
   ['What is the uterus?', 'The organ that supports foetal development|A blood vessel|A lung passage|A lymph node', 0, 'The uterus supports implantation and foetal development.'],
   ['What is the cervix?', 'The neck of the uterus|The end of a ureter|A brain lobe|A heart valve', 0, 'The cervix is the lower neck of the uterus.'],
   ['What is lactation?', 'Production of breast milk|Formation of urine|Release of CSF|Gas exchange', 0, 'Lactation is the production of breast milk.'],
   ['What does the male reproductive system produce?', 'Spermatozoa|Ova|Urine only|Lymph', 0, 'The male reproductive system produces, matures and stores spermatozoa.'],
-  ['Where do spermatozoa mature and become stored?', 'Male reproductive ducts and associated structures|The lungs|The bladder|The cerebellum', 0, 'Sperm mature and are stored within structures of the male reproductive tract.'],
+  ['Where do spermatozoa mature and become stored?', 'The epididymis|The lungs|The bladder|The cerebellum', 0, 'Sperm mature and are stored in the epididymis.'],
   ['What is semen?', 'Fluid carrying spermatozoa|Filtered lymph|Cerebrospinal fluid|Deoxygenated blood', 0, 'Semen carries spermatozoa for delivery into the female reproductive tract.'],
   ['What is the role of reproductive ducts?', 'Transport reproductive cells or secretions|Exchange oxygen|Filter blood|Control balance', 0, 'Ducts provide routes for reproductive cells and secretions.'],
-  ['Why are these systems considered together in homeostasis?', 'They support fluid balance, waste removal, immunity and reproduction|They all only control movement|They only exchange gases|They only create ATP', 0, 'Together they contribute to internal balance, defence, waste removal and reproduction.'],
+  ['Which functions of the lymphatic and urinary systems support homeostasis?', 'Fluid balance, waste removal and immune support|Voluntary movement and speech|Gas exchange only|ATP production only', 0, 'The lymphatic and urinary systems support fluid balance, waste removal and immune function.'],
   ['What can impaired urinary function affect?', 'Waste removal and fluid balance|Only smell|Only speech|Only skeletal movement', 0, 'Urinary problems can affect the removal of waste and regulation of body fluids.'],
   ['What can impaired lymphatic drainage cause?', 'Accumulation of tissue fluid|Improved gas exchange|More ATP production|Faster nerve impulses', 0, 'If drainage is impaired, excess tissue fluid can accumulate.'],
-  ['Which statement best summarises the topic?', 'The systems maintain internal balance and support reproduction|They are all parts of the brain|They only move blood|They only make vocal sounds', 0, 'The topic connects lymphatic, urinary and reproductive functions to body maintenance and reproduction.']
+  ['Which statement best describes the combined topic?', 'The systems support fluid balance, waste removal, immunity and reproduction|They are all parts of the brain|They only move blood|They only make vocal sounds', 0, 'The topic connects lymphatic, urinary and reproductive functions to body maintenance and reproduction.']
 ]);
 
 addQuestions('body', [
@@ -192,7 +192,7 @@ addQuestions('body', [
   ['What does a receptor detect?', 'A stimulus|A bone fracture only|A hormone gland only|A tissue layer', 0, 'Receptors detect changes in the internal or external environment.'],
   ['What is a stimulus?', 'A detectable change|A type of tissue|A body cavity|A stored nutrient only', 0, 'A stimulus is a change that can be detected and may trigger a response.'],
   ['Which system contributes to hormone control?', 'Endocrine|Skeletal only|Integumentary only|Respiratory only', 0, 'The endocrine system releases hormones that coordinate body functions.'],
-  ['Why do body systems work together?', 'To maintain life and homeostasis|To prevent all movement|To create only bone|To eliminate communication', 0, 'Body systems are interdependent and cooperate to maintain the internal environment.']
+  ['What stable condition do body systems help maintain?', 'The internal environment, or homeostasis|Complete absence of movement|Only bone formation|Elimination of communication', 0, 'Body systems are interdependent and cooperate to maintain the internal environment.']
 ]);
 
 addQuestions('cardiovascular', [
@@ -202,13 +202,13 @@ addQuestions('cardiovascular', [
   ['Which chamber pumps blood into the aorta?', 'Left ventricle|Left atrium|Right ventricle|Right atrium', 0, 'The left ventricle ejects oxygenated blood through the aortic valve into the aorta.'],
   ['What is the myocardium?', 'Heart muscle|Inner vessel lining|Blood plasma|A heart valve', 0, 'The myocardium is the muscular layer of the heart wall.'],
   ['What is the septum?', 'Wall separating the heart sides|A vessel leaving the heart|A coronary valve|A blood cell', 0, 'The septum separates the right and left sides of the heart.'],
-  ['Which vessels carry blood away from the heart under pressure?', 'Arteries|Veins|Capillaries only|Venules only', 0, 'Arteries carry blood away from the heart under pressure.'],
+  ['Which vessels carry blood away from the left ventricle into the systemic circulation?', 'Arteries|Veins|Capillaries only|Venules only', 0, 'Arteries carry blood away from the heart; the aorta carries blood from the left ventricle into the systemic circulation.'],
   ['Which vessels return blood towards the heart?', 'Veins|Arteries|Arterioles only|Capillaries only', 0, 'Veins return blood towards the heart.'],
   ['Where does most exchange with tissues occur?', 'Capillaries|Aorta|Vena cava|Pulmonary trunk', 0, 'Thin-walled capillaries allow exchange of gases, nutrients and waste with tissues.'],
   ['What is the function of valves in veins?', 'Limit backflow|Increase red cell production|Exchange gases|Create lymph', 0, 'Venous valves help keep low-pressure blood moving towards the heart.'],
   ['What does systole describe?', 'Contraction of the heart|Relaxation only|Blood clotting|Gas exchange', 0, 'Systole is the contraction phase of the cardiac cycle.'],
   ['What does diastole describe?', 'Relaxation and filling|Ventricular ejection only|Arterial narrowing|Clot formation', 0, 'Diastole is the relaxation and filling phase of the cardiac cycle.'],
-  ['What initiates the normal heartbeat?', 'Electrical activity in cardiac tissue|The pulmonary valve|The vena cava|Skeletal muscle contraction', 0, 'Specialised cardiac cells generate and conduct electrical impulses that coordinate contraction.'],
+  ['What initiates the normal heartbeat according to the material?', 'Electrical activity in cardiac tissue|The pulmonary valve|The vena cava|Skeletal muscle contraction', 0, 'Specialised cardiac cells generate and conduct electrical impulses that coordinate contraction.'],
   ['Which vessels branch from the aorta to supply the myocardium?', 'Coronary arteries|Pulmonary veins|Venae cavae|Renal veins', 0, 'Coronary arteries branch from the aorta and supply oxygenated blood to the myocardium.'],
   ['What does haemoglobin transport?', 'Oxygen|Urine|Bile|Cerebrospinal fluid', 0, 'Haemoglobin in red blood cells binds and transports oxygen.'],
   ['What is plasma?', 'The liquid part of blood|A heart chamber|A blood valve|A type of artery', 0, 'Plasma is the fluid medium carrying cells and dissolved substances.'],
@@ -265,7 +265,7 @@ addQuestions('nervous', [
 ]);
 
 addQuestions('lymphatic-urinary-reproductive', [
-  ['What does lymph return to the circulation?', 'Excess tissue fluid|Air from the lungs|Urine from the bladder|Bile from the liver', 0, 'Lymphatic vessels collect excess tissue fluid and return it to the venous circulation.'],
+  ['What does the lymphatic system return to the bloodstream?', 'Excess tissue fluid as lymph|Air from the lungs|Urine from the bladder|Bile from the liver', 0, 'Lymphatic vessels collect excess tissue fluid and return it to the venous circulation as lymph.'],
   ['What is filtered in a lymph node?', 'Lymph|Urine|Air|Cerebrospinal fluid', 0, 'Lymph nodes filter lymph and expose its contents to immune cells.'],
   ['Which cells recognise foreign antigens?', 'Lymphocytes|Red blood cells|Platelets|Osteocytes', 0, 'Lymphocytes recognise antigens and coordinate specific immune responses.'],
   ['Which organ filters blood and removes old red blood cells?', 'Spleen|Thymus|Bladder|Pancreas', 0, 'The spleen filters blood and removes old or damaged red blood cells.'],
@@ -274,8 +274,8 @@ addQuestions('lymphatic-urinary-reproductive', [
   ['What is the functional unit of the kidney?', 'Nephron|Alveolus|Neuron|Lymph node', 0, 'The nephron filters blood and forms urine.'],
   ['What is the glomerulus?', 'A capillary network for filtration|A bladder muscle|A reproductive duct|A lymphatic valve', 0, 'The glomerulus is a capillary network where filtration begins.'],
   ['What is Bowman capsule?', 'The cup surrounding the glomerulus|The outer kidney capsule only|A ureter valve|A testicular duct', 0, 'Bowman capsule collects fluid filtered from glomerular capillaries.'],
-  ['What is reabsorbed from renal filtrate?', 'Useful substances such as glucose and water|All red blood cells|All bacteria|Only air', 0, 'Selective reabsorption returns useful water, glucose, amino acids and ions to the blood.'],
-  ['What is secreted into the nephron?', 'Hydrogen ions and some drugs|Oxygen into alveoli|Sperm into the uterus|Lymph into nodes', 0, 'Tubular secretion moves selected waste substances from blood into the nephron.'],
+  ['Which useful substances may be selectively reabsorbed from renal filtrate?', 'Glucose and water|All red blood cells|All bacteria|Only air', 0, 'Selective reabsorption returns useful water, glucose, amino acids and ions to the blood.'],
+  ['Which substances may be secreted from the blood into the nephron?', 'Hydrogen ions and some drugs|Oxygen into alveoli|Sperm into the uterus|Lymph into nodes', 0, 'Tubular secretion moves selected waste substances from blood into the nephron.'],
   ['What is the function of antidiuretic hormone?', 'Increase water reabsorption|Prevent all filtration|Make sperm|Digest fats', 0, 'Antidiuretic hormone increases water reabsorption in the collecting ducts.'],
   ['Which tube carries urine from kidney to bladder?', 'Ureter|Urethra|Vas deferens|Fallopian tube', 0, 'The ureter transports urine from the renal pelvis to the bladder.'],
   ['What does the bladder do?', 'Stores urine|Filters blood|Produces ova|Matures T cells', 0, 'The bladder stores urine before micturition.'],
