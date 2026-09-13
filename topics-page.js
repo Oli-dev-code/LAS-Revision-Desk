@@ -1,4 +1,9 @@
 const topics = window.topicCatalog || [];
+const topicTimerStart = Date.now();
+let topicTimerSaved = topicTimerStart;
+const flushTopicTime = () => { const elapsed = Math.max(0, Date.now() - topicTimerSaved); if (!elapsed) return; try { const today = new Date().toISOString().slice(0, 10); const stored = JSON.parse(localStorage.getItem('las-revision-time-stats') || '{}'); const time = { totalMs: (stored.totalMs || 0) + elapsed, todayDate: today, todayMs: stored.todayDate === today ? (stored.todayMs || 0) + elapsed : elapsed }; localStorage.setItem('las-revision-time-stats', JSON.stringify(time)); } catch { /* Time tracking is optional when storage is unavailable. */ } topicTimerSaved = Date.now(); };
+window.setInterval(flushTopicTime, 15000);
+window.addEventListener('beforeunload', flushTopicTime);
 const themeToggle = document.getElementById('theme-toggle');
 function applyTheme(theme) { const dark = theme === 'dark'; document.body.dataset.theme = dark ? 'dark' : 'light'; themeToggle.setAttribute('aria-pressed', dark); themeToggle.textContent = dark ? 'Light mode' : 'Dark mode'; }
 let storedTheme = 'light';

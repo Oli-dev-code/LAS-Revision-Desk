@@ -30,6 +30,15 @@
       questionCard.querySelector('strong').textContent = questionStats.answered;
       questionCard.querySelector('small').innerHTML = questionStats.answered ? `<em>${Math.round((questionStats.correct / questionStats.answered) * 100)}%</em> average score` : 'No questions completed yet';
     }
+    const statCards = document.querySelectorAll('.stats-grid .stat-card');
+    const formatTime = (milliseconds) => { const minutes = Math.floor(milliseconds / 60000); if (minutes < 60) return `${minutes}m`; return `${Math.floor(minutes / 60)}h ${minutes % 60}m`; };
+    const updateTimeCards = () => {
+      const time = window.lasProgress?.revisionTime?.() || { todayMs: 0, totalMs: 0 };
+      if (statCards[0]) { statCards[0].querySelector('.stat-label').textContent = 'Revision today'; statCards[0].querySelector('strong').textContent = formatTime(time.todayMs); statCards[0].querySelector('small').textContent = 'Time in the app today'; }
+      if (statCards[2]) { statCards[2].querySelector('.stat-label').textContent = 'Total revision'; statCards[2].querySelector('strong').textContent = formatTime(time.totalMs); statCards[2].querySelector('small').textContent = 'All recorded app time'; }
+    };
+    updateTimeCards();
+    window.setInterval(updateTimeCards, 15000);
     const topicCount = document.querySelector('.nav-count');
     if (topicCount) topicCount.textContent = topics.length;
     const learntTopics = window.lasProgress?.learntTopics() || [];
