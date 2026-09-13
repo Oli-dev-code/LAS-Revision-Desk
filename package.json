@@ -1,6 +1,6 @@
 {
   "name": "las-revision-desk",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Desktop revision workspace for LAS AAP training",
   "main": "electron-main.cjs",
   "author": "LAS Revision Desk",
@@ -17,6 +17,12 @@
   "build": {
     "appId": "uk.lasrevision.desk",
     "productName": "LAS Revision Desk",
+    "publish": {
+      "provider": "github",
+      "owner": "Oli-dev-code",
+      "repo": "LAS-Revision-Desk",
+      "releaseType": "release"
+    },
     "files": [
       "index.html",
       "learn.html",
@@ -69,5 +75,8 @@
     "portable": {
       "artifactName": "LAS-Revision-Desk-${version}-Portable-${arch}.${ext}"
     }
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.9"
   }
 }
