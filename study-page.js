@@ -164,6 +164,10 @@ function renderDiagramTest(question) {
     checkButton.disabled = true;
     nextButton.disabled = false;
   });
+  nextButton.addEventListener('click', () => {
+    if (questionIndex === questions.length - 1) renderTestResults();
+    else { questionIndex += 1; renderTest(); }
+  });
 }
 
 function renderTest() {
