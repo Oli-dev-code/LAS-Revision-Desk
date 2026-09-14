@@ -5,6 +5,12 @@ const path = require('node:path');
 function startAutoUpdater() {
   if (!app.isPackaged) return;
 
+  autoUpdater.autoDownload = true;
+  autoUpdater.autoInstallOnAppQuit = true;
+  autoUpdater.on('checking-for-update', () => console.log('Checking for LAS Revision Desk updates...'));
+  autoUpdater.on('update-available', (info) => console.log(`LAS Revision Desk update available: ${info.version}`));
+  autoUpdater.on('update-not-available', (info) => console.log(`LAS Revision Desk is up to date at ${info.version}.`));
+  autoUpdater.on('error', (error) => console.error('LAS Revision Desk update failed:', error));
   autoUpdater.on('update-downloaded', () => {
     const choice = dialog.showMessageBoxSync({
       type: 'info',
