@@ -6,7 +6,7 @@ Desktop revision software for LAS AAP training.
 
 Most users only need this file:
 
-**[Download the Windows installer](https://github.com/Oli-dev-code/LAS-Revision-Desk/releases/download/v1.0.0/LAS-Revision-Desk-1.0.0-Setup-x64.exe)**
+**[Download the latest Windows installer](https://github.com/Oli-dev-code/LAS-Revision-Desk/releases/latest)**
 
 1. Download the installer.
 2. Run the `.exe` file.
@@ -19,7 +19,7 @@ You do **not** need to download the source code, course documents, Node.js or an
 
 To run the app without installing it, use the portable build:
 
-**[Download the portable version](https://github.com/Oli-dev-code/LAS-Revision-Desk/releases/download/v1.0.0/LAS-Revision-Desk-1.0.0-Portable-x64.exe)**
+**[Download the latest portable version](https://github.com/Oli-dev-code/LAS-Revision-Desk/releases/latest)**
 
 Download it, place it in a suitable folder and run the `.exe` file.
 
