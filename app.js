@@ -124,8 +124,9 @@ document.querySelectorAll('[data-view]').forEach((button) => {
 });
 
 document.getElementById('start-session').addEventListener('click', () => showToast('Study session started'));
-document.getElementById('resume-topic')?.addEventListener('click', () => selectMode('learn'));
-document.getElementById('view-topic')?.addEventListener('click', () => selectMode('learn'));
+const openLearnPage = () => { window.location.assign(`learn.html?topic=${selectedTopic}`); };
+document.getElementById('resume-topic')?.addEventListener('click', openLearnPage);
+document.getElementById('view-topic')?.addEventListener('click', openLearnPage);
 
 if (topicCatalog.length) {
   document.querySelector('.course-list').innerHTML = topicCatalog.map((topic, index) => `<button class="course-item${index === 0 ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${index === 0 ? ' current' : ''}">${index + 1}</span><span class="course-name">${topic.name}</span></button>`).join('');
@@ -166,7 +167,7 @@ document.getElementById('reveal-answer').addEventListener('click', () => {
 });
 
 document.getElementById('quiz-got-it').addEventListener('click', () => showToast('Nice recall'));
-document.getElementById('mark-learned').addEventListener('click', (event) => {
+document.getElementById('mark-learned')?.addEventListener('click', (event) => {
   window.lasProgress?.markLearnt(selectedTopic);
   event.currentTarget.innerHTML = 'Reviewed <span>✓</span>';
   showToast('Topic marked as reviewed');
