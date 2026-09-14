@@ -34,7 +34,7 @@ function createWindow() {
     height: 920,
     minWidth: 1024,
     minHeight: 700,
-    icon: path.join(__dirname, 'assets', 'las-logo.png'),
+    icon: path.join(__dirname, 'assets', 'las-logo-icon.png'),
     backgroundColor: '#fbfcfa',
     title: 'LAS Revision Desk',
     autoHideMenuBar: true,

@@ -53,9 +53,18 @@ function shuffleQuestions(items) {
   }
   return shuffled;
 }
+function shuffledOptions(question) {
+  return shuffleQuestions(question.options.map((text, index) => ({ text, index })));
+}
 function savedIncorrectQuestionIds() {
   if (window.lasProgress?.questionStats) return new Set(window.lasProgress.questionStats().incorrectQuestionIds || []);
   try { return new Set(JSON.parse(localStorage.getItem('las-revision-question-stats') || '{}').incorrectQuestionIds || []); } catch { return new Set(); }
+}
+function savedLastTestOrder() {
+  try { const order = JSON.parse(localStorage.getItem(`las-revision-last-test-order-${topic}`) || '[]'); return Array.isArray(order) ? order : []; } catch { return []; }
+}
+function saveLastTestOrder() {
+  try { localStorage.setItem(`las-revision-last-test-order-${topic}`, JSON.stringify(questions.map((question) => question.id))); } catch { /* Ordering preference is optional when storage is unavailable. */ }
 }
 function questionsForSession() {
   const topicQuestions = database.filter((item) => item.topic === topic);
@@ -65,6 +74,7 @@ function questionsForSession() {
   return [...topicQuestions, ...topicDiagrams];
 }
 function recordSessionResults() {
+  if (mode === 'test') saveLastTestOrder();
   const results = questions.map((question, index) => ({ id: question.id, correct: question.type === 'diagram' ? Boolean(testAnswers[index]?.correct) : testAnswers[index] === question.answer }));
   if (window.lasProgress?.recordQuestionResults) { window.lasProgress.recordQuestionResults(results); return; }
   try {
@@ -78,7 +88,14 @@ function recordSessionResults() {
   } catch { /* Progress is optional when storage is unavailable. */ }
 }
 function shuffledSessionQuestions() {
-  const selected = shuffleQuestions(questionsForSession());
+  const sessionQuestions = questionsForSession();
+  let selected = shuffleQuestions(sessionQuestions);
+  if (mode === 'focused-test' && selected.length > 1) {
+    const missedIds = new Set(sessionQuestions.map((question) => question.id));
+    const previousOrder = savedLastTestOrder().filter((id) => missedIds.has(id));
+    const matchesPreviousOrder = selected.every((question, index) => question.id === previousOrder[index]);
+    if (matchesPreviousOrder) [selected[0], selected[1]] = [selected[1], selected[0]];
+  }
   if (mode !== 'test' && mode !== 'focused-test') return selected;
   const diagrams = selected.filter((question) => question.type === 'diagram');
   const ordinary = selected.filter((question) => question.type !== 'diagram').slice(0, diagrams.length ? 49 : 50);
@@ -131,9 +148,10 @@ function renderDiagramTest(question) {
   const targets = question.diagram.labels.map((label) => `<div class="diagram-target" data-target-id="${label.id}" style="left:${label.x}%;top:${label.y}%;${label.targetWidth ? `width:${label.targetWidth}px;` : ''}${label.targetHeight ? `height:${label.targetHeight}px;` : ''}"><span>Drop label</span></div>`).join('');
   const tiles = labels.map((label) => `<button class="diagram-label" draggable="true" data-label-id="${label.id}">${label.name}</button>`).join('');
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">DIAGRAM LABEL</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="diagram-layout"><div class="diagram-board"><img src="${question.diagram.image}" alt="${question.diagram.alt}"><svg class="diagram-arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="diagram-arrowhead" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d68428" /></marker></defs>${arrows}</svg>${targets}</div><div class="diagram-label-bank">${tiles}</div></div><p class="page-feedback" id="diagram-feedback" aria-live="polite">Drag every label onto a matching target.</p><button class="page-button" id="check-diagram" disabled>Check labels</button><button class="page-button" id="next-question" disabled>${questionIndex === questions.length - 1 ? 'Submit test' : 'Next question'} <span>-></span></button>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">DIAGRAM LABEL</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="diagram-layout"><div class="diagram-board"><img src="${question.diagram.image}" alt="${question.diagram.alt}"><svg class="diagram-arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="diagram-arrowhead" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d68428" /></marker></defs>${arrows}</svg>${targets}</div><div class="diagram-label-bank">${tiles}</div></div><p class="page-feedback" id="diagram-feedback" aria-live="polite">Drag every label onto a matching target.</p><div class="diagram-actions"><button class="page-button" id="check-diagram" disabled>Check labels</button><button class="page-button" id="reset-diagram" type="button">Reset diagram</button><button class="page-button" id="next-question" disabled>${questionIndex === questions.length - 1 ? 'Submit test' : 'Next question'} <span>-></span></button></div>`;
   const placements = {};
   const checkButton = document.getElementById('check-diagram');
+  const resetButton = document.getElementById('reset-diagram');
   const nextButton = document.getElementById('next-question');
   const refresh = () => {
     document.querySelectorAll('.diagram-target').forEach((target) => {
@@ -164,6 +182,14 @@ function renderDiagramTest(question) {
     checkButton.disabled = true;
     nextButton.disabled = false;
   });
+  resetButton.addEventListener('click', () => {
+    Object.keys(placements).forEach((targetId) => delete placements[targetId]);
+    delete testAnswers[questionIndex];
+    document.getElementById('diagram-feedback').textContent = 'Drag every label onto a matching target.';
+    document.getElementById('diagram-feedback').className = 'page-feedback';
+    nextButton.disabled = true;
+    refresh();
+  });
   nextButton.addEventListener('click', () => {
     if (questionIndex === questions.length - 1) renderTestResults();
     else { questionIndex += 1; renderTest(); }
@@ -174,8 +200,9 @@ function renderTest() {
   const question = questions[questionIndex];
   if (question.type === 'diagram') { renderDiagramTest(question); return; }
   const lastQuestion = questionIndex === questions.length - 1;
+  const options = shuffledOptions(question);
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">QUESTION ${(questionIndex + 1).toString().padStart(2, '0')}</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="page-options">${question.options.map((option, index) => `<button data-index="${index}" class="${testAnswers[questionIndex] === index ? 'selected' : ''}">${withAbbreviationTooltips(option)}</button>`).join('')}</div><p class="page-feedback" aria-live="polite">Your answer will be marked when you finish the test.</p><button class="page-button" id="next-question" ${testAnswers[questionIndex] === undefined ? 'disabled' : ''}>${lastQuestion ? 'Submit test' : 'Next question'} <span>-></span></button>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">QUESTION ${(questionIndex + 1).toString().padStart(2, '0')}</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="page-options">${options.map((option) => `<button data-index="${option.index}" class="${testAnswers[questionIndex] === option.index ? 'selected' : ''}">${withAbbreviationTooltips(option.text)}</button>`).join('')}</div><p class="page-feedback" aria-live="polite">Your answer will be marked when you finish the test.</p><button class="page-button" id="next-question" ${testAnswers[questionIndex] === undefined ? 'disabled' : ''}>${lastQuestion ? 'Submit test' : 'Next question'} <span>-></span></button>`;
   document.querySelectorAll('.page-options button').forEach((button) => button.addEventListener('click', () => {
     testAnswers[questionIndex] = Number(button.dataset.index);
     document.querySelectorAll('.page-options button').forEach((item) => item.classList.remove('selected'));
