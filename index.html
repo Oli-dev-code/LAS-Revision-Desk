@@ -45,7 +45,7 @@
 
     <main class="main-content">
       <header class="topbar">
-        <span class="app-version">v1.0.2</span>
+        <span class="app-version">v1.0.4</span>
         <div class="breadcrumb"><span>Workspace</span><b>/</b><strong>Overview</strong></div>
         <div class="top-actions"><button class="streak"><span>✦</span> 4 day streak</button><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false"><span class="theme-icon">☾</span><span class="theme-label">Dark mode</span></button><button class="icon-button" aria-label="Notifications">♢<i></i></button><div class="mini-avatar">LR</div></div>
       </header>
@@ -67,10 +67,10 @@
         </section>
 
         <section class="mode-content" id="mode-content" aria-live="polite">
-          <div class="mode-view active" data-mode-view="learn">
+          <!-- The detailed Learn view is available on learn.html. -->
             <div class="mode-view-heading"><div><span class="section-kicker">Learn · 02 / Patient assessment</span><h2>Primary survey &amp; vital signs</h2></div><span class="read-time">18 min read</span></div>
             <div class="learn-layout"><article class="material-main"><p class="material-lead">The primary survey is a rapid, structured assessment used to identify and manage immediate life threats. Use it whenever a patient appears seriously unwell.</p><div class="material-block"><span class="material-step">01</span><div><h3>Start with a general impression</h3><p>Look at the patient before you touch them. Note their position, work of breathing, skin colour, and whether they appear well, unwell, or critically unwell.</p></div></div><div class="material-block"><span class="material-step">02</span><div><h3>Work through ABCDE</h3><p>Assess Airway, Breathing, Circulation, Disability and Exposure in order. Treat problems as you find them, then reassess before moving on.</p></div></div></article><aside class="key-points"><span class="section-kicker">Key points</span><ul><li><b>A</b><span>Airway: is it open and protected?</span></li><li><b>B</b><span>Breathing: rate, effort, oxygenation</span></li><li><b>C</b><span>Circulation: pulse, skin, bleeding</span></li><li><b>D</b><span>Disability: AVPU, pupils, glucose</span></li><li><b>E</b><span>Exposure: inspect while preserving dignity</span></li></ul><button class="button outline" id="mark-learned">Mark as reviewed <span>✓</span></button></aside></div>
-          </div>
+          -->
           <div class="mode-view" data-mode-view="test" hidden>
             <div class="mode-view-heading"><div><span class="section-kicker">Test · selected topic</span><h2>Topic test</h2></div><span class="question-count" id="test-count">Question 1 of 1</span></div><div class="test-card"><p class="question-number">QUESTION 01</p><p class="test-question" id="test-question">Loading questions...</p><div class="test-options" id="test-options"></div><div class="test-result" aria-live="polite"></div><button class="button primary next-test" id="next-test" disabled>Next question <span>→</span></button></div>
           </div>
