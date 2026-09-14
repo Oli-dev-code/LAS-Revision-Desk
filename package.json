@@ -49,6 +49,7 @@
       "assets/diagrams/**/*",
       "assets/test-diagrams/**/*",
       "assets/las-logo.png",
+      "assets/las-logo-icon.png",
       "app.js",
       "electron-main.cjs",
       "package.json"
@@ -57,7 +58,7 @@
       "output": "release"
     },
     "win": {
-      "icon": "assets/las-logo.png",
+      "icon": "assets/las-logo-icon.png",
       "target": [
         "nsis",
         "portable"

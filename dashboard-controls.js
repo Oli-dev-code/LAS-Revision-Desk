@@ -51,11 +51,18 @@
     const progressBar = document.querySelector('.progress-track span');
     if (progressBar) progressBar.style.width = `${progress}%`;
     const courseList = document.querySelector('.course-list');
+    const initialTopic = topics[0].id;
     courseList.innerHTML = topics.map((topic, index) => { const complete = learntTopics.includes(topic.id); return `<button class="course-item${index === 0 ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${complete ? ' complete' : (index === 0 ? ' current' : '')}">${complete ? '✓' : index + 1}</span><span class="course-name">${topic.name}</span></button>`; }).join('');
+    window.setDashboardTopic?.(initialTopic);
+    document.querySelector('.mode-tab[href^="focused-test"]').href = `focused-test.html?topic=${initialTopic}`;
+    document.querySelector('.mode-tab[href^="learn"]').href = `learn.html?topic=${initialTopic}`;
+    document.querySelector('.mode-tab[href^="test"]').href = `test.html?topic=${initialTopic}`;
+    document.querySelector('.mode-tab[href^="quiz"]').href = `quiz.html?topic=${initialTopic}`;
     courseList.querySelectorAll('.course-item').forEach((item) => item.addEventListener('click', () => {
       courseList.querySelectorAll('.course-item').forEach((course) => course.classList.remove('selected'));
       item.classList.add('selected');
       const topic = item.dataset.topic;
+      window.setDashboardTopic?.(topic);
       document.querySelector('.mode-intro p').textContent = `${item.querySelector('.course-name').textContent} - Questions filtered to this topic`;
       document.querySelector('.mode-tab[href^="learn"]').href = `learn.html?topic=${topic}`;
       document.querySelector('.mode-tab[href^="test"]').href = `test.html?topic=${topic}`;

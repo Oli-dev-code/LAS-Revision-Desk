@@ -1,10 +1,10 @@
 const toast = document.getElementById('toast');
 const modeTabs = document.querySelectorAll('.mode-tab');
 const modeViews = document.querySelectorAll('.mode-view');
-const questionDatabase = window.questionDatabase || [];
+const dashboardQuestionDatabase = window.questionDatabase || [];
 const topicCatalog = window.topicCatalog || [];
 const themeToggle = document.getElementById('theme-toggle');
-let selectedTopic = 'body';
+let selectedTopic = topicCatalog[0]?.id || 'body';
 let testIndex = 0;
 let quizIndex = 0;
 
@@ -39,7 +39,15 @@ function showToast(message) {
 }
 
 function questionsForSelectedTopic() {
-  return questionDatabase.filter((question) => question.topic === selectedTopic);
+  return dashboardQuestionDatabase.filter((question) => question.topic === selectedTopic);
+}
+function shuffleOptions(options) {
+  const shuffled = [...options];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
+  }
+  return shuffled;
 }
 
 function renderTestQuestion() {
@@ -48,7 +56,8 @@ function renderTestQuestion() {
   const options = document.getElementById('test-options');
   document.getElementById('test-count').textContent = question ? `Question ${(testIndex % questions.length) + 1} of ${questions.length}` : 'No questions';
   document.getElementById('test-question').textContent = question ? question.question : 'No questions have been added for this topic yet.';
-  options.innerHTML = question ? question.options.map((option, index) => `<button data-answer-index="${index}">${option}</button>`).join('') : '';
+  const shuffledOptions = question ? shuffleOptions(question.options.map((option, index) => ({ option, index }))) : [];
+  options.innerHTML = question ? shuffledOptions.map(({ option, index }) => `<button data-answer-index="${index}">${option}</button>`).join('') : '';
   const result = document.querySelector('.test-result');
   result.textContent = '';
   result.className = 'test-result';
@@ -89,6 +98,14 @@ function selectMode(mode, shouldScroll = true) {
   if (mode === 'quiz') renderQuizQuestion();
   if (shouldScroll) document.getElementById('mode-content').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
+
+window.setDashboardTopic = (topic) => {
+  selectedTopic = topic;
+  testIndex = 0;
+  quizIndex = 0;
+  renderTestQuestion();
+  renderQuizQuestion();
+};
 
 modeTabs.forEach((tab) => tab.addEventListener('click', () => selectMode(tab.dataset.mode)));
 
@@ -150,6 +167,7 @@ document.getElementById('reveal-answer').addEventListener('click', () => {
 
 document.getElementById('quiz-got-it').addEventListener('click', () => showToast('Nice recall'));
 document.getElementById('mark-learned').addEventListener('click', (event) => {
+  window.lasProgress?.markLearnt(selectedTopic);
   event.currentTarget.innerHTML = 'Reviewed <span>✓</span>';
   showToast('Topic marked as reviewed');
 });
