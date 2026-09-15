@@ -132,5 +132,23 @@ window.learnContent = {
       ['03', 'Female reproductive function', 'The female reproductive system supports formation of ova, reception of spermatozoa, foetal development, childbirth and lactation. The ovaries, fallopian tubes, cervix, uterus and vagina each have specialised roles.'],
       ['04', 'Male reproductive function', 'The male reproductive system produces, matures and stores spermatozoa and delivers sperm in semen into the female reproductive tract. Reproductive function depends on coordinated organs, ducts and hormonal control.']
     ]
+  },
+  digestive: {
+    source: 'L3 Digestive System  v1 September 2020.pdf',
+    intro: 'The digestive system breaks food down mechanically and chemically, absorbs useful nutrients and water, and eliminates waste. It includes the alimentary canal and accessory organs that support digestion.',
+    image: 'assets/diagrams/digestive-system.png',
+    imageAlt: 'Labelled digestive system diagram',
+    sections: [
+      ['01', 'Why we need food', 'Food supplies nutrients used for cellular energy, energy storage, heat production, growth and repair. Vitamins and minerals are also absorbed as part of the digestive process.'],
+      ['02', 'The five digestive stages', 'Digestion is described in five stages: ingestion takes food into the canal; propulsion mixes and moves it; digestion breaks it down mechanically and chemically; absorption transfers digested substances into blood and lymph; elimination excretes waste.'],
+      ['03', 'Autonomic control', 'The GI tract receives involuntary autonomic nerve supply. Parasympathetic rest-and-digest activity increases peristalsis and gland secretion, while sympathetic fight-or-flight activity reduces both.'],
+      ['04', 'Mouth and pharynx', 'The tongue propels the food bolus, teeth carry out mechanical digestion by chewing, and salivary enzymes begin chemical digestion. The pharynx is shared with the respiratory tract and the epiglottis helps keep food and fluid out of the lungs.'],
+      ['05', 'Oesophagus and peristalsis', 'The oesophagus is a collapsible muscular tube from the pharynx to the stomach. Rhythmic muscular contractions called peristalsis push food in one direction, and sphincters act as valves.'],
+      ['06', 'The stomach', 'The stomach churns food for mechanical digestion and mixes it with gastric juices, hydrochloric acid and enzymes. Liquefied food becomes chyme, which passes through the pyloric sphincter into the duodenum.'],
+      ['07', 'Small intestine', 'The small intestine includes the duodenum, jejunum and ileum. The bile and pancreatic ducts empty into the duodenum, while villi create a large surface area for digestion and absorption into blood vessels.'],
+      ['08', 'Large intestine and peritoneum', 'The large intestine absorbs electrolytes and vitamins and stores and expels faeces. The peritoneum is a serous membrane that covers abdominal organs, reduces friction and attaches them to the posterior abdominal wall.'],
+      ['09', 'The liver and gallbladder', 'The liver produces bile, processes carbohydrates, lipids and proteins, processes drugs and hormones, excretes bilirubin, stores vitamins and minerals, and breaks down cells. The gallbladder stores and concentrates bile before releasing it into the duodenum.'],
+      ['10', 'The pancreas', 'The pancreas has an exocrine function, secreting digestive enzymes in pancreatic juice, and an endocrine function, secreting insulin and glucagon to control blood sugar. It lies behind the stomach.']
+    ]
   }
 };
