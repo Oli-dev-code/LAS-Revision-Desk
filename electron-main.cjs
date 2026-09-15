@@ -12,15 +12,17 @@ function createUpdateCheckWindow() {
     minimizable: false,
     maximizable: false,
     closable: false,
-    show: true,
+    show: false,
     title: 'LAS Revision Desk',
     backgroundColor: '#fbfcfa',
+    icon: path.join(__dirname, 'assets', 'las-logo-icon.png'),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false
     }
   });
-  updateCheckWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(`<!doctype html><html><head><meta charset="utf-8"><style>body{margin:0;background:#fbfcfa;color:#203c43;font:14px 'Segoe UI',Arial,sans-serif;display:grid;place-items:center;height:100vh}.panel{text-align:center}.mark{width:42px;height:42px;margin:0 auto 16px;border-radius:8px;background:#176f6b;color:#fff;display:grid;place-items:center;font-weight:700;font-size:20px}.status{font-weight:600}.detail{margin-top:7px;color:#66777b;font-size:12px}</style></head><body><div class="panel"><div class="mark">L</div><div class="status">Checking for updates...</div><div class="detail">Please wait a moment.</div></div></body></html>`)}`);
+  updateCheckWindow.once('ready-to-show', () => updateCheckWindow.show());
+  updateCheckWindow.loadFile(path.join(__dirname, 'update-check.html'));
   return updateCheckWindow;
 }
 
