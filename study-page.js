@@ -99,7 +99,7 @@ function shuffledSessionQuestions() {
   }
   if (mode !== 'test' && mode !== 'focused-test') return selected;
   const diagrams = selected.filter((question) => question.type === 'diagram');
-  const ordinary = selected.filter((question) => question.type !== 'diagram').slice(0, diagrams.length ? 49 : 50);
+  const ordinary = selected.filter((question) => question.type !== 'diagram').slice(0, diagrams.length ? 29 : 30);
   if (diagrams.length) ordinary.splice(Math.floor(Math.random() * (ordinary.length + 1)), 0, diagrams[0]);
   return ordinary;
 }
