@@ -5,7 +5,8 @@ const topicCatalog = window.topicCatalog || [
   { id: 'cardiovascular', name: 'Cardiovascular system', source: 'L3 CV System v1 September 2020.pdf' },
   { id: 'respiratory', name: 'Respiratory system', source: 'AAP Resp system update JUL26.ppsx' },
   { id: 'nervous', name: 'Nervous system', source: 'L3 Nervous System v3 May 2021.ppsx' },
-  { id: 'lymphatic-urinary-reproductive', name: 'Lymphatic, urinary & reproductive systems', source: 'L3 Lymphatic, Urinary  Reproductive Systems v1 September 2020.pdf' }
+  { id: 'lymphatic-urinary-reproductive', name: 'Lymphatic, urinary & reproductive systems', source: 'L3 Lymphatic, Urinary  Reproductive Systems v1 September 2020.pdf' },
+  { id: 'digestive', name: 'Digestive system', source: 'L3 Digestive System  v1 September 2020.pdf' }
 ];
 const topicNames = Object.fromEntries(topicCatalog.map((item) => [item.id, item.name]));
 const materials = {
