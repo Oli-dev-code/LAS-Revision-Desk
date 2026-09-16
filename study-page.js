@@ -2,6 +2,7 @@ const database = window.questionDatabase || [];
 const diagramDatabase = window.diagramQuestionDatabase || [];
 const topicCatalog = window.topicCatalog || [
   { id: 'body', name: 'Introduction to the body', source: 'Introduction to the body AAP April 2025 v2.ppsx' },
+  { id: 'musculoskeletal', name: 'Musculoskeletal system', source: 'L3 Musculoskeletal System v1 October 2020.pdf' },
   { id: 'cardiovascular', name: 'Cardiovascular system', source: 'L3 CV System v1 September 2020.pdf' },
   { id: 'respiratory', name: 'Respiratory system', source: 'AAP Resp system update JUL26.ppsx' },
   { id: 'nervous', name: 'Nervous system', source: 'L3 Nervous System v3 May 2021.ppsx' },
@@ -99,8 +100,12 @@ function shuffledSessionQuestions() {
   }
   if (mode !== 'test' && mode !== 'focused-test') return selected;
   const diagrams = selected.filter((question) => question.type === 'diagram');
-  const ordinary = selected.filter((question) => question.type !== 'diagram').slice(0, diagrams.length ? 29 : 30);
-  if (diagrams.length) ordinary.splice(Math.floor(Math.random() * (ordinary.length + 1)), 0, diagrams[0]);
+  const diagramCount = topic === 'musculoskeletal' && mode === 'test' ? Math.min(5, diagrams.length) : (diagrams.length ? 1 : 0);
+  const selectedDiagrams = diagrams.slice(0, diagramCount);
+  const ordinary = selected.filter((question) => question.type !== 'diagram').slice(0, 30 - selectedDiagrams.length);
+  selectedDiagrams.forEach((diagram) => {
+    ordinary.splice(Math.floor(Math.random() * (ordinary.length + 1)), 0, diagram);
+  });
   return ordinary;
 }
 let questions = shuffledSessionQuestions();
