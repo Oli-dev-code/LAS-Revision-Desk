@@ -4,7 +4,7 @@ const learnPageContent = document.getElementById('page-content');
 
 function renderDetailedLearnPage(learnData) {
   const sourceLine = `<div class="source-line"><span>Source material</span>${learnData.source}</div>`;
-  const heroImage = learnData.image ? `<figure class="learn-figure"><img src="${learnData.image}" alt="${learnData.imageAlt}"><figcaption>Diagram from the supplied course material.</figcaption></figure>` : '';
+  const heroImage = learnData.image ? `<figure class="learn-figure${learnData.imageOverlay ? ' diagram-figure' : ''}"><img src="${learnData.image}" alt="${learnData.imageAlt}">${learnData.imageOverlay ? `<span class="diagram-label-overlay" style="left:${learnData.imageOverlay.x}%;top:${learnData.imageOverlay.y}%">${learnData.imageOverlay.text}</span>` : ''}<figcaption>Diagram from the supplied course material.</figcaption></figure>` : '';
   const sections = learnData.sections.map(([number, title, copy, expanded]) => expanded === undefined ? `<section class="learn-section"><span class="learn-section-number">${number}</span><div><h2>${title}</h2><p>${copy}</p></div></section>` : `<details class="learn-section learn-collapsible"${expanded ? ' open' : ''}><summary><span class="learn-section-number">${number}</span><span class="learn-section-title">${title}</span><span class="learn-section-toggle" aria-hidden="true">+</span></summary><p>${copy}</p></details>`).join('');
   const secondaryImages = (learnData.secondaryImages || []).map((image) => `<figure class="learn-figure secondary"><img src="${image.src}" alt="${image.alt}"><figcaption>Diagram from the supplied course material.</figcaption></figure>`).join('');
   const learnt = window.lasProgress?.isLearnt(learnTopic);

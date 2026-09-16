@@ -138,6 +138,7 @@ window.learnContent = {
     intro: 'The digestive system is responsible for taking in food, breaking it down physically and chemically, absorbing useful nutrients and water, and eliminating waste. This page follows the supplied course material from the overall system and its five processes through the alimentary canal and accessory organs.',
     image: 'assets/diagrams/digestive-system.png',
     imageAlt: 'Labelled digestive system diagram',
+    imageOverlay: { text: 'Anus', x: 80, y: 57 },
     sections: [
       ['01', 'Learning objectives and why we need food', 'The source document aims to explain the structure and functions of the digestive system. Food provides nutrients for use as energy by cells, storage of energy, production of heat, and growth and repair. Essential nutrients are presented as three basic food groups; minerals and vitamins are also absorbed.', true],
       ['02', 'The components of the digestive system', 'The digestive system is the collective name for three related parts: the digestive processes, the alimentary canal (also called the gastrointestinal or GI tract), and the accessory organs of digestion. The alimentary canal is the continuous route through which food passes, while accessory organs produce substances that support digestion.', true],

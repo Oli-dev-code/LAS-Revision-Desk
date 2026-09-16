@@ -13,6 +13,7 @@ function createUpdateCheckWindow() {
     maximizable: false,
     closable: false,
     show: false,
+    autoHideMenuBar: true,
     title: 'LAS Revision Desk',
     backgroundColor: '#fbfcfa',
     icon: path.join(__dirname, 'assets', 'las-logo-icon.png'),
@@ -21,6 +22,7 @@ function createUpdateCheckWindow() {
       nodeIntegration: false
     }
   });
+  updateCheckWindow.setMenuBarVisibility(false);
   updateCheckWindow.once('ready-to-show', () => updateCheckWindow.show());
   updateCheckWindow.loadFile(path.join(__dirname, 'update-check.html'));
   return updateCheckWindow;
