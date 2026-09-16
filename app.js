@@ -132,21 +132,25 @@ if (topicCatalog.length) {
   document.querySelector('.course-list').innerHTML = topicCatalog.map((topic, index) => `<button class="course-item${index === 0 ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${index === 0 ? ' current' : ''}">${index + 1}</span><span class="course-name">${topic.name}</span></button>`).join('');
   document.querySelector('.mode-intro p').innerHTML = `${topicCatalog[0].name} <span> - </span> Questions filtered to this topic`;
   document.querySelector('.mode-tab[href^="learn"]').href = `learn.html?topic=${selectedTopic}`;
-  document.querySelector('.mode-tab[href^="test"]').href = `test.html?topic=${selectedTopic}`;
+  document.querySelector('.mode-tab:not([data-flagged-test])[href^="test"]').href = `test.html?topic=${selectedTopic}`;
   document.querySelector('.mode-tab[href^="quiz"]').href = `quiz.html?topic=${selectedTopic}`;
 }
 
 document.querySelectorAll('.course-item').forEach((item) => {
   item.addEventListener('click', () => {
-    document.querySelectorAll('.course-item').forEach((course) => course.classList.remove('selected'));
+    document.querySelectorAll('.course-item').forEach((course) => {
+      course.classList.remove('selected');
+      course.querySelector('.status-dot')?.classList.remove('current');
+    });
     item.classList.add('selected');
+    item.querySelector('.status-dot')?.classList.add('current');
     selectedTopic = item.dataset.topic;
     testIndex = 0;
     quizIndex = 0;
     const topicName = item.querySelector('.course-name')?.textContent || item.textContent.trim();
     document.querySelector('.mode-intro p').innerHTML = `${topicName} <span> - </span> Questions filtered to this topic`;
     document.querySelector('.mode-tab[href^="learn"]').href = `learn.html?topic=${selectedTopic}`;
-    document.querySelector('.mode-tab[href^="test"]').href = `test.html?topic=${selectedTopic}`;
+    document.querySelector('.mode-tab:not([data-flagged-test])[href^="test"]').href = `test.html?topic=${selectedTopic}`;
     document.querySelector('.mode-tab[href^="quiz"]').href = `quiz.html?topic=${selectedTopic}`;
     renderTestQuestion();
     renderQuizQuestion();
