@@ -22,8 +22,9 @@ const materials = {
   medical: ['Start with a general impression, identify immediate threats and use a structured primary survey for every seriously unwell patient.', 'Look for changes in consciousness, breathing, circulation and blood glucose, then escalate early when concerned.']
 };
 const params = new URLSearchParams(window.location.search);
+const flaggedTest = params.get('topic') === 'flagged';
 let topic = params.get('topic') || 'body';
-if (!topicNames[topic]) topic = 'body';
+if (!topicNames[topic] && !flaggedTest) topic = 'body';
 const mode = document.body.dataset.mode;
 if (!window.lasProgress?.revisionTime) {
   const timerStart = Date.now();
@@ -62,6 +63,34 @@ function savedIncorrectQuestionIds() {
   if (window.lasProgress?.questionStats) return new Set(window.lasProgress.questionStats().incorrectQuestionIds || []);
   try { return new Set(JSON.parse(localStorage.getItem('las-revision-question-stats') || '{}').incorrectQuestionIds || []); } catch { return new Set(); }
 }
+function savedFlaggedQuestionIds() {
+  if (window.lasProgress?.flaggedQuestionIds) return new Set(window.lasProgress.flaggedQuestionIds());
+  try { const ids = JSON.parse(localStorage.getItem('las-revision-flagged-question-ids') || '[]'); return new Set(Array.isArray(ids) ? ids : []); } catch { return new Set(); }
+}
+function isQuestionFlagged(questionId) {
+  return savedFlaggedQuestionIds().has(questionId);
+}
+function setQuestionFlagged(questionId, flagged) {
+  if (window.lasProgress?.setQuestionFlagged) return window.lasProgress.setQuestionFlagged(questionId, flagged);
+  const ids = savedFlaggedQuestionIds();
+  if (flagged) ids.add(questionId); else ids.delete(questionId);
+  try { localStorage.setItem('las-revision-flagged-question-ids', JSON.stringify([...ids])); } catch { /* Flags are optional when storage is unavailable. */ }
+  return flagged;
+}
+function flagButtonMarkup(question) {
+  const flagged = isQuestionFlagged(question.id);
+  return `<button class="page-button flag-question" id="flag-question" type="button" aria-pressed="${flagged}">${flagged ? 'Remove flag' : 'Flag question'}</button>`;
+}
+function bindFlagButton(question) {
+  const button = document.getElementById('flag-question');
+  if (!button) return;
+  button.addEventListener('click', () => {
+    const flagged = !isQuestionFlagged(question.id);
+    setQuestionFlagged(question.id, flagged);
+    button.setAttribute('aria-pressed', String(flagged));
+    button.textContent = flagged ? 'Remove flag' : 'Flag question';
+  });
+}
 function savedLastTestOrder() {
   try { const order = JSON.parse(localStorage.getItem(`las-revision-last-test-order-${topic}`) || '[]'); return Array.isArray(order) ? order : []; } catch { return []; }
 }
@@ -69,6 +98,7 @@ function saveLastTestOrder() {
   try { localStorage.setItem(`las-revision-last-test-order-${topic}`, JSON.stringify(questions.map((question) => question.id))); } catch { /* Ordering preference is optional when storage is unavailable. */ }
 }
 function questionsForSession() {
+  if (flaggedTest) return [...database, ...diagramDatabase].filter((question) => savedFlaggedQuestionIds().has(question.id));
   const topicQuestions = database.filter((item) => item.topic === topic);
   const topicDiagrams = diagramDatabase.filter((item) => item.topic === topic);
   if (mode === 'quiz') return topicQuestions;
@@ -98,7 +128,7 @@ function shuffledSessionQuestions() {
     const matchesPreviousOrder = selected.every((question, index) => question.id === previousOrder[index]);
     if (matchesPreviousOrder) [selected[0], selected[1]] = [selected[1], selected[0]];
   }
-  if (mode !== 'test' && mode !== 'focused-test') return selected;
+  if (flaggedTest || (mode !== 'test' && mode !== 'focused-test')) return selected;
   const diagrams = selected.filter((question) => question.type === 'diagram');
   const diagramCount = topic === 'musculoskeletal' && mode === 'test' ? Math.min(5, diagrams.length) : (diagrams.length ? 1 : 0);
   const selectedDiagrams = diagrams.slice(0, diagramCount);
@@ -129,7 +159,12 @@ themeToggle.addEventListener('click', () => {
 });
 
 const selectedTopicRecord = topicCatalog.find((item) => item.id === topic);
-document.getElementById('page-topic').textContent = selectedTopicRecord ? `${topicNames[topic]} - ${selectedTopicRecord.source}` : topicNames[topic];
+document.getElementById('page-topic').textContent = flaggedTest ? 'Questions flagged across all topics' : (selectedTopicRecord ? `${topicNames[topic]} - ${selectedTopicRecord.source}` : topicNames[topic]);
+if (flaggedTest) {
+  document.title = 'Flagged Questions Test | LAS Revision Desk';
+  document.querySelector('.page-title').textContent = 'Flagged questions test';
+  document.querySelector('.page-card-header h1').textContent = 'Flagged questions test';
+}
 
 function renderLearn() {
   document.getElementById('page-content').innerHTML = `<p class="page-lead">${materials[topic][0]}</p><div class="reading-section"><span>01</span><div><h2>What to remember</h2><p>${materials[topic][1]}</p></div></div><div class="reading-section"><span>02</span><div><h2>Keep reassessing</h2><p>After every intervention, repeat your assessment. A patient’s condition can change quickly, so record your findings and communicate concerns clearly.</p></div></div>`;
@@ -154,7 +189,8 @@ function renderDiagramTest(question) {
   const targets = question.diagram.labels.map((label) => `<div class="diagram-target" data-target-id="${label.id}" style="left:${label.x}%;top:${label.y}%;${label.targetWidth ? `width:${label.targetWidth}px;` : ''}${label.targetHeight ? `height:${label.targetHeight}px;` : ''}"><span>Drop label</span></div>`).join('');
   const tiles = labels.map((label) => `<button class="diagram-label" draggable="true" data-label-id="${label.id}">${label.name}</button>`).join('');
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">DIAGRAM LABEL</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="diagram-layout"><div class="diagram-board"><img src="${question.diagram.image}" alt="${question.diagram.alt}"><svg class="diagram-arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="diagram-arrowhead" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d68428" /></marker></defs>${arrows}</svg>${targets}</div><div class="diagram-label-bank">${tiles}</div></div><p class="page-feedback" id="diagram-feedback" aria-live="polite">Drag every label onto a matching target.</p><div class="diagram-actions"><button class="page-button" id="check-diagram" disabled>Check labels</button><button class="page-button" id="reset-diagram" type="button">Reset diagram</button><button class="page-button" id="next-question" disabled>${questionIndex === questions.length - 1 ? 'Submit test' : 'Next question'} <span>-></span></button></div>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">DIAGRAM LABEL</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="diagram-layout"><div class="diagram-board"><img src="${question.diagram.image}" alt="${question.diagram.alt}"><svg class="diagram-arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="diagram-arrowhead" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d68428" /></marker></defs>${arrows}</svg>${targets}</div><div class="diagram-label-bank">${tiles}</div></div><p class="page-feedback" id="diagram-feedback" aria-live="polite">Drag every label onto a matching target.</p><div class="diagram-actions"><button class="page-button" id="check-diagram" disabled>Check labels</button><button class="page-button" id="reset-diagram" type="button">Reset diagram</button>${flagButtonMarkup(question)}<button class="page-button" id="next-question" disabled>${questionIndex === questions.length - 1 ? 'Submit test' : 'Next question'} <span>-></span></button></div>`;
+  bindFlagButton(question);
   const placements = {};
   const checkButton = document.getElementById('check-diagram');
   const resetButton = document.getElementById('reset-diagram');
@@ -208,7 +244,8 @@ function renderTest() {
   const lastQuestion = questionIndex === questions.length - 1;
   const options = shuffledOptions(question);
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">QUESTION ${(questionIndex + 1).toString().padStart(2, '0')}</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="page-options">${options.map((option) => `<button data-index="${option.index}" class="${testAnswers[questionIndex] === option.index ? 'selected' : ''}">${withAbbreviationTooltips(option.text)}</button>`).join('')}</div><p class="page-feedback" aria-live="polite">Your answer will be marked when you finish the test.</p><button class="page-button" id="next-question" ${testAnswers[questionIndex] === undefined ? 'disabled' : ''}>${lastQuestion ? 'Submit test' : 'Next question'} <span>-></span></button>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">QUESTION ${(questionIndex + 1).toString().padStart(2, '0')}</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="page-options">${options.map((option) => `<button data-index="${option.index}" class="${testAnswers[questionIndex] === option.index ? 'selected' : ''}">${withAbbreviationTooltips(option.text)}</button>`).join('')}</div><p class="page-feedback" aria-live="polite">Your answer will be marked when you finish the test.</p><div class="question-actions">${flagButtonMarkup(question)}<button class="page-button" id="next-question" ${testAnswers[questionIndex] === undefined ? 'disabled' : ''}>${lastQuestion ? 'Submit test' : 'Next question'} <span>-></span></button></div>`;
+  bindFlagButton(question);
   document.querySelectorAll('.page-options button').forEach((button) => button.addEventListener('click', () => {
     testAnswers[questionIndex] = Number(button.dataset.index);
     document.querySelectorAll('.page-options button').forEach((item) => item.classList.remove('selected'));
@@ -234,7 +271,8 @@ function renderTestResults() {
 function renderQuiz() {
   const question = questions[questionIndex % questions.length];
   document.getElementById('page-count').textContent = `Question ${(questionIndex % questions.length) + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">THINK BEFORE REVEALING</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><button class="page-button" id="reveal-answer">Reveal answer</button><div class="answer-box" id="answer-box" hidden><strong>${withAbbreviationTooltips(question.options[question.answer])}</strong><p>${withAbbreviationTooltips(question.explanation)}</p></div><button class="page-link" id="next-question">Next question <span>-></span></button>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">THINK BEFORE REVEALING</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="question-actions"><button class="page-button" id="reveal-answer">Reveal answer</button>${flagButtonMarkup(question)}</div><div class="answer-box" id="answer-box" hidden><strong>${withAbbreviationTooltips(question.options[question.answer])}</strong><p>${withAbbreviationTooltips(question.explanation)}</p></div><button class="page-link" id="next-question">Next question <span>-></span></button>`;
+  bindFlagButton(question);
   document.getElementById('reveal-answer').addEventListener('click', () => { document.getElementById('answer-box').hidden = false; document.getElementById('reveal-answer').textContent = 'Answer revealed'; });
   document.getElementById('next-question').addEventListener('click', () => { questionIndex += 1; renderQuiz(); });
 }
@@ -242,4 +280,4 @@ function renderQuiz() {
 if (mode === 'learn') renderLearn();
 if ((mode === 'test' || mode === 'focused-test') && questions.length) renderTest();
 if (mode === 'quiz' && questions.length) renderQuiz();
-if ((mode === 'test' || mode === 'focused-test' || mode === 'quiz') && !questions.length) document.getElementById('page-content').textContent = mode === 'focused-test' ? 'No questions currently need focused revision for this topic.' : 'No questions have been added for this topic yet.';
+if ((mode === 'test' || mode === 'focused-test' || mode === 'quiz') && !questions.length) document.getElementById('page-content').textContent = flaggedTest ? 'No questions have been flagged yet.' : (mode === 'focused-test' ? 'No questions currently need focused revision for this topic.' : 'No questions have been added for this topic yet.');
