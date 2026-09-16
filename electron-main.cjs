@@ -6,8 +6,9 @@ let updateCheckWindow;
 
 function createUpdateCheckWindow() {
   updateCheckWindow = new BrowserWindow({
-    width: 380,
-    height: 190,
+    width: 330,
+    height: 226,
+    useContentSize: true,
     resizable: false,
     minimizable: false,
     maximizable: false,
@@ -75,7 +76,7 @@ async function checkForUpdatesBeforeLaunch() {
     console.error('LAS Revision Desk update check failed:', error);
     updateCheckStatus('Update check unavailable', 'Starting LAS Revision Desk...');
   }
-  await new Promise((resolve) => setTimeout(resolve, 500));
+  await new Promise((resolve) => setTimeout(resolve, 700));
   closeUpdateCheckWindow();
 }
 
