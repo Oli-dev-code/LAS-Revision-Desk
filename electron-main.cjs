@@ -39,6 +39,10 @@ function closeUpdateCheckWindow() {
   updateCheckWindow = null;
 }
 
+function closeUpdateCheckWindowAfterStatus() {
+  setTimeout(closeUpdateCheckWindow, 700);
+}
+
 async function checkForUpdatesBeforeLaunch() {
   if (!app.isPackaged) return;
 
@@ -50,12 +54,18 @@ async function checkForUpdatesBeforeLaunch() {
   autoUpdater.on('update-available', (info) => {
     console.log(`LAS Revision Desk update available: ${info.version}`);
     updateCheckStatus('Update found', `Downloading version ${info.version}...`);
+    closeUpdateCheckWindowAfterStatus();
   });
   autoUpdater.on('update-not-available', (info) => {
     console.log(`LAS Revision Desk is up to date at ${info.version}.`);
     updateCheckStatus('No updates found', 'Starting LAS Revision Desk...');
+    closeUpdateCheckWindowAfterStatus();
   });
-  autoUpdater.on('error', (error) => console.error('LAS Revision Desk update failed:', error));
+  autoUpdater.on('error', (error) => {
+    console.error('LAS Revision Desk update failed:', error);
+    updateCheckStatus('Update check unavailable', 'Starting LAS Revision Desk...');
+    closeUpdateCheckWindowAfterStatus();
+  });
   autoUpdater.on('update-downloaded', () => {
     const choice = dialog.showMessageBoxSync({
       type: 'info',
@@ -75,9 +85,8 @@ async function checkForUpdatesBeforeLaunch() {
   } catch (error) {
     console.error('LAS Revision Desk update check failed:', error);
     updateCheckStatus('Update check unavailable', 'Starting LAS Revision Desk...');
+    closeUpdateCheckWindowAfterStatus();
   }
-  await new Promise((resolve) => setTimeout(resolve, 700));
-  closeUpdateCheckWindow();
 }
 
 function createWindow() {
