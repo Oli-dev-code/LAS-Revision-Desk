@@ -620,19 +620,17 @@ window.diagramQuestionDatabase = [
     { id: 'lumbar-lamina', name: 'Lamina', x: 77.9, y: 58.0, targetWidth: 170 },
     { id: 'lumbar-spinous-process', name: 'Spinous process', x: 71.7, y: 72.9, targetWidth: 220 }
   ] } },
-  { id: 'diagram-musculoskeletal-07', topic: 'musculoskeletal', type: 'diagram', question: 'Drag each source label onto the matching structure in the sacrum and coccyx diagram.', explanation: 'The sacrum is a fused triangular group of five sacral vertebrae. It has a promontory, an articulation surface for the ilium and foramina for passage of nerves. The coccyx is formed from four small coccygeal vertebrae labelled Co1 to Co4.', diagram: { image: 'assets/test-diagrams/Sacrum-and-Coccyx-test-diagram.png', alt: 'Anterior and lateral sacrum and coccyx diagrams with blank label targets', labels: [
-    { id: 'sacrum-intervertebral-disc-surface', name: 'Articulating surface for intervertebral disc (body)', x: 25.8, y: 18.0, targetWidth: 330 },
-    { id: 'sacrum-articular-process-l5', name: 'Articular process for L5', x: 36.1, y: 14.3, targetWidth: 230 },
-    { id: 'sacrum-promontory', name: 'Promontory', x: 27.9, y: 25.7, targetWidth: 180 },
-    { id: 'sacrum-ilium-articulation', name: 'Surfaces for articulation with the left ilium', x: 34.8, y: 35.2, targetWidth: 330 },
-    { id: 'sacrum-nerve-foramina-1', name: 'Foramina for passage of nerves', x: 34.7, y: 44.4, targetWidth: 300 },
-    { id: 'sacrum-nerve-foramina-2', name: 'Foramina for passage of nerves', x: 34.6, y: 55.8, targetWidth: 300 },
-    { id: 'sacrum-nerve-foramina-3', name: 'Foramina for passage of nerves', x: 34.5, y: 64.1, targetWidth: 300 },
-    { id: 'sacrum-coccyx', name: 'Coccyx', x: 16.9, y: 84.0, targetWidth: 170 },
-    { id: 'sacrum-co1', name: 'Co1', x: 28.0, y: 78.6, targetWidth: 150 },
-    { id: 'sacrum-co2', name: 'Co2', x: 28.0, y: 82.9, targetWidth: 150 },
-    { id: 'sacrum-co3', name: 'Co3', x: 28.0, y: 86.6, targetWidth: 150 },
-    { id: 'sacrum-co4', name: 'Co4', x: 26.0, y: 91.0, targetWidth: 150 }
+  { id: 'diagram-musculoskeletal-07', topic: 'musculoskeletal', type: 'diagram', question: 'Drag each source label onto the matching structure in the sacrum and coccyx diagram.', explanation: 'The sacrum is a fused triangular group of five sacral vertebrae. It has a promontory, an articulation surface for the ilium and foramina for passage of nerves. The coccyx is formed from four small coccygeal vertebrae labelled Co1 to Co4.', diagram: { image: 'assets/test-diagrams/Sacrum-and-Coccyx-test.png', alt: 'Anterior and lateral sacrum and coccyx diagrams with blank label targets', labels: [
+    { id: 'sacrum-intervertebral-disc-surface', name: 'Articulating surface for intervertebral disc (body)', x: 25.8, y: 18.0, targetX: 12.47, targetY: 0.35, targetWidthPercent: 21.08, targetHeightPercent: 19.08 },
+    { id: 'sacrum-articular-process-l5', name: 'Articular process for L5', x: 36.1, y: 14.3, targetX: 38.44, targetY: 4.97, targetWidthPercent: 15.61, targetHeightPercent: 14.51 },
+    { id: 'sacrum-promontory', name: 'Promontory', x: 27.9, y: 25.7, targetX: 49.45, targetY: 29.01, targetWidthPercent: 18.82, targetHeightPercent: 5.92 },
+    { id: 'sacrum-ilium-articulation', name: 'Surfaces for articulation with the left ilium', x: 34.8, y: 35.2, targetX: 50.18, targetY: 41.03, targetWidthPercent: 19.04, targetHeightPercent: 18.29 },
+    { id: 'sacrum-nerve-foramina', name: 'Foramina for passage of nerves', x: 34.7, y: 44.4, targetX: 49.96, targetY: 64.81, targetWidthPercent: 19.40, targetHeightPercent: 14.46 },
+    { id: 'sacrum-coccyx', name: 'Coccyx', x: 16.9, y: 84.0, targetX: 2.48, targetY: 85.37, targetWidthPercent: 11.74, targetHeightPercent: 5.66 },
+    { id: 'sacrum-co1', name: 'Co1', x: 28.0, y: 78.6, targetX: 32.60, targetY: 79.88, targetWidthPercent: 7.00, targetHeightPercent: 4.09 },
+    { id: 'sacrum-co2', name: 'Co2', x: 28.0, y: 82.9, targetX: 32.60, targetY: 84.32, targetWidthPercent: 7.00, targetHeightPercent: 3.83 },
+    { id: 'sacrum-co3', name: 'Co3', x: 28.0, y: 86.6, targetX: 32.60, targetY: 88.33, targetWidthPercent: 7.00, targetHeightPercent: 3.92 },
+    { id: 'sacrum-co4', name: 'Co4', x: 26.0, y: 91.0, targetX: 32.60, targetY: 92.33, targetWidthPercent: 7.00, targetHeightPercent: 3.92 }
   ] } },
   { id: 'diagram-musculoskeletal-08', topic: 'musculoskeletal', type: 'diagram', question: 'Drag each source label onto the matching structure in the shoulder girdle, arm and hand diagram.', explanation: 'The shoulder girdle consists of the clavicle and scapula. The arm contains the humerus, the forearm contains the ulna and radius, and the hand contains carpals, metacarpals and phalanges.', diagram: { image: 'assets/test-diagrams/arm-test.png', alt: 'Shoulder girdle, arm and hand diagram with blank label targets', labels: [
     { id: 'upper-limb-clavicle', name: 'Clavicle', x: 70.9, y: 8.3, targetX: 74.94, targetY: 8.55, targetWidthPercent: 22.62, targetHeightPercent: 4.11 },
