@@ -103,7 +103,7 @@ window.learnContent = {
       { src: 'assets/diagrams/musculoskeletal-figure-13.jpg', alt: 'Clean labelled sacrum and coccyx diagram' },
       { src: 'assets/diagrams/arm.png', alt: 'Labelled shoulder girdle, arm and hand diagram' },
       { src: 'assets/diagrams/pelvis.png', alt: 'Labelled pelvis and upper femur diagram' },
-      { src: 'assets/diagrams/musculoskeletal-figure-17.jpg', alt: 'Bones of the pelvis, leg and foot' },
+      { src: 'assets/diagrams/pelvis-leg-foot.png', alt: 'Labelled pelvis, leg and foot diagram' },
       { src: 'assets/diagrams/bone-fibrous.png', alt: 'Labelled fibrous joint diagram' },
       { src: 'assets/diagrams/Cartilaginous.png', alt: 'Labelled cartilaginous joint diagram' },
       { src: 'assets/diagrams/Synovial-joint.png', alt: 'Labelled synovial joint diagram' },
