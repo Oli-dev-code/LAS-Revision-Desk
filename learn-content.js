@@ -2,7 +2,7 @@ window.learnContent = {
   body: {
     source: 'Introduction to the body AAP April 2025 v2.ppsx',
     intro: 'The body is organised from atoms to a complete human organism. This topic introduces anatomy, physiology and pathophysiology, then builds through cells, tissues, organs and systems.',
-    image: 'assets/diagrams/body-organisation.jpeg',
+    image: 'assets/diagrams/body-organisation.png',
     imageAlt: 'Diagram showing organisation from atom and molecule to cell, tissue, organ, organ system and organism',
     sections: [
       ['01', 'Anatomy, physiology and pathophysiology', 'Anatomy is the study of structure: how an organ or body part is constructed. Physiology asks how the body works, including how we breathe, digest food and maintain life. Pathophysiology examines abnormal changes and the effects illness or injury have on the body.'],
