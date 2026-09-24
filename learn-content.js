@@ -90,9 +90,8 @@ window.learnContent = {
     source: 'L3 Musculoskeletal System v1 October 2020.pdf',
     intro: 'The musculoskeletal system is made up of bones, muscle tissue, joints and connective tissues. Together they support and protect the body, allow movement, store minerals, produce blood cells and store energy.',
     secondaryImages: [
-      { src: 'assets/diagrams/musculoskeletal-figure-02.jpg', alt: 'Sectioned mature long bone showing bone marrow, periosteum, compact bone, nutrient artery and epiphyses' },
-      { src: 'assets/diagrams/musculoskeletal-figure-03.jpg', alt: 'Clean labelled mature long bone diagram' },
-      { src: 'assets/diagrams/musculoskeletal-figure-04.jpg', alt: 'Anterior and lateral views of the complete human skeleton' },
+      { src: 'assets/diagrams/bone.png', alt: 'Labelled long bone showing cancellous bone, marrow, periosteum, compact bone, nutrient artery, epiphyses and diaphysis' },
+      { src: 'assets/diagrams/Axial-and-Appendicular-Skeleton.png', alt: 'Anterior and lateral views of the complete human skeleton' },
       { src: 'assets/diagrams/musculoskeletal-figure-05.jpg', alt: 'Anterior view of the bones of the face' },
       { src: 'assets/diagrams/musculoskeletal-figure-06.jpg', alt: 'Lateral view of the skull bones and sutures' },
       { src: 'assets/diagrams/musculoskeletal-figure-07.jpg', alt: 'Lateral view of the vertebral column' },
