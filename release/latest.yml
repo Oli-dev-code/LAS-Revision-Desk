@@ -1,8 +1,8 @@
-version: 1.0.23
+version: 1.0.24
 files:
-  - url: LAS-Revision-Desk-1.0.23-Setup-x64.exe
-    sha512: 4s/+CTEdx8nUot2lxG/y/sL44p8NZlT0ueSeeAUugVEk3/q6X2k9Si9Bnc089lklLXlIdyhlG7GuCRy6qZLQMQ==
-    size: 146040385
-path: LAS-Revision-Desk-1.0.23-Setup-x64.exe
-sha512: 4s/+CTEdx8nUot2lxG/y/sL44p8NZlT0ueSeeAUugVEk3/q6X2k9Si9Bnc089lklLXlIdyhlG7GuCRy6qZLQMQ==
-releaseDate: '2026-09-24T12:13:20.086Z'
+  - url: LAS-Revision-Desk-1.0.24-Setup-x64.exe
+    sha512: t597RZoJVPSzLwCvbWV+sOXXDnb6dBTRjOnKKz05O/WRZiecj8d8D0KMXQN2DOhhPZMsqBjvM/BT9zwB/q7b4g==
+    size: 144895904
+path: LAS-Revision-Desk-1.0.24-Setup-x64.exe
+sha512: t597RZoJVPSzLwCvbWV+sOXXDnb6dBTRjOnKKz05O/WRZiecj8d8D0KMXQN2DOhhPZMsqBjvM/BT9zwB/q7b4g==
+releaseDate: '2026-09-24T14:06:43.123Z'
