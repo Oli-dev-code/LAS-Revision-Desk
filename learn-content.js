@@ -104,10 +104,8 @@ window.learnContent = {
       { src: 'assets/diagrams/musculoskeletal-figure-14.jpg', alt: 'Bones of the shoulder girdle, arm and hand' },
       { src: 'assets/diagrams/pelvis.png', alt: 'Labelled pelvis and upper femur diagram' },
       { src: 'assets/diagrams/musculoskeletal-figure-17.jpg', alt: 'Bones of the pelvis, leg and foot' },
-      { src: 'assets/diagrams/musculoskeletal-figure-18.jpg', alt: 'Section through a fibrous joint of the skull' },
-      { src: 'assets/diagrams/musculoskeletal-figure-19.jpg', alt: 'Clean labelled fibrous joint diagram' },
-      { src: 'assets/diagrams/musculoskeletal-figure-20.jpg', alt: 'Section through a cartilaginous joint between vertebral bodies' },
-      { src: 'assets/diagrams/musculoskeletal-figure-21.jpg', alt: 'Clean labelled cartilaginous joint diagram' },
+      { src: 'assets/diagrams/bone-fibrous.png', alt: 'Labelled fibrous joint diagram' },
+      { src: 'assets/diagrams/Cartilaginous.png', alt: 'Labelled cartilaginous joint diagram' },
       { src: 'assets/diagrams/musculoskeletal-figure-22.jpg', alt: 'Clean labelled synovial joint showing capsule, synovial membrane, cavity and articular cartilage' },
       { src: 'assets/diagrams/musculoskeletal-figure-24.jpg', alt: 'Photograph of a human skeleton' }
     ],
