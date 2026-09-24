@@ -92,8 +92,8 @@ window.learnContent = {
     secondaryImages: [
       { src: 'assets/diagrams/bone.png', alt: 'Labelled long bone showing cancellous bone, marrow, periosteum, compact bone, nutrient artery, epiphyses and diaphysis' },
       { src: 'assets/diagrams/Axial-and-Appendicular-Skeleton.png', alt: 'Anterior and lateral views of the complete human skeleton' },
-      { src: 'assets/diagrams/musculoskeletal-figure-05.jpg', alt: 'Anterior view of the bones of the face' },
-      { src: 'assets/diagrams/musculoskeletal-figure-06.jpg', alt: 'Lateral view of the skull bones and sutures' },
+      { src: 'assets/diagrams/skull-front.png', alt: 'Anterior view of the bones of the face' },
+      { src: 'assets/diagrams/skull-side.png', alt: 'Lateral view of the skull bones and sutures' },
       { src: 'assets/diagrams/musculoskeletal-figure-07.jpg', alt: 'Lateral view of the vertebral column' },
       { src: 'assets/diagrams/musculoskeletal-figure-08.jpg', alt: 'Lumbar vertebra viewed from above' },
       { src: 'assets/diagrams/musculoskeletal-figure-09.jpg', alt: 'Upper cervical vertebrae viewed from above' },
