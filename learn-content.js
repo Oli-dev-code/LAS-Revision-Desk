@@ -32,7 +32,7 @@ window.learnContent = {
   cardiovascular: {
     source: 'L3 CV System v1 September 2020.pdf',
     intro: 'The cardiovascular system consists of the heart, blood and blood vessels. It provides transport, maintains the internal environment and links the lungs with every tissue in the body.',
-    image: 'assets/diagrams/heart-anatomy.jpeg',
+    image: 'assets/diagrams/heart-anatomy.png',
     imageAlt: 'Labelled heart anatomy diagram',
     sections: [
       ['01', 'What the system does', 'The cardiovascular system transports oxygen, nutrients, hormones and heat. It removes carbon dioxide and other waste products, contributes to temperature regulation, supports host defence and helps maintain the conditions cells need to function.'],

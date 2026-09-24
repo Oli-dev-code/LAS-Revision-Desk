@@ -180,16 +180,18 @@ function diagramAnswerText(question, answer) {
 }
 
 function renderDiagramTest(question) {
+  const targetPoint = (label) => label.targetX === undefined ? (() => { const horizontal = label.x < 50 || label.x > 50; return horizontal ? { x: label.x < 50 ? 4 : 96, y: label.y } : { x: label.x, y: label.y < 50 ? 7 : 93 }; })() : { x: label.targetX, y: label.targetY };
   const labels = shuffleQuestions(question.diagram.labels);
   const arrows = question.diagram.labels.map((label) => {
     const horizontal = label.x < 50 || label.x > 50;
-    const end = horizontal ? { x: label.x < 50 ? 4 : 96, y: label.y } : { x: label.x, y: label.y < 50 ? 7 : 93 };
+    const end = targetPoint(label);
     return `<line class="diagram-arrow" x1="${label.x}" y1="${label.y}" x2="${end.x}" y2="${end.y}" marker-end="url(#diagram-arrowhead)" />`;
   }).join('');
   const targets = question.diagram.labels.map((label) => {
     const horizontal = label.x < 50 || label.x > 50;
-    const end = horizontal ? { x: label.x < 50 ? 4 : 96, y: label.y } : { x: label.x, y: label.y < 50 ? 7 : 93 };
-    const side = horizontal ? (label.x < 50 ? 'left' : 'right') : (label.y < 50 ? 'top' : 'bottom');
+    const end = targetPoint(label);
+    const positioned = label.targetX !== undefined;
+    const side = positioned ? '' : (horizontal ? (label.x < 50 ? 'left' : 'right') : (label.y < 50 ? 'top' : 'bottom'));
     return `<div class="diagram-target" data-target-id="${label.id}" data-side="${side}" style="left:${end.x}%;top:${end.y}%;${label.targetWidth ? `width:${label.targetWidth}px;` : ''}${label.targetHeight ? `height:${label.targetHeight}px;` : ''}"><span>Drop label</span></div>`;
   }).join('');
   const tiles = labels.map((label) => `<button class="diagram-label" draggable="true" data-label-id="${label.id}">${label.name}</button>`).join('');
