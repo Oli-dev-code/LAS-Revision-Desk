@@ -101,12 +101,12 @@ window.learnContent = {
       { src: 'assets/diagrams/musculoskeletal-figure-11.jpg', alt: 'Clean labelled atlas and axis diagram' },
       { src: 'assets/diagrams/musculoskeletal-figure-12.jpg', alt: 'Anterior and lateral views of the sacrum and coccyx' },
       { src: 'assets/diagrams/musculoskeletal-figure-13.jpg', alt: 'Clean labelled sacrum and coccyx diagram' },
-      { src: 'assets/diagrams/musculoskeletal-figure-14.jpg', alt: 'Bones of the shoulder girdle, arm and hand' },
+      { src: 'assets/diagrams/arm.png', alt: 'Labelled shoulder girdle, arm and hand diagram' },
       { src: 'assets/diagrams/pelvis.png', alt: 'Labelled pelvis and upper femur diagram' },
       { src: 'assets/diagrams/musculoskeletal-figure-17.jpg', alt: 'Bones of the pelvis, leg and foot' },
       { src: 'assets/diagrams/bone-fibrous.png', alt: 'Labelled fibrous joint diagram' },
       { src: 'assets/diagrams/Cartilaginous.png', alt: 'Labelled cartilaginous joint diagram' },
-      { src: 'assets/diagrams/musculoskeletal-figure-22.jpg', alt: 'Clean labelled synovial joint showing capsule, synovial membrane, cavity and articular cartilage' },
+      { src: 'assets/diagrams/Synovial-joint.png', alt: 'Labelled synovial joint diagram' },
       { src: 'assets/diagrams/musculoskeletal-figure-24.jpg', alt: 'Photograph of a human skeleton' }
     ],
     sections: [
