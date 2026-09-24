@@ -1,6 +1,6 @@
 {
   "name": "las-revision-desk",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "description": "Desktop revision workspace for LAS AAP training",
   "main": "electron-main.cjs",
   "author": "LAS Revision Desk",
