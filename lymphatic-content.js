@@ -2,6 +2,8 @@ window.topicLearnOverrides = window.topicLearnOverrides || {};
 window.topicLearnOverrides['lymphatic-urinary-reproductive'] = {
   source: 'L3 Lymphatic, Urinary  Reproductive Systems v1 September 2020.pdf',
   intro: 'The lymphatic, urinary and reproductive systems have different primary roles but work together with the cardiovascular, endocrine and immune systems to maintain the internal environment. This guide follows the supplied course material from tissue drainage and defence through kidney function, urine production and human reproduction.',
+  image: 'assets/diagrams/lymphatic-urinary-reproductive.png',
+  imageAlt: 'Lymphatic, urinary and reproductive systems diagram',
   sections: [
     ['01', 'Three systems, connected roles', 'The lymphatic system drains tissue fluid and supports immunity. The urinary system removes metabolic waste and regulates the composition of body fluids. The reproductive systems produce sex cells and hormones and enable fertilisation, pregnancy and the continuation of the species.'],
     ['02', 'Tissue fluid and lymph', 'Fluid leaves blood capillaries to bathe cells. Most returns directly to the blood capillaries, but excess tissue fluid enters lymphatic capillaries and becomes lymph. Lymph eventually returns to the venous circulation, preventing fluid accumulating in the tissues.'],
