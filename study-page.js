@@ -192,7 +192,7 @@ function renderDiagramTest(question) {
     const end = targetPoint(label);
     const positioned = label.targetX !== undefined;
     const side = positioned ? '' : (horizontal ? (label.x < 50 ? 'left' : 'right') : (label.y < 50 ? 'top' : 'bottom'));
-    return `<div class="diagram-target" data-target-id="${label.id}" data-side="${side}" data-positioned="${positioned}" style="left:${end.x}%;top:${end.y}%;--target-width:${label.targetWidthPercent || 0};--target-height:${label.targetHeightPercent || 0};${label.targetWidth ? `width:${label.targetWidth}px;` : ''}${label.targetHeight ? `height:${label.targetHeight}px;` : ''}"><span>Drop label</span></div>`;
+    return `<div class="diagram-target" data-target-id="${label.id}" data-side="${side}" data-positioned="${positioned}" style="left:${end.x}%;top:${end.y}%;--target-width:${label.targetWidthPercent ? `${label.targetWidthPercent}%` : '0%'};--target-height:${label.targetHeightPercent ? `${label.targetHeightPercent}%` : '0%'};${label.targetWidth ? `width:${label.targetWidth}px;` : ''}${label.targetHeight ? `height:${label.targetHeight}px;` : ''}"><span>Drop label</span></div>`;
   }).join('');
   const tiles = labels.map((label) => `<button class="diagram-label" draggable="true" data-label-id="${label.id}">${label.name}</button>`).join('');
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
