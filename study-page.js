@@ -182,7 +182,7 @@ function diagramAnswerText(question, answer) {
 function renderDiagramTest(question) {
   const targetPoint = (label) => label.targetX === undefined ? (() => { const horizontal = label.x < 50 || label.x > 50; return horizontal ? { x: label.x < 50 ? 4 : 96, y: label.y } : { x: label.x, y: label.y < 50 ? 7 : 93 }; })() : { x: label.targetX, y: label.targetY };
   const labels = shuffleQuestions(question.diagram.labels);
-  const arrows = question.diagram.labels.map((label) => {
+  const arrows = question.diagram.labels.filter((label) => label.targetX === undefined).map((label) => {
     const horizontal = label.x < 50 || label.x > 50;
     const end = targetPoint(label);
     return `<line class="diagram-arrow" x1="${label.x}" y1="${label.y}" x2="${end.x}" y2="${end.y}" marker-end="url(#diagram-arrowhead)" />`;
