@@ -7,6 +7,8 @@ const topicCatalog = window.topicCatalog || [
   { id: 'drowning', name: 'Drowning', source: 'AAP drowning v2 Dec25.ppsx' },
   { id: 'suspension-blast-ballistics', name: 'Suspension, blast and ballistics', source: 'AAP Suspension Blast Ballistics v4 Oct25.ppsx' },
   { id: 'abdominal-conditions', name: 'Abdominal conditions', source: 'Abdominal Conditions AAP v2 Dec25.ppsx' },
+  { id: 'burns', name: 'Burns', source: 'Burns AAP PP July2026 V2.ppsx' },
+  { id: 'extrication-light-rescue', name: 'Extrication and light rescue', source: 'Extrication and Light Rescue  AAP v2 nov25.ppsx' },
   { id: 'musculoskeletal', name: 'Musculoskeletal system', source: 'L3 Musculoskeletal System v1 October 2020.pdf' },
   { id: 'cardiovascular', name: 'Cardiovascular system', source: 'L3 CV System v1 September 2020.pdf' },
   { id: 'respiratory', name: 'Respiratory system', source: 'AAP Resp system update JUL26.ppsx' },
