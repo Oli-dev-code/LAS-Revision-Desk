@@ -1,5 +1,6 @@
 window.topicCatalog = [
   { id: 'body', name: 'Introduction to the body', source: 'Introduction to the body AAP April 2025 v2.ppsx', description: 'Atoms, cells, tissues, organs and the systems that keep the body alive.' },
+  { id: 'trauma', name: 'Trauma: process and systems', source: 'L3 - Process and Systems of Trauma v4 April 2025.ppsx', description: 'Major trauma systems, mechanism of injury, triage, life-saving interventions and structured handover.' },
   { id: 'musculoskeletal', name: 'Musculoskeletal system', source: 'L3 Musculoskeletal System v1 October 2020.pdf', description: 'Bones, muscles, joints, ligaments and tendons working together for support, protection and movement.' },
   { id: 'cardiovascular', name: 'Cardiovascular system', source: 'L3 CV System v1 September 2020.pdf', description: 'The heart, blood and vessels, including circulation and transport.' },
   { id: 'respiratory', name: 'Respiratory system', source: 'AAP Resp system update JUL26.ppsx', description: 'Airway, breathing, gas exchange and the functions of the respiratory system.' },
