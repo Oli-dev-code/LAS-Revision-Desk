@@ -1,8 +1,8 @@
-version: 1.0.36
+version: 1.0.37
 files:
-  - url: LAS-Revision-Desk-1.0.36-Setup-x64.exe
-    sha512: n63zzpv9MbTWrBI1NMIga/Of2WxnpD5+D67Km8vNq8HPgfHR4NbJveWXgtsZykeJpCSlexeuhma3v8cCACJH+g==
-    size: 154311333
-path: LAS-Revision-Desk-1.0.36-Setup-x64.exe
-sha512: n63zzpv9MbTWrBI1NMIga/Of2WxnpD5+D67Km8vNq8HPgfHR4NbJveWXgtsZykeJpCSlexeuhma3v8cCACJH+g==
-releaseDate: '2026-10-03T12:29:01.427Z'
+  - url: LAS-Revision-Desk-1.0.37-Setup-x64.exe
+    sha512: KG3MB6Jv3O1IceY1q/cNI/9K9Ennoa0iUhwvuzApmmmRZmFDLcjSke0CQdNj9rCl1cyLj0bSge2Et/htGZWMvg==
+    size: 154317900
+path: LAS-Revision-Desk-1.0.37-Setup-x64.exe
+sha512: KG3MB6Jv3O1IceY1q/cNI/9K9Ennoa0iUhwvuzApmmmRZmFDLcjSke0CQdNj9rCl1cyLj0bSge2Et/htGZWMvg==
+releaseDate: '2026-10-03T12:53:23.586Z'
