@@ -3,6 +3,8 @@ const diagramDatabase = window.diagramQuestionDatabase || [];
 const topicCatalog = window.topicCatalog || [
   { id: 'body', name: 'Introduction to the body', source: 'Introduction to the body AAP April 2025 v2.ppsx' },
   { id: 'trauma', name: 'Trauma: process and systems', source: 'L3 - Process and Systems of Trauma v4 April 2025.ppsx' },
+  { id: 'chest-injuries', name: 'Chest injuries', source: 'AAP Chest Injuries May25 v6.ppsx' },
+  { id: 'drowning', name: 'Drowning', source: 'AAP drowning v2 Dec25.ppsx' },
   { id: 'musculoskeletal', name: 'Musculoskeletal system', source: 'L3 Musculoskeletal System v1 October 2020.pdf' },
   { id: 'cardiovascular', name: 'Cardiovascular system', source: 'L3 CV System v1 September 2020.pdf' },
   { id: 'respiratory', name: 'Respiratory system', source: 'AAP Resp system update JUL26.ppsx' },
