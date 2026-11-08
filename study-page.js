@@ -11,6 +11,10 @@ const topicCatalog = window.topicCatalog || [
   { id: 'sepsis', name: 'Sepsis', source: 'AAP Sepsis v2 Sep24.pdf' },
   { id: 'cardiac-conditions', name: 'Cardiac conditions', source: 'L3 Cardiac Conditions v4 Dec 2025.ppsx' },
   { id: 'maxillofacial-injuries', name: 'Maxillofacial injuries', source: 'L3 Maxillo Facial Injuries V3 Jan 2026.ppsx' },
+  { id: 'head-injuries', name: 'Head injuries', source: 'L3 Head Injuries v1 October 2020.pdf' },
+  { id: 'addisons-disease', name: 'Adrenal insufficiency and Addison\'s disease', source: 'L3 Addisions v1 September 2020.pdf' },
+  { id: 'urinary-conditions', name: 'Urinary conditions', source: 'L3 Urinary Conditions  v1 September 2020.pdf' },
+  { id: 'poisoning', name: 'Poisoning', source: 'L3 Poisoning v2 March 2022.pdf' },
   { id: 'post-operative-complications', name: 'Post-operative complications', source: 'Post Operative complications.ppsx' },
   { id: 'respiratory-conditions', name: 'Respiratory conditions', source: 'Respiratory Conditions AAP Jul25 v7.ppsx' },
   { id: 'wounds-and-bleeding', name: 'Wounds and bleeding', source: 'Wounds and Bleeding AAP August 2026.ppsx' },
@@ -40,6 +44,15 @@ const flaggedTest = params.get('topic') === 'flagged';
 let topic = params.get('topic') || 'body';
 if (!topicNames[topic] && !flaggedTest) topic = 'body';
 const mode = document.body.dataset.mode;
+const pageContent = document.getElementById('page-content');
+if (pageContent && typeof MutationObserver !== 'undefined') {
+  const contentObserver = new MutationObserver(() => {
+    pageContent.classList.remove('content-transition');
+    void pageContent.offsetWidth;
+    pageContent.classList.add('content-transition');
+  });
+  contentObserver.observe(pageContent, { childList: true });
+}
 if (!window.lasProgress?.revisionTime) {
   const timerStart = Date.now();
   let timerSaved = timerStart;
