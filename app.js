@@ -219,6 +219,27 @@ function formatDashboardTime(milliseconds) {
   return minutes < 60 ? `${minutes}m` : `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
 }
 
+function animateMetric(element, target, format = (value) => String(value)) {
+  if (!element) return;
+  const next = Number(target) || 0;
+  const previous = Number(element.dataset.metricValue);
+  const start = Number.isFinite(previous) ? previous : 0;
+  element.dataset.metricValue = String(next);
+  if (window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || start === next) {
+    element.textContent = format(next);
+    return;
+  }
+  const started = performance.now();
+  const duration = 650;
+  const tick = (now) => {
+    const progress = Math.min(1, (now - started) / duration);
+    const eased = 1 - Math.pow(1 - progress, 3);
+    element.textContent = format(Math.round(start + (next - start) * eased));
+    if (progress < 1) window.requestAnimationFrame(tick);
+  };
+  window.requestAnimationFrame(tick);
+}
+
 function topicCompletion(topicId) {
   if (window.lasProgress?.isLearnt(topicId)) return 100;
   const questions = dashboardQuestionDatabase.filter((question) => question.topic === topicId);
@@ -238,7 +259,7 @@ function renderDashboardFocus() {
   document.getElementById('focus-topic-description').textContent = topic.description || 'Review the essential knowledge for this topic.';
   document.getElementById('focus-topic-source').textContent = `Source: ${topic.source}`;
   document.getElementById('focus-topic-questions').textContent = `${topicQuestions.length} questions`;
-  document.getElementById('focus-topic-percent').innerHTML = `${progress}<small>%</small>`;
+  animateMetric(document.getElementById('focus-topic-percent'), progress, (value) => `${value}%`);
   const progressRing = document.getElementById('focus-topic-ring');
   progressRing.style.background = `conic-gradient(#75bbae 0 ${progress}%,#385d68 ${progress}% 100%)`;
   progressRing.classList.remove('progress-updated');
@@ -257,14 +278,14 @@ function renderDashboardStats() {
   const learnt = window.lasProgress?.learntTopics() || [];
   const time = window.lasProgress?.revisionTime?.() || { todayMs: 0, totalMs: 0 };
   const cards = document.querySelectorAll('.stats-grid .stat-card');
-  cards[0].querySelector('strong').textContent = formatDashboardTime(time.todayMs);
+  animateMetric(cards[0].querySelector('strong'), Math.floor(time.todayMs / 60000), formatDashboardTime);
   cards[0].querySelector('small').textContent = 'Revision today';
-  cards[1].querySelector('strong').textContent = stats.answered;
+  animateMetric(cards[1].querySelector('strong'), stats.answered);
   cards[1].querySelector('small').innerHTML = stats.answered ? `<em>${Math.round((stats.correct / stats.answered) * 100)}%</em> average score` : 'No questions completed yet';
-  cards[2].querySelector('strong').textContent = `${learnt.length}/${topicCatalog.length}`;
+  animateMetric(cards[2].querySelector('strong'), learnt.length, (value) => `${value}/${topicCatalog.length}`);
   cards[2].querySelector('small').textContent = `${topicCatalog.length - learnt.length} topics remaining`;
   const progress = topicCatalog.length ? Math.round((learnt.length / topicCatalog.length) * 100) : 0;
-  document.querySelector('.progress-top strong').textContent = `${progress}%`;
+  animateMetric(document.querySelector('.progress-top strong'), progress, (value) => `${value}%`);
   document.querySelector('.progress-track span').style.width = `${progress}%`;
   document.querySelector('.course-progress p').textContent = `${learnt.length} of ${topicCatalog.length} topics reviewed`;
 }
