@@ -30,6 +30,14 @@ function saveTheme(theme) {
 
 const savedTheme = readTheme();
 applyTheme(savedTheme);
+const now = new Date();
+const dateLabel = document.querySelector('.welcome-row .eyebrow');
+const greeting = document.querySelector('.welcome-row h1');
+if (dateLabel) dateLabel.textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).format(now);
+if (greeting) {
+  const hour = now.getHours();
+  greeting.textContent = hour < 12 ? 'Good morning.' : hour < 18 ? 'Good afternoon.' : 'Good evening.';
+}
 themeToggle.addEventListener('click', () => {
   const nextTheme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
   saveTheme(nextTheme);
@@ -127,7 +135,6 @@ document.querySelectorAll('[data-view]').forEach((button) => {
   });
 });
 
-document.getElementById('start-session').addEventListener('click', () => showToast('Study session started'));
 const openLearnPage = () => { window.location.assign(`learn.html?topic=${selectedTopic}`); };
 document.getElementById('resume-topic')?.addEventListener('click', openLearnPage);
 document.getElementById('view-topic')?.addEventListener('click', openLearnPage);

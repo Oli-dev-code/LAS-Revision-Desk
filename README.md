@@ -47,6 +47,8 @@ npm install
 npm start
 ```
 
+Development launches also check the GitHub release feed using `dev-app-update.yml`. If an update is downloaded during development, it is reported but not installed over the unpackaged development build.
+
 To build the Windows installer and portable executable:
 
 ```powershell
