@@ -4,6 +4,8 @@ const modeViews = document.querySelectorAll('.mode-view');
 const dashboardQuestionDatabase = window.questionDatabase || [];
 const topicCatalog = window.topicCatalog || [];
 const themeToggle = document.getElementById('theme-toggle');
+const topicCountBadge = document.querySelector('.nav-count');
+if (topicCountBadge) topicCountBadge.textContent = topicCatalog.length;
 let selectedTopic = topicCatalog.find((topic) => !(window.lasProgress?.learntTopics?.() || []).includes(topic.id))?.id || topicCatalog[0]?.id || 'body';
 try {
   const savedTopic = localStorage.getItem('las-revision-selected-topic');
@@ -237,7 +239,11 @@ function renderDashboardFocus() {
   document.getElementById('focus-topic-source').textContent = `Source: ${topic.source}`;
   document.getElementById('focus-topic-questions').textContent = `${topicQuestions.length} questions`;
   document.getElementById('focus-topic-percent').innerHTML = `${progress}<small>%</small>`;
-  document.getElementById('focus-topic-ring').style.background = `conic-gradient(#75bbae 0 ${progress}%,#385d68 ${progress}% 100%)`;
+  const progressRing = document.getElementById('focus-topic-ring');
+  progressRing.style.background = `conic-gradient(#75bbae 0 ${progress}%,#385d68 ${progress}% 100%)`;
+  progressRing.classList.remove('progress-updated');
+  void progressRing.offsetWidth;
+  progressRing.classList.add('progress-updated');
   document.getElementById('focus-topic-status').textContent = progress === 100 ? 'Reviewed' : progress ? 'In progress' : 'Not started';
   document.querySelector('.mode-intro p').innerHTML = `${topic.name} <span>·</span> Questions filtered to this topic`;
   document.querySelector('.mode-tab[href^="learn"]').href = `learn.html?topic=${topic.id}`;

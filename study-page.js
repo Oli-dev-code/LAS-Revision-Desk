@@ -7,6 +7,7 @@ const topicCatalog = window.topicCatalog || [
   { id: 'drowning', name: 'Drowning', source: 'AAP drowning v2 Dec25.ppsx' },
   { id: 'suspension-blast-ballistics', name: 'Suspension, blast and ballistics', source: 'AAP Suspension Blast Ballistics v4 Oct25.ppsx' },
   { id: 'abdominal-conditions', name: 'Abdominal conditions', source: 'Abdominal Conditions AAP v2 Dec25.ppsx' },
+  { id: 'abdominal-injuries', name: 'Abdominal injuries', source: 'L3 Abdominal Injuries v3 Feb2024.pdf' },
   { id: 'cardiac-conditions', name: 'Cardiac conditions', source: 'L3 Cardiac Conditions v4 Dec 2025.ppsx' },
   { id: 'maxillofacial-injuries', name: 'Maxillofacial injuries', source: 'L3 Maxillo Facial Injuries V3 Jan 2026.ppsx' },
   { id: 'post-operative-complications', name: 'Post-operative complications', source: 'Post Operative complications.ppsx' },
@@ -153,7 +154,7 @@ function shuffledSessionQuestions() {
 let questions = shuffledSessionQuestions();
 let questionIndex = 0;
 let testAnswers = [];
-const sessionStart = Date.now();
+let sessionStart = Date.now();
 
 function formatSessionDuration(milliseconds) {
   const totalSeconds = Math.max(0, Math.round(milliseconds / 1000));
@@ -295,13 +296,14 @@ function renderTestResults() {
   const missed = questions.filter((question, index) => !answerIsCorrect(question, index));
   const percentage = questions.length ? Math.round((score / questions.length) * 100) : 0;
   const elapsed = formatSessionDuration(Date.now() - sessionStart);
+  const resultTreatment = percentage >= 80 ? 'result-success' : percentage >= 50 ? 'result-review' : 'result-warning';
   const weakTopicCounts = missed.reduce((counts, question) => { counts[question.topic] = (counts[question.topic] || 0) + 1; return counts; }, {});
   const weakTopics = Object.entries(weakTopicCounts).sort(([, left], [, right]) => right - left);
   const recommendations = weakTopics.length ? weakTopics.slice(0, 3).map(([topicId, count]) => `<article class="recommendation-card"><div><span class="recommendation-label">WEAK TOPIC</span><strong>${topicLabel(topicId)}</strong><small>${count} missed question${count === 1 ? '' : 's'}</small></div><div class="recommendation-actions"><a class="page-button" href="learn.html?topic=${encodeURIComponent(topicId)}">Learn</a><a class="page-button page-button-secondary" href="focused-test.html?topic=${encodeURIComponent(topicId)}">Focused test</a></div></article>`).join('') : `<article class="recommendation-card recommendation-success"><div><span class="recommendation-label">NEXT STEP</span><strong>Keep your momentum</strong><small>Try another topic test or review the next uncompleted topic.</small></div><div class="recommendation-actions"><a class="page-button" href="index.html">Back to dashboard</a></div></article>`;
   document.getElementById('page-count').textContent = 'Test complete';
   const review = missed.length ? `<div class="wrong-list"><div class="review-heading"><div><span class="results-label">KNOWLEDGE CHECK</span><h2>Review missed questions</h2></div><span class="missed-count">${missed.length} to revisit</span></div>${missed.map((question) => { const index = questions.indexOf(question); const yourAnswer = question.type === 'diagram' ? diagramAnswerText(question, testAnswers[index]) : (testAnswers[index] === undefined ? 'No answer selected' : question.options[testAnswers[index]]); const correctAnswer = question.type === 'diagram' ? 'Place every label on its matching target' : question.options[question.answer]; const flagged = isQuestionFlagged(question.id); return `<article class="wrong-answer"><div class="wrong-question"><span class="question-index">Question ${index + 1}</span><p>${withAbbreviationTooltips(question.question)}</p></div><div class="answer-comparison"><div class="answer-line incorrect"><span class="answer-label">Your answer</span><strong>${withAbbreviationTooltips(yourAnswer)}</strong></div><div class="answer-line correct"><span class="answer-label">Correct answer</span><strong>${withAbbreviationTooltips(correctAnswer)}</strong></div></div><div class="explanation"><span>Why</span><p>${withAbbreviationTooltips(question.explanation)}</p></div><div class="result-flag-row"><span class="result-flag-status">${flagged ? 'Flagged for review' : 'Not flagged'}</span><button class="page-button result-flag-question" type="button" data-question-id="${question.id}" aria-pressed="${flagged}">${flagged ? 'Remove flag' : 'Flag incorrect question'}</button></div></article>`; }).join('')}</div>` : '<p class="all-correct">Excellent. You got every question right.</p>';
   const weakTopicMarkup = weakTopics.length ? `<section class="weak-topics"><div class="results-section-heading"><div><span class="results-label">FOCUS NEXT</span><h2>Weak topics</h2></div><span>${weakTopics.length} topic${weakTopics.length === 1 ? '' : 's'}</span></div><div class="weak-topic-list">${weakTopics.map(([topicId, count]) => `<div class="weak-topic-row"><span>${topicLabel(topicId)}</span><strong>${count} missed</strong></div>`).join('')}</div></section>` : '';
-  document.getElementById('page-content').innerHTML = `<section class="results-summary"><div class="results-score"><span class="results-label">FINAL SCORE</span><strong>${score} / ${questions.length}</strong><b>${percentage}%</b><p>${score === questions.length ? 'Excellent work.' : `${questions.length - score} question${questions.length - score === 1 ? '' : 's'} to revisit.`}</p></div><div class="results-metric"><span>Time spent</span><strong>${elapsed}</strong></div><div class="results-metric"><span>Missed</span><strong>${missed.length}</strong></div><div class="results-metric"><span>Questions</span><strong>${questions.length}</strong></div></section>${weakTopicMarkup}<section class="recommendations"><div class="results-section-heading"><div><span class="results-label">RECOMMENDED</span><h2>What to do next</h2></div></div><div class="recommendation-list">${recommendations}</div></section>${review}<button class="page-button" id="retry-test">Try again <span><-</span></button>`;
+  document.getElementById('page-content').innerHTML = `<section class="results-summary ${resultTreatment}"><div class="results-score"><span class="results-label">FINAL SCORE</span><strong>${score} / ${questions.length}</strong><b>${percentage}%</b><p>${score === questions.length ? 'Excellent work.' : `${questions.length - score} question${questions.length - score === 1 ? '' : 's'} to revisit.`}</p></div><div class="results-metric"><span>Time spent</span><strong>${elapsed}</strong></div><div class="results-metric"><span>Missed</span><strong>${missed.length}</strong></div><div class="results-metric"><span>Questions</span><strong>${questions.length}</strong></div></section>${weakTopicMarkup}<section class="recommendations"><div class="results-section-heading"><div><span class="results-label">RECOMMENDED</span><h2>What to do next</h2></div></div><div class="recommendation-list">${recommendations}</div></section>${review}<button class="page-button" id="retry-test">Try again <span><-</span></button>`;
   document.querySelectorAll('.result-flag-question').forEach((button) => button.addEventListener('click', () => {
     const flagged = !isQuestionFlagged(button.dataset.questionId);
     setQuestionFlagged(button.dataset.questionId, flagged);
@@ -309,7 +311,7 @@ function renderTestResults() {
     button.textContent = flagged ? 'Remove flag' : 'Flag incorrect question';
     button.previousElementSibling.textContent = flagged ? 'Flagged for review' : 'Not flagged';
   }));
-  document.getElementById('retry-test').addEventListener('click', () => { questionIndex = 0; testAnswers = []; questions = shuffledSessionQuestions(); renderTest(); });
+  document.getElementById('retry-test').addEventListener('click', () => { questionIndex = 0; testAnswers = []; questions = shuffledSessionQuestions(); sessionStart = Date.now(); renderTest(); });
 }
 
 function renderQuiz() {
