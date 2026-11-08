@@ -8,6 +8,7 @@ const topicCatalog = window.topicCatalog || [
   { id: 'suspension-blast-ballistics', name: 'Suspension, blast and ballistics', source: 'AAP Suspension Blast Ballistics v4 Oct25.ppsx' },
   { id: 'abdominal-conditions', name: 'Abdominal conditions', source: 'Abdominal Conditions AAP v2 Dec25.ppsx' },
   { id: 'abdominal-injuries', name: 'Abdominal injuries', source: 'L3 Abdominal Injuries v3 Feb2024.pdf' },
+  { id: 'sepsis', name: 'Sepsis', source: 'AAP Sepsis v2 Sep24.pdf' },
   { id: 'cardiac-conditions', name: 'Cardiac conditions', source: 'L3 Cardiac Conditions v4 Dec 2025.ppsx' },
   { id: 'maxillofacial-injuries', name: 'Maxillofacial injuries', source: 'L3 Maxillo Facial Injuries V3 Jan 2026.ppsx' },
   { id: 'post-operative-complications', name: 'Post-operative complications', source: 'Post Operative complications.ppsx' },

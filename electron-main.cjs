@@ -72,6 +72,15 @@ function formatDuration(seconds) {
 async function checkForUpdatesBeforeLaunch() {
   const developmentBuild = !app.isPackaged;
   if (developmentBuild) autoUpdater.forceDevUpdateConfig = true;
+  let resolveStartup;
+  let startupResolved = false;
+  let openMainWindow = true;
+  const waitForUpdateFlow = new Promise((resolve) => { resolveStartup = resolve; });
+  const finishUpdateFlow = (delay = 0) => {
+    if (startupResolved) return;
+    startupResolved = true;
+    setTimeout(resolveStartup, delay);
+  };
 
   createUpdateCheckWindow();
 
@@ -94,17 +103,20 @@ async function checkForUpdatesBeforeLaunch() {
     console.log(`LAS Revision Desk is up to date at ${info.version}.`);
     updateCheckStatus('No updates found', 'Starting LAS Revision Desk...');
     closeUpdateCheckWindowAfterStatus();
+    finishUpdateFlow(700);
   });
   autoUpdater.on('error', (error) => {
     console.error('LAS Revision Desk update failed:', error);
     updateCheckStatus('Update check unavailable', 'We couldn’t check for updates. You can continue using the current version.');
     updateCheckError();
     closeUpdateCheckWindowAfterStatus(1800);
+    finishUpdateFlow(1800);
   });
   autoUpdater.on('update-downloaded', () => {
     if (developmentBuild) {
       updateCheckStatus('Update downloaded', 'A development update is ready for the packaged application.');
       closeUpdateCheckWindowAfterStatus(1400);
+      finishUpdateFlow(1400);
       return;
     }
     const choice = dialog.showMessageBoxSync({
@@ -117,17 +129,26 @@ async function checkForUpdatesBeforeLaunch() {
       detail: 'Restart the app now to install the update.'
     });
 
-    if (choice === 0) autoUpdater.quitAndInstall();
+    if (choice === 0) {
+      openMainWindow = false;
+      autoUpdater.quitAndInstall();
+    } else {
+      finishUpdateFlow();
+    }
   });
 
   try {
     await autoUpdater.checkForUpdates();
+    await waitForUpdateFlow;
   } catch (error) {
     console.error('LAS Revision Desk update check failed:', error);
     updateCheckStatus('Update check unavailable', 'We couldn’t check for updates. You can continue using the current version.');
     updateCheckError();
     closeUpdateCheckWindowAfterStatus(1800);
+    finishUpdateFlow(1800);
+    await waitForUpdateFlow;
   }
+  return openMainWindow;
 }
 
 function createWindow() {
@@ -146,11 +167,14 @@ function createWindow() {
     }
   });
 
+  window.maximize();
   window.loadFile(path.join(__dirname, 'index.html'));
 }
 
 app.whenReady().then(() => {
-  checkForUpdatesBeforeLaunch().finally(createWindow);
+  checkForUpdatesBeforeLaunch().then((openMainWindow) => {
+    if (openMainWindow) createWindow();
+  });
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
