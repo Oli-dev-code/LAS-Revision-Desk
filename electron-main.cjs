@@ -70,12 +70,13 @@ function formatDuration(seconds) {
 }
 
 async function checkForUpdatesBeforeLaunch() {
-  if (!app.isPackaged) return;
+  const developmentBuild = !app.isPackaged;
+  if (developmentBuild) autoUpdater.forceDevUpdateConfig = true;
 
   createUpdateCheckWindow();
 
   autoUpdater.autoDownload = true;
-  autoUpdater.autoInstallOnAppQuit = true;
+  autoUpdater.autoInstallOnAppQuit = !developmentBuild;
   autoUpdater.on('checking-for-update', () => console.log('Checking for LAS Revision Desk updates...'));
   autoUpdater.on('update-available', (info) => {
     console.log(`LAS Revision Desk update available: ${info.version}`);
@@ -101,6 +102,11 @@ async function checkForUpdatesBeforeLaunch() {
     closeUpdateCheckWindowAfterStatus(1800);
   });
   autoUpdater.on('update-downloaded', () => {
+    if (developmentBuild) {
+      updateCheckStatus('Update downloaded', 'A development update is ready for the packaged application.');
+      closeUpdateCheckWindowAfterStatus(1400);
+      return;
+    }
     const choice = dialog.showMessageBoxSync({
       type: 'info',
       buttons: ['Restart and install', 'Later'],
