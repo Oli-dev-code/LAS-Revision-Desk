@@ -4,7 +4,11 @@ const modeViews = document.querySelectorAll('.mode-view');
 const dashboardQuestionDatabase = window.questionDatabase || [];
 const topicCatalog = window.topicCatalog || [];
 const themeToggle = document.getElementById('theme-toggle');
-let selectedTopic = topicCatalog[0]?.id || 'body';
+let selectedTopic = topicCatalog.find((topic) => !(window.lasProgress?.learntTopics?.() || []).includes(topic.id))?.id || topicCatalog[0]?.id || 'body';
+try {
+  const savedTopic = localStorage.getItem('las-revision-selected-topic');
+  if (savedTopic && topicCatalog.some((topic) => topic.id === savedTopic)) selectedTopic = savedTopic;
+} catch { /* Optional preference. */ }
 let testIndex = 0;
 let quizIndex = 0;
 
@@ -129,7 +133,7 @@ document.getElementById('resume-topic')?.addEventListener('click', openLearnPage
 document.getElementById('view-topic')?.addEventListener('click', openLearnPage);
 
 if (topicCatalog.length) {
-  document.querySelector('.course-list').innerHTML = topicCatalog.map((topic, index) => `<button class="course-item${index === 0 ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${index === 0 ? ' current' : ''}">${index + 1}</span><span class="course-name">${topic.name}</span></button>`).join('');
+  document.querySelector('.course-list').innerHTML = topicCatalog.map((topic, index) => `<button class="course-item${topic.id === selectedTopic ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${topic.id === selectedTopic ? ' current' : ''}">${index + 1}</span><span class="course-name">${topic.name}</span></button>`).join('');
   document.querySelector('.mode-intro p').innerHTML = `${topicCatalog[0].name} <span> - </span> Questions filtered to this topic`;
   document.querySelector('.mode-tab[href^="learn"]').href = `learn.html?topic=${selectedTopic}`;
   document.querySelector('.mode-tab:not([data-flagged-test])[href^="test"]').href = `test.html?topic=${selectedTopic}`;
@@ -171,6 +175,11 @@ document.getElementById('reveal-answer').addEventListener('click', () => {
 });
 
 document.getElementById('quiz-got-it').addEventListener('click', () => showToast('Nice recall'));
+document.getElementById('new-question')?.addEventListener('click', () => {
+  quizIndex += 1;
+  renderQuizQuestion();
+  showToast('A new question is ready');
+});
 document.getElementById('mark-learned')?.addEventListener('click', (event) => {
   window.lasProgress?.markLearnt(selectedTopic);
   event.currentTarget.innerHTML = 'Reviewed <span>✓</span>';
@@ -192,11 +201,98 @@ document.querySelectorAll('.answers button').forEach((answer) => {
   });
 });
 
-document.getElementById('new-question').addEventListener('click', () => {
-  document.querySelectorAll('.answers button').forEach((item) => item.classList.remove('correct', 'wrong'));
-  document.querySelector('.quiz-feedback').textContent = '';
-  showToast('A new question is ready');
-});
-
 renderTestQuestion();
 renderQuizQuestion();
+
+// Dashboard state is derived from the progress store so the overview never shows stale demo data.
+function formatDashboardTime(milliseconds) {
+  const minutes = Math.floor(milliseconds / 60000);
+  return minutes < 60 ? `${minutes}m` : `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
+}
+
+function topicCompletion(topicId) {
+  if (window.lasProgress?.isLearnt(topicId)) return 100;
+  const questions = dashboardQuestionDatabase.filter((question) => question.topic === topicId);
+  const history = window.lasProgress?.questionHistory?.() || {};
+  const answered = questions.reduce((total, question) => total + (history[question.id]?.answered || 0), 0);
+  return questions.length ? Math.min(99, Math.round((answered / questions.length) * 100)) : 0;
+}
+
+function renderDashboardFocus() {
+  const topic = topicCatalog.find((item) => item.id === selectedTopic) || topicCatalog[0];
+  if (!topic) return;
+  const progress = topicCompletion(topic.id);
+  const topicQuestions = dashboardQuestionDatabase.filter((question) => question.topic === topic.id);
+  document.getElementById('focus-topic-number').textContent = String(topicCatalog.indexOf(topic) + 1).padStart(2, '0');
+  document.getElementById('focus-topic-tag').textContent = topic.name.toUpperCase();
+  document.getElementById('focus-topic-name').textContent = topic.name;
+  document.getElementById('focus-topic-description').textContent = topic.description || 'Review the essential knowledge for this topic.';
+  document.getElementById('focus-topic-source').textContent = `Source: ${topic.source}`;
+  document.getElementById('focus-topic-questions').textContent = `${topicQuestions.length} questions`;
+  document.getElementById('focus-topic-percent').innerHTML = `${progress}<small>%</small>`;
+  document.getElementById('focus-topic-ring').style.background = `conic-gradient(#75bbae 0 ${progress}%,#385d68 ${progress}% 100%)`;
+  document.getElementById('focus-topic-status').textContent = progress === 100 ? 'Reviewed' : progress ? 'In progress' : 'Not started';
+  document.querySelector('.mode-intro p').innerHTML = `${topic.name} <span>·</span> Questions filtered to this topic`;
+  document.querySelector('.mode-tab[href^="learn"]').href = `learn.html?topic=${topic.id}`;
+  document.querySelector('.mode-tab:not([data-flagged-test])[href^="test"]').href = `test.html?topic=${topic.id}`;
+  document.querySelector('.mode-tab[href^="quiz"]').href = `quiz.html?topic=${topic.id}`;
+  document.getElementById('resume-topic').onclick = () => window.location.assign(`learn.html?topic=${topic.id}`);
+}
+
+function renderDashboardStats() {
+  const stats = window.lasProgress?.questionStats() || { answered: 0, correct: 0 };
+  const learnt = window.lasProgress?.learntTopics() || [];
+  const time = window.lasProgress?.revisionTime?.() || { todayMs: 0, totalMs: 0 };
+  const cards = document.querySelectorAll('.stats-grid .stat-card');
+  cards[0].querySelector('strong').textContent = formatDashboardTime(time.todayMs);
+  cards[0].querySelector('small').textContent = 'Revision today';
+  cards[1].querySelector('strong').textContent = stats.answered;
+  cards[1].querySelector('small').innerHTML = stats.answered ? `<em>${Math.round((stats.correct / stats.answered) * 100)}%</em> average score` : 'No questions completed yet';
+  cards[2].querySelector('strong').textContent = `${learnt.length}/${topicCatalog.length}`;
+  cards[2].querySelector('small').textContent = `${topicCatalog.length - learnt.length} topics remaining`;
+  const progress = topicCatalog.length ? Math.round((learnt.length / topicCatalog.length) * 100) : 0;
+  document.querySelector('.progress-top strong').textContent = `${progress}%`;
+  document.querySelector('.progress-track span').style.width = `${progress}%`;
+  document.querySelector('.course-progress p').textContent = `${learnt.length} of ${topicCatalog.length} topics reviewed`;
+}
+
+function renderDashboardActivity() {
+  const time = window.lasProgress?.revisionTime?.() || { dailyMs: {} };
+  const days = [];
+  for (let offset = 6; offset >= 0; offset -= 1) {
+    const date = new Date();
+    date.setHours(12, 0, 0, 0);
+    date.setDate(date.getDate() - offset);
+    const key = date.toISOString().slice(0, 10);
+    days.push({ key, label: date.toLocaleDateString(undefined, { weekday: 'short' }), minutes: Math.round((time.dailyMs?.[key] || 0) / 60000) });
+  }
+  const max = Math.max(20, Math.ceil(Math.max(...days.map((day) => day.minutes), 0) / 20) * 20);
+  document.getElementById('chart-max').textContent = `${max}m`;
+  document.getElementById('chart-mid').textContent = `${Math.round(max * 2 / 3)}m`;
+  const today = new Date().toISOString().slice(0, 10);
+  document.getElementById('activity-bars').innerHTML = days.map((day) => `<span class="${day.key === today ? 'today' : ''}" style="height:${day.minutes ? Math.max(4, (day.minutes / max) * 100) : 2}%" title="${day.minutes} minutes"><b>${day.label}</b></span>`).join('');
+  const total = days.reduce((sum, day) => sum + day.minutes, 0);
+  document.getElementById('activity-summary').textContent = total ? `${total}m this week` : 'No activity recorded yet';
+}
+
+function refreshDashboard() {
+  renderDashboardFocus();
+  renderDashboardStats();
+  renderDashboardActivity();
+}
+
+const originalSetDashboardTopic = window.setDashboardTopic;
+window.setDashboardTopic = (topic) => {
+  selectedTopic = topic;
+  try { localStorage.setItem('las-revision-selected-topic', topic); } catch { /* Optional preference. */ }
+  originalSetDashboardTopic?.(topic);
+  refreshDashboard();
+};
+
+refreshDashboard();
+window.setInterval(refreshDashboard, 15000);
+document.querySelectorAll('.course-item').forEach((item) => item.addEventListener('click', () => {
+  selectedTopic = item.dataset.topic;
+  try { localStorage.setItem('las-revision-selected-topic', selectedTopic); } catch { /* Optional preference. */ }
+  refreshDashboard();
+}));
