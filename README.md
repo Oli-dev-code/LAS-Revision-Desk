@@ -32,9 +32,11 @@ Download it, place it in a suitable folder and run the `.exe` file.
 - Topic completion tracking
 - Light and dark modes
 
-## Windows security notice
+## Windows security and code signing
 
-Windows may display a SmartScreen warning because the application is not signed with a commercial code-signing certificate. Check that the file was downloaded from the official release link above before choosing **More info** and **Run anyway**.
+Published Windows installers and portable builds are signed with the LAS Revision Desk code-signing certificate. Windows should therefore show a verified publisher and SmartScreen warnings should be substantially reduced over time as the release reputation grows.
+
+Local builds are not signed unless `CSC_LINK` and `CSC_KEY_PASSWORD` are supplied to electron-builder. Do not commit certificates or passwords to the repository.
 
 ## For developers
 
@@ -52,3 +54,12 @@ npm run package
 ```
 
 The generated files are placed in the `release` folder.
+
+### Release signing
+
+The GitHub Actions release workflow expects these repository secrets:
+
+- `WINDOWS_CERTIFICATE_BASE64`: the base64-encoded `.pfx` signing certificate
+- `WINDOWS_CERTIFICATE_PASSWORD`: the password for that certificate
+
+When both secrets are present, the workflow writes the certificate to the temporary GitHub Actions runner and exposes it to electron-builder through `CSC_LINK` and `CSC_KEY_PASSWORD`. If either secret is missing, the workflow currently continues with an unsigned build and prints a warning. The certificate remains outside the repository.

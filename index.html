@@ -14,17 +14,9 @@
         <img class="brand-logo" src="assets/las-logo.png" alt="London Ambulance Service">
       </div>
 
-      <div class="profile-switcher">
-        <div class="avatar">LR</div>
-        <div class="profile-copy"><strong>Study profile</strong><span>Learner</span></div>
-        <button class="icon-button" aria-label="Open profile menu">⌄</button>
-      </div>
-
       <nav class="primary-nav" aria-label="Primary navigation">
         <button class="nav-item active" data-view="overview"><span class="nav-icon">⌂</span>Overview</button>
         <button class="nav-item" data-view="topics"><span class="nav-icon">▦</span>Topic library <span class="nav-count">14</span></button>
-        <button class="nav-item" data-view="practice"><span class="nav-icon">◉</span>Practice</button>
-        <button class="nav-item" data-view="notes"><span class="nav-icon">▤</span>My notes</button>
       </nav>
 
       <div class="sidebar-label">Your course</div>
@@ -47,7 +39,7 @@
       <header class="topbar">
         <span class="app-version">v1.0.41</span>
         <div class="breadcrumb"><span>Workspace</span><b>/</b><strong>Overview</strong></div>
-        <div class="top-actions"><button class="streak"><span>✦</span> 4 day streak</button><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false"><span class="theme-icon">☾</span><span class="theme-label">Dark mode</span></button><button class="icon-button" aria-label="Notifications">♢<i></i></button><div class="mini-avatar">LR</div></div>
+        <div class="top-actions"><button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false"><span class="theme-icon">☾</span><span class="theme-label">Dark mode</span></button></div>
       </header>
 
       <div class="content-wrap" id="app-content">
@@ -90,24 +82,20 @@
           <section class="panel focus-panel">
             <div class="panel-heading"><div><span class="section-kicker">Continue learning</span><h2>Today’s focus</h2></div><button class="text-button" id="view-topic">View topic <span>→</span></button></div>
             <div class="focus-content">
-              <div class="topic-number">02</div>
-              <div class="topic-copy"><span class="topic-tag">PATIENT ASSESSMENT</span><h3>Primary survey &amp; vital signs</h3><p>Build a reliable first impression of your patient using the <strong>ABCDE</strong> approach and recognise immediate threats.</p><div class="topic-meta"><span>◷ 18 min read</span><span>▤ 8 key notes</span></div></div>
-              <div class="topic-progress"><div class="ring"><span>65<small>%</small></span></div><span>In progress</span></div>
+              <div class="topic-number" id="focus-topic-number">01</div>
+              <div class="topic-copy"><span class="topic-tag" id="focus-topic-tag">CURRENT TOPIC</span><h3 id="focus-topic-name">Loading topic…</h3><p id="focus-topic-description">Loading your next revision topic.</p><div class="topic-meta"><span id="focus-topic-source">Source loading</span><span id="focus-topic-questions">Questions loading</span></div></div>
+              <div class="topic-progress"><div class="ring" id="focus-topic-ring"><span id="focus-topic-percent">0<small>%</small></span></div><span id="focus-topic-status">Not started</span></div>
             </div>
             <button class="focus-cta" id="resume-topic"><span>▶</span> Resume topic <kbd>R</kbd></button>
           </section>
 
           <section class="panel activity-panel">
             <div class="panel-heading"><div><span class="section-kicker">Your activity</span><h2>Study rhythm</h2></div><button class="icon-button" aria-label="Activity options">•••</button></div>
-            <div class="chart"><div class="chart-y"><span>60m</span><span>40m</span><span>20m</span><span>0</span></div><div class="chart-area"><div class="chart-gridlines"><i></i><i></i><i></i><i></i></div><div class="bars"><span style="height:26%"><b>Mon</b></span><span style="height:52%"><b>Tue</b></span><span style="height:34%"><b>Wed</b></span><span style="height:78%"><b>Thu</b></span><span class="today" style="height:62%"><b>Fri</b></span><span style="height:12%"><b>Sat</b></span><span style="height:8%"><b>Sun</b></span></div></div></div>
-            <div class="chart-note"><span class="legend-dot"></span> Minutes studied <strong>+18%</strong> this week</div>
+            <div class="chart"><div class="chart-y"><span id="chart-max">60m</span><span id="chart-mid">40m</span><span>20m</span><span>0</span></div><div class="chart-area"><div class="chart-gridlines"><i></i><i></i><i></i><i></i></div><div class="bars" id="activity-bars"></div></div></div>
+            <div class="chart-note"><span class="legend-dot"></span> Minutes studied <strong id="activity-summary">No activity recorded yet</strong></div>
           </section>
         </div>
 
-        <div class="lower-grid">
-          <section class="panel next-panel"><div class="panel-heading"><div><span class="section-kicker">Keep moving</span><h2>Next up</h2></div><button class="text-button" data-view="topics">See all <span>→</span></button></div><div class="next-list"><button class="next-item"><span class="next-icon orange">!</span><span><strong>Shock &amp; perfusion</strong><small>Trauma &amp; shock · 12 questions</small></span><span class="next-arrow">→</span></button><button class="next-item"><span class="next-icon blue">+</span><span><strong>Respiratory emergencies</strong><small>Medical emergencies · 9 questions</small></span><span class="next-arrow">→</span></button><button class="next-item"><span class="next-icon green">✓</span><span><strong>Medication calculations</strong><small>Clinical skills · 15 questions</small></span><span class="next-arrow">→</span></button></div></section>
-          <section class="panel quiz-panel"><div class="panel-heading"><div><span class="section-kicker">Quick check</span><h2>Test yourself</h2></div><span class="question-count">1 of 3</span></div><p class="question">What is the first priority when assessing an unwell patient?</p><div class="answers"><button data-answer="wrong">Obtain a full medical history</button><button data-answer="correct">Identify and treat immediate life threats</button><button data-answer="wrong">Record a 12-lead ECG</button></div><div class="quiz-feedback" aria-live="polite"></div><button class="text-button quiz-next" id="new-question">New question <span>↗</span></button></section>
-        </div>
       </div>
     </main>
   </div>
@@ -116,6 +104,5 @@
   <script src="topic-catalog.js"></script>
   <script src="progress-store.js"></script>
   <script src="app.js"></script>
-  <script src="dashboard-controls.js"></script>
 </body>
 </html>
