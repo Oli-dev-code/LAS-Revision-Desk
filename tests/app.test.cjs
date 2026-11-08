@@ -100,3 +100,16 @@ test('update UI wiring includes progress and recoverable error states', () => {
   assert.match(updater, /We couldn.?t check for updates/);
   assert.match(updater, /forceDevUpdateConfig/);
 });
+
+test('test sessions render richer result summaries and recommendations', () => {
+  const studyPage = read('study-page.js');
+  const styles = read('study-page.css');
+  assert.match(studyPage, /let sessionStart = Date\.now\(\)/);
+  assert.match(studyPage, /Time spent/);
+  assert.match(studyPage, /Weak topics/);
+  assert.match(studyPage, /Missed/);
+  assert.match(studyPage, /focused-test\.html\?topic=/);
+  assert.match(studyPage, /learn\.html\?topic=/);
+  assert.match(styles, /\.results-summary/);
+  assert.match(styles, /\.recommendation-card/);
+});
