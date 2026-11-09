@@ -1,8 +1,4 @@
 const toast = document.getElementById('toast');
-// Electron's CSS viewport can fall below the physical desktop width under Windows display scaling.
-// The app's native minimum width is 1024px, so narrower dashboard viewports are scaled desktop windows.
-const scaledDesktop = window.innerWidth < 1100;
-if (scaledDesktop) document.body.classList.add('scaled-display');
 const modeTabs = document.querySelectorAll('.mode-tab');
 const modeViews = document.querySelectorAll('.mode-view');
 const dashboardQuestionDatabase = window.questionDatabase || [];
