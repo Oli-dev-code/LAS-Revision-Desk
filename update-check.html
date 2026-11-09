@@ -24,6 +24,11 @@
     .error .progress-track{background:#f7e5e1}.error .progress-track span{background:#c96d5d}.error .secure i{background:#c96d5d}
     .secure{display:flex;align-items:center;gap:5px}
     .secure i{width:6px;height:6px;border-radius:50%;background:#61ae8d}
+    .ready-actions{display:flex;gap:8px;margin-top:16px}
+    .ready-actions[hidden]{display:none}
+    .ready-actions a{flex:1;padding:9px 8px;border-radius:5px;text-align:center;text-decoration:none;font-size:10px;font-weight:700}
+    .restart-action{background:var(--teal);color:#fff}
+    .later-action{border:1px solid var(--line);color:var(--teal)}
     @keyframes progress{0%{transform:translateX(-120%)}100%{transform:translateX(330%)}}
   </style>
 </head>
@@ -35,6 +40,7 @@
     <p class="detail">Please wait a moment.</p>
     <div class="progress-track indeterminate" aria-label="Update download progress"><span></span></div>
     <div class="download-meta"><span class="progress-label">Preparing...</span><span class="download-stats"></span></div>
+    <div class="ready-actions" hidden><a class="restart-action" href="las-revision://restart">Restart and install</a><a class="later-action" href="las-revision://later">Later</a></div>
     <div class="footer"><span>Starting securely</span><span class="secure"><i></i> Connected</span></div>
   </main>
 </body>
