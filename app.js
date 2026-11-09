@@ -1,4 +1,6 @@
 const toast = document.getElementById('toast');
+const scaledDesktop = window.devicePixelRatio > 1.25 || (window.innerWidth < 900 && window.screen?.availWidth > 1200);
+if (scaledDesktop) document.body.classList.add('scaled-display');
 const modeTabs = document.querySelectorAll('.mode-tab');
 const modeViews = document.querySelectorAll('.mode-view');
 const dashboardQuestionDatabase = window.questionDatabase || [];

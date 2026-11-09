@@ -36,3 +36,18 @@ body[data-theme="dark"] .progress-track{background:#365258}body[data-theme="dark
   .mode-tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
   .mode-tab{width:auto;min-height:108px;padding:14px 12px}
 }
+
+/* Treat high-DPI maximized Windows windows as desktop layouts, even when their CSS viewport is narrow. */
+body.scaled-display .app-shell{display:flex}
+body.scaled-display .sidebar{width:220px;min-width:220px;padding:20px 12px 16px}
+body.scaled-display .brand{padding:0 8px 20px}
+body.scaled-display .primary-nav{display:grid;overflow:visible}
+body.scaled-display .nav-item{flex:initial;white-space:normal}
+body.scaled-display .sidebar-label,body.scaled-display .course-progress,body.scaled-display .course-list,body.scaled-display .sidebar-footer{display:block}
+body.scaled-display .course-list{display:grid}
+body.scaled-display .sidebar-footer{display:flex}
+body.scaled-display .main-content{width:auto;flex:1}
+body.scaled-display .stats-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+body.scaled-display .dashboard-grid{grid-template-columns:1fr}
+body.scaled-display .mode-tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+body.scaled-display .mode-tab{width:auto;min-height:108px;padding:14px 12px}
