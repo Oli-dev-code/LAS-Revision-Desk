@@ -1,4 +1,4 @@
-const { app, BrowserWindow, dialog } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('node:path');
 
@@ -7,7 +7,7 @@ let updateCheckWindow;
 function createUpdateCheckWindow() {
   updateCheckWindow = new BrowserWindow({
     width: 360,
-    height: 250,
+    height: 300,
     useContentSize: true,
     resizable: false,
     minimizable: false,
@@ -25,6 +25,11 @@ function createUpdateCheckWindow() {
   });
   updateCheckWindow.setMenuBarVisibility(false);
   updateCheckWindow.once('ready-to-show', () => updateCheckWindow.show());
+  updateCheckWindow.webContents.on('will-navigate', (event, url) => {
+    if (!url.startsWith('las-revision://')) return;
+    event.preventDefault();
+    updateCheckWindow.webContents.emit('update-action', url.replace('las-revision://', ''));
+  });
   updateCheckWindow.loadFile(path.join(__dirname, 'update-check.html'));
   return updateCheckWindow;
 }
@@ -43,6 +48,11 @@ function updateCheckProgress(percent, speed, eta) {
 function updateCheckError() {
   if (!updateCheckWindow || updateCheckWindow.isDestroyed()) return;
   updateCheckWindow.webContents.executeJavaScript(`(() => { const root = document.querySelector('.window'); const track = document.querySelector('.progress-track'); const label = document.querySelector('.progress-label'); const stats = document.querySelector('.download-stats'); if (!root || !track || !label || !stats) return; root.classList.add('error'); track.classList.remove('indeterminate'); track.querySelector('span').style.width = '0'; label.textContent = 'Continuing with the current version'; stats.textContent = ''; })()`).catch(() => {});
+}
+
+function showUpdateReady(version) {
+  if (!updateCheckWindow || updateCheckWindow.isDestroyed()) return;
+  updateCheckWindow.webContents.executeJavaScript(`(() => { const root = document.querySelector('.window'); const track = document.querySelector('.progress-track'); const label = document.querySelector('.progress-label'); const stats = document.querySelector('.download-stats'); const actions = document.querySelector('.ready-actions'); if (!root || !track || !label || !stats || !actions) return; root.classList.remove('error'); document.querySelector('.status').textContent = 'Update ready to install'; document.querySelector('.detail').textContent = ${JSON.stringify(`Version ${version} has been downloaded.`)}; track.classList.remove('indeterminate'); track.querySelector('span').style.width = '100%'; label.textContent = 'Download complete'; stats.textContent = ''; actions.hidden = false; })()`).catch(() => {});
 }
 
 function closeUpdateCheckWindow() {
@@ -86,6 +96,16 @@ async function checkForUpdatesBeforeLaunch() {
 
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = !developmentBuild;
+  updateCheckWindow.webContents.on('update-action', (action) => {
+    if (action === 'restart') {
+      openMainWindow = false;
+      autoUpdater.quitAndInstall();
+    }
+    if (action === 'later') {
+      closeUpdateCheckWindow();
+      finishUpdateFlow();
+    }
+  });
   autoUpdater.on('checking-for-update', () => console.log('Checking for LAS Revision Desk updates...'));
   autoUpdater.on('update-available', (info) => {
     console.log(`LAS Revision Desk update available: ${info.version}`);
@@ -112,29 +132,14 @@ async function checkForUpdatesBeforeLaunch() {
     closeUpdateCheckWindowAfterStatus(1800);
     finishUpdateFlow(1800);
   });
-  autoUpdater.on('update-downloaded', () => {
+  autoUpdater.on('update-downloaded', (info) => {
     if (developmentBuild) {
       updateCheckStatus('Update downloaded', 'A development update is ready for the packaged application.');
       closeUpdateCheckWindowAfterStatus(1400);
       finishUpdateFlow(1400);
       return;
     }
-    const choice = dialog.showMessageBoxSync({
-      type: 'info',
-      buttons: ['Restart and install', 'Later'],
-      defaultId: 0,
-      cancelId: 1,
-      title: 'LAS Revision Desk update ready',
-      message: 'A new version of LAS Revision Desk has been downloaded.',
-      detail: 'Restart the app now to install the update.'
-    });
-
-    if (choice === 0) {
-      openMainWindow = false;
-      autoUpdater.quitAndInstall();
-    } else {
-      finishUpdateFlow();
-    }
+    showUpdateReady(info?.version || 'the latest version');
   });
 
   try {

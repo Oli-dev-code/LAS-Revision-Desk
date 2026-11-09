@@ -99,6 +99,10 @@ test('update UI wiring includes progress and recoverable error states', () => {
   assert.match(updater, /remaining/);
   assert.match(updater, /We couldn.?t check for updates/);
   assert.match(updater, /forceDevUpdateConfig/);
+  assert.match(updater, /showUpdateReady/);
+  assert.doesNotMatch(updater, /showMessageBoxSync/);
+  assert.match(read('update-check.html'), /las-revision:\/\/restart/);
+  assert.match(read('update-check.html'), /Restart and install/);
 });
 
 test('test sessions render richer result summaries and recommendations', () => {
