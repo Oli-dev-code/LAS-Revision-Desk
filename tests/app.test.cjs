@@ -85,6 +85,19 @@ test('navigation exposes the dashboard and topic-library routes', () => {
   assert.match(read('index.html'), /Trauma Exam/);
 });
 
+test('Trauma Exam selects 50 questions with required coverage pools', () => {
+  const context = { window: {} };
+  vm.runInNewContext(`${read('question-bank.js')}\nwindow.loadedQuestions = questionDatabase;`, context);
+  const config = context.window.traumaExamConfig;
+  assert.equal(config.questionCount, 50);
+  assert.equal(config.coverage.length, 16);
+  assert.ok(config.coverage.some((pool) => pool.id === 'cushings-triad' && pool.questionIds.includes('head-injuries-23')));
+  assert.ok(config.coverage.some((pool) => pool.id === 'retroperitoneal' && pool.questionIds.includes('abdominal-injuries-02')));
+  assert.ok(config.coverage.some((pool) => pool.id === 'msc' && pool.questionIds.includes('musculoskeletal-injuries-17')));
+  assert.ok(config.traumaTopics.includes('burns'));
+  assert.ok(config.traumaTopics.includes('suspension-blast-ballistics'));
+});
+
 test('question scoring identifies the configured correct answer', () => {
   const questions = [];
   const context = { window: {}, questionDatabase: questions };

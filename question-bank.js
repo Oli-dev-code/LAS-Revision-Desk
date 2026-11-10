@@ -1683,3 +1683,33 @@ addQuestions('extrication-light-rescue', [
   ['What should happen after the patient has been extricated?', 'Stop monitoring because the rescue is complete|Remove all documentation|Assume no injury was caused by the entrapment|Repeat assessment, reassess injuries and hand over the mechanism, findings and interventions', 3, 'After rescue, reassess the patient, check for hidden injury, review observations and provide a structured handover.']
 ]);
 window.questionDatabase = questionDatabase;
+// The Trauma Exam is assembled at runtime from this existing question bank.
+// Each pool guarantees coverage of the requested subject area; remaining places
+// are filled randomly from the wider trauma question set.
+window.traumaExamConfig = {
+  questionCount: 50,
+  traumaTopics: [
+    'trauma', 'chest-injuries', 'suspension-blast-ballistics', 'abdominal-injuries',
+    'head-injuries', 'wounds-and-bleeding', 'burns', 'extrication-light-rescue',
+    'musculoskeletal-injuries', 'clinical-shock', 'spinal-pelvic-injuries',
+    'maxillofacial-injuries'
+  ],
+  coverage: [
+    { id: 'c-spine', label: 'C-spine management', minimum: 3, questionIds: ['spinal-pelvic-injuries-25', 'spinal-pelvic-injuries-27', 'head-injuries-18'] },
+    { id: 'airway-support', label: 'Airway support with facial or C-spine injury', minimum: 2, questionIds: ['maxillofacial-injuries-03', 'maxillofacial-injuries-06', 'head-injuries-27'] },
+    { id: 'fractures', label: 'Fractures and blood loss', minimum: 4, questionIds: ['musculoskeletal-injuries-09', 'musculoskeletal-injuries-10', 'musculoskeletal-injuries-11', 'musculoskeletal-injuries-24', 'musculoskeletal-injuries-25', 'musculoskeletal-injuries-26', 'wounds-and-bleeding-28'] },
+    { id: 'mechanism', label: 'Mechanism of injury', minimum: 4, questionIds: ['trauma-02', 'trauma-05', 'trauma-06', 'trauma-24', 'musculoskeletal-injuries-01', 'abdominal-injuries-21', 'chest-injuries-04', 'suspension-blast-ballistics-30'] },
+    { id: 'pelvis', label: 'Pelvic injury management', minimum: 3, questionIds: ['spinal-pelvic-injuries-05', 'spinal-pelvic-injuries-08', 'spinal-pelvic-injuries-09', 'spinal-pelvic-injuries-10', 'spinal-pelvic-injuries-11', 'spinal-pelvic-injuries-12', 'musculoskeletal-injuries-26'] },
+    { id: 'msc', label: 'MSC assessment', minimum: 2, questionIds: ['musculoskeletal-injuries-17', 'musculoskeletal-injuries-18', 'musculoskeletal-injuries-19'] },
+    { id: 'terms', label: 'Trauma terms', minimum: 2, questionIds: ['trauma-02', 'trauma-14', 'trauma-15', 'head-injuries-14'] },
+    { id: 'head-skull', label: 'Head injuries and skull fractures', minimum: 4, questionIds: ['head-injuries-08', 'head-injuries-09', 'head-injuries-10', 'head-injuries-11', 'head-injuries-12', 'head-injuries-13', 'head-injuries-26', 'head-injuries-27'] },
+    { id: 'gcs', label: 'GCS', minimum: 2, questionIds: ['head-injuries-14', 'head-injuries-15', 'head-injuries-16', 'head-injuries-17'] },
+    { id: 'cushings-triad', label: "Cushing's triad", minimum: 1, questionIds: ['head-injuries-23'] },
+    { id: 'wounds', label: 'Wounds and causes', minimum: 3, questionIds: ['wounds-and-bleeding-01', 'wounds-and-bleeding-03', 'wounds-and-bleeding-05', 'wounds-and-bleeding-07', 'wounds-and-bleeding-08', 'wounds-and-bleeding-14', 'wounds-and-bleeding-15', 'wounds-and-bleeding-21'] },
+    { id: 'shock', label: 'Traumatic shock', minimum: 4, questionIds: ['clinical-shock-01', 'clinical-shock-03', 'clinical-shock-04', 'clinical-shock-14', 'clinical-shock-17', 'clinical-shock-18', 'clinical-shock-20', 'clinical-shock-25', 'clinical-shock-29', 'trauma-36', 'trauma-37'] },
+    { id: 'suspension', label: 'Suspension injury', minimum: 3, questionIds: ['suspension-blast-ballistics-01', 'suspension-blast-ballistics-02', 'suspension-blast-ballistics-05', 'suspension-blast-ballistics-06', 'suspension-blast-ballistics-07', 'suspension-blast-ballistics-09', 'suspension-blast-ballistics-14', 'suspension-blast-ballistics-18'] },
+    { id: 'open-closed-fractures', label: 'Open and closed fractures', minimum: 2, questionIds: ['musculoskeletal-injuries-09', 'musculoskeletal-injuries-10', 'musculoskeletal-injuries-11'] },
+    { id: 'burns', label: 'Burns', minimum: 4, questionIds: ['burns-01', 'burns-03', 'burns-04', 'burns-05', 'burns-06', 'burns-07', 'burns-08', 'burns-10', 'burns-14', 'burns-18', 'burns-19', 'burns-21', 'burns-23', 'burns-25', 'burns-28', 'burns-30'] },
+    { id: 'retroperitoneal', label: 'Retroperitoneal cavity', minimum: 1, questionIds: ['abdominal-injuries-02'] }
+  ]
+};
