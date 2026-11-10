@@ -4,7 +4,7 @@ const modeViews = document.querySelectorAll('.mode-view');
 const dashboardQuestionDatabase = window.questionDatabase || [];
 const topicCatalog = window.topicCatalog || [];
 const topicGrouping = window.topicGrouping || { dashboardGroups: [] };
-const traumaTopicIds = new Set(topicGrouping.traumaTopicIds || []);
+const dashboardTraumaTopicIds = new Set(topicGrouping.traumaTopicIds || []);
 const themeToggle = document.getElementById('theme-toggle');
 const topicCountBadge = document.querySelector('.nav-count');
 if (topicCountBadge) topicCountBadge.textContent = topicCatalog.length;
@@ -137,7 +137,7 @@ document.getElementById('view-topic')?.addEventListener('click', openLearnPage);
 if (topicCatalog.length) {
   const courseGroups = topicGrouping.dashboardGroups?.length
     ? topicGrouping.dashboardGroups.map((group) => [group.name, topicCatalog.filter(group.matches)])
-    : [['Medical', topicCatalog.filter((topic) => !traumaTopicIds.has(topic.id))], ['Trauma', topicCatalog.filter((topic) => traumaTopicIds.has(topic.id))]];
+    : [['Medical', topicCatalog.filter((topic) => !dashboardTraumaTopicIds.has(topic.id))], ['Trauma', topicCatalog.filter((topic) => dashboardTraumaTopicIds.has(topic.id))]];
   const courseList = document.querySelector('.course-list');
   courseList.innerHTML = courseGroups.map(([label, topicsInGroup]) => `<section class="course-group collapsed" aria-label="${label} topics"><button class="course-group-toggle" type="button" aria-expanded="false"><span>${label}</span><span class="course-group-chevron" aria-hidden="true">⌃</span></button><div class="course-group-items" hidden>${topicsInGroup.map((topic, index) => `<button class="course-item${topic.id === selectedTopic ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${topic.id === selectedTopic ? ' current' : ''}">${index + 1}</span><span class="course-name">${topic.name}</span></button>`).join('')}</div></section>`).join('');
   courseList.addEventListener('click', (event) => {
