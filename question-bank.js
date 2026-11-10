@@ -1682,6 +1682,22 @@ addQuestions('extrication-light-rescue', [
   ['Which combination of findings should trigger early escalation and prioritised rescue planning?', 'A stable patient with no hazards|Airway compromise, shock, reduced consciousness or a dangerous environment|A completed equipment check only|A normal observation with no mechanism', 1, 'Time-critical features include airway or breathing compromise, haemorrhage, shock, reduced consciousness and dangerous environments.'],
   ['What should happen after the patient has been extricated?', 'Stop monitoring because the rescue is complete|Remove all documentation|Assume no injury was caused by the entrapment|Repeat assessment, reassess injuries and hand over the mechanism, findings and interventions', 3, 'After rescue, reassess the patient, check for hidden injury, review observations and provide a structured handover.']
 ]);
+addQuestions('respiratory-conditions', [
+  ['Which asthma categories are described in the supplied deck?', 'Mild, moderate, acute severe and life-threatening|Viral, bacterial, fungal and allergic only|Stable, unstable and terminal only|Upper, middle and lower asthma', 0, 'The deck describes mild, moderate, acute severe and life-threatening asthma.'],
+  ['Which feature is associated with acute severe asthma in the supplied deck?', 'Inability to complete sentences, raised pulse or respiratory rate, and PEFR 33–50% of best or predicted|A normal respiratory rate and PEFR above 80%|A silent chest with exhaustion and altered consciousness only|No symptoms or airway obstruction', 0, 'The deck identifies inability to complete sentences, raised pulse or respiratory rate and PEFR 33–50% of best or predicted as severe features.'],
+  ['Which feature indicates life-threatening asthma?', 'A mild cough that resolves with rest|PEFR below 33%, silent chest, exhaustion, cyanosis, altered consciousness or hypotension|A normal oxygen saturation and normal speech|A peak flow that is unchanged from baseline', 1, 'Life-threatening features include PEFR below 33%, silent chest, exhaustion, cyanosis, altered consciousness, poor respiratory effort, SpO2 below 92%, arrhythmia or hypotension.']
+]);
+addQuestions('cardiac-conditions', [
+  ['Where can fluid commonly accumulate in heart failure?', 'In the lungs and dependent peripheral tissues, causing pulmonary congestion or oedema|Only inside the stomach|Only within the skull|Only around a single joint', 0, 'Heart failure can cause congestion and fluid accumulation in the lungs and dependent peripheral tissues, contributing to breathlessness and oedema.']
+]);
+addQuestions('sepsis', [
+  ['What is colonisation?', 'The presence of microorganisms on or in the body without causing infection or tissue invasion|The period between exposure and symptoms|The deliberate introduction of a drug into a vein|The spread of infection through every organ', 0, 'Colonisation means microorganisms are present without necessarily causing disease or tissue invasion.'],
+  ['What is the incubation period of an infection?', 'The time between exposure to an infectious agent and the appearance of symptoms|The time required to measure a temperature|The time after recovery when immunity is guaranteed|The period in which bacteria cannot reproduce', 0, 'The incubation period is the interval between exposure and the onset of symptoms.'],
+  ['What is inoculation in relation to infection?', 'The introduction of an infectious agent into the body or onto a susceptible site|The removal of all bacteria from the skin|The stage when symptoms have completely resolved|The production of oxygen by the lungs', 0, 'Inoculation is the introduction of an infectious agent into the body or a susceptible site.']
+]);
+addQuestions('body', [
+  ['Which adult resting respiratory rate is commonly considered within the normal range?', '12–20 breaths per minute|2–5 breaths per minute|30–45 breaths per minute in every adult|60–80 breaths per minute', 0, 'A resting adult respiratory rate is commonly taught as approximately 12–20 breaths per minute; interpret it with the wider clinical assessment.']
+]);
 window.questionDatabase = questionDatabase;
 // The Trauma Exam is assembled at runtime from this existing question bank.
 // Each pool guarantees coverage of the requested subject area; remaining places
@@ -1711,5 +1727,35 @@ window.traumaExamConfig = {
     { id: 'open-closed-fractures', label: 'Open and closed fractures', minimum: 2, questionIds: ['musculoskeletal-injuries-09', 'musculoskeletal-injuries-10', 'musculoskeletal-injuries-11'] },
     { id: 'burns', label: 'Burns', minimum: 4, questionIds: ['burns-01', 'burns-03', 'burns-04', 'burns-05', 'burns-06', 'burns-07', 'burns-08', 'burns-10', 'burns-14', 'burns-18', 'burns-19', 'burns-21', 'burns-23', 'burns-25', 'burns-28', 'burns-30'] },
     { id: 'retroperitoneal', label: 'Retroperitoneal cavity', minimum: 1, questionIds: ['abdominal-injuries-02'] }
+  ]
+};
+window.medicalExamConfig = {
+  questionCount: 50,
+  medicalTopics: [
+    'body', 'cardiovascular', 'respiratory', 'nervous', 'lymphatic-urinary-reproductive',
+    'digestive', 'cardiac-conditions', 'ecg-interpretation', 'medical-gases',
+    'post-operative-complications', 'respiratory-conditions', 'airway-management',
+    'bls-ils', 'chemotherapy-radiotherapy', 'medicines-management', 'clinical-shock',
+    'allergic-reaction-anaphylaxis', 'diabetes', 'neurovascular-conditions',
+    'urinary-conditions', 'addisons-disease', 'sepsis', 'poisoning'
+  ],
+  coverage: [
+    { id: 'sepsis-shock', label: 'Sepsis and septic shock', minimum: 2, questionIds: ['sepsis-03', 'sepsis-04', 'clinical-shock-05', 'clinical-shock-06', 'clinical-shock-07'] },
+    { id: 'pulmonary-embolism', label: 'Pulmonary embolism and related systems', minimum: 3, questionIds: ['respiratory-conditions-12', 'respiratory-conditions-14', 'respiratory-conditions-15', 'respiratory-conditions-16', 'respiratory-conditions-17'] },
+    { id: 'asthma', label: 'Asthma categories and severity', minimum: 3, questionIds: ['respiratory-conditions-31', 'respiratory-conditions-32', 'respiratory-conditions-33', 'respiratory-conditions-24', 'respiratory-conditions-29'] },
+    { id: 'heart-failure', label: 'Heart failure and fluid accumulation', minimum: 2, questionIds: ['cardiac-conditions-09', 'cardiac-conditions-14', 'cardiac-conditions-15', 'cardiac-conditions-31'] },
+    { id: 'copd', label: 'COPD oxygen saturation', minimum: 2, questionIds: ['respiratory-conditions-18', 'respiratory-conditions-19', 'respiratory-conditions-22', 'medical-gases-03'] },
+    { id: 'oxygen-masks', label: 'Oxygen masks and flow rates', minimum: 4, questionIds: ['medical-gases-14', 'medical-gases-15', 'medical-gases-16', 'medical-gases-17', 'medical-gases-18', 'medical-gases-19'] },
+    { id: 'body-terms', label: 'Anatomical body terms', minimum: 3, questionIds: ['body-37', 'body-38', 'body-39', 'body-40'] },
+    { id: 'infection-terms', label: 'Colonisation, incubation and inoculation', minimum: 3, questionIds: ['sepsis-31', 'sepsis-32', 'sepsis-33'] },
+    { id: 'addisons', label: "Addison's disease signs", minimum: 2, questionIds: ['addisons-disease-07', 'addisons-disease-12', 'addisons-disease-25', 'addisons-disease-30'] },
+    { id: 'normal-observations', label: 'Normal observations and BM', minimum: 3, questionIds: ['body-76', 'diabetes-06', 'diabetes-07', 'medical-gases-03'] },
+    { id: 'fbao', label: 'Foreign-body airway obstruction', minimum: 3, questionIds: ['airway-management-03', 'airway-management-08', 'airway-management-09', 'airway-management-10', 'airway-management-12'] },
+    { id: 'drug-routes', label: 'Drug administration routes', minimum: 3, questionIds: ['medicines-management-10', 'medicines-management-11', 'medicines-management-12'] },
+    { id: 'stroke', label: 'Stroke types', minimum: 2, questionIds: ['neurovascular-conditions-09', 'neurovascular-conditions-10', 'neurovascular-conditions-12', 'neurovascular-conditions-17'] },
+    { id: 'ecg', label: 'ECG paper, intervals and waves', minimum: 4, questionIds: ['ecg-interpretation-03', 'ecg-interpretation-04', 'ecg-interpretation-06', 'ecg-interpretation-14', 'ecg-interpretation-15'] },
+    { id: 'anaphylaxis-shock', label: 'Anaphylaxis and shock types', minimum: 3, questionIds: ['allergic-reaction-anaphylaxis-01', 'allergic-reaction-anaphylaxis-13', 'allergic-reaction-anaphylaxis-16', 'clinical-shock-02', 'clinical-shock-07'] },
+    { id: 'op-airway', label: 'Oropharyngeal airway tubes', minimum: 2, questionIds: ['airway-management-16', 'airway-management-17', 'airway-management-18', 'airway-management-20'] },
+    { id: 'suction', label: 'Suction positioning and safety', minimum: 2, questionIds: ['airway-management-23', 'airway-management-24'] }
   ]
 };

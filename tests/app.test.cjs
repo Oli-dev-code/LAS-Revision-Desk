@@ -83,6 +83,8 @@ test('navigation exposes the dashboard and topic-library routes', () => {
   assert.match(app, /\['Trauma'/);
   assert.match(read('index.html'), /Medical Exam/);
   assert.match(read('index.html'), /Trauma Exam/);
+  assert.match(read('index.html'), /href="medical-exam\.html"/);
+  assert.match(read('index.html'), /href="trauma-exam\.html"/);
 });
 
 test('Trauma Exam selects 50 questions with required coverage pools', () => {
@@ -96,6 +98,19 @@ test('Trauma Exam selects 50 questions with required coverage pools', () => {
   assert.ok(config.coverage.some((pool) => pool.id === 'msc' && pool.questionIds.includes('musculoskeletal-injuries-17')));
   assert.ok(config.traumaTopics.includes('burns'));
   assert.ok(config.traumaTopics.includes('suspension-blast-ballistics'));
+});
+
+test('Medical Exam config selects 50 questions with requested coverage', () => {
+  const context = { window: {} };
+  vm.runInNewContext(`${read('question-bank.js')}\nwindow.loadedQuestions = questionDatabase;`, context);
+  const config = context.window.medicalExamConfig;
+  assert.equal(config.questionCount, 50);
+  assert.ok(config.coverage.some((pool) => pool.id === 'infection-terms' && pool.questionIds.includes('sepsis-31')));
+  assert.ok(config.coverage.some((pool) => pool.id === 'oxygen-masks' && pool.questionIds.includes('medical-gases-15')));
+  assert.ok(config.coverage.some((pool) => pool.id === 'suction' && pool.questionIds.includes('airway-management-23')));
+  assert.ok(config.coverage.some((pool) => pool.id === 'ecg' && pool.questionIds.includes('ecg-interpretation-14')));
+  assert.ok(config.medicalTopics.includes('sepsis'));
+  assert.ok(config.medicalTopics.includes('respiratory-conditions'));
 });
 
 test('question scoring identifies the configured correct answer', () => {

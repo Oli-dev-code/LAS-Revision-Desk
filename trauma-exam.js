@@ -1,5 +1,6 @@
 const database = window.questionDatabase || [];
-const config = window.traumaExamConfig || { questionCount: 50, traumaTopics: [], coverage: [] };
+const examType = document.body.dataset.examType || 'trauma';
+const config = window[`${examType}ExamConfig`] || { questionCount: 50, medicalTopics: [], traumaTopics: [], coverage: [] };
 const content = document.getElementById('exam-content');
 const countLabel = document.getElementById('exam-count');
 const themeToggle = document.getElementById('theme-toggle');
@@ -24,8 +25,9 @@ function selectExamQuestions() {
       .slice(0, pool.minimum)
       .forEach((question) => selected.set(question.id, question));
   });
-  const traumaPool = database.filter((question) => config.traumaTopics.includes(question.topic));
-  shuffle(traumaPool).forEach((question) => {
+  const topicPool = config.traumaTopics || config.medicalTopics || [];
+  const examPool = database.filter((question) => topicPool.includes(question.topic));
+  shuffle(examPool).forEach((question) => {
     if (selected.size < config.questionCount) selected.set(question.id, question);
   });
   return shuffle([...selected.values()]).slice(0, config.questionCount);
@@ -57,7 +59,7 @@ function renderQuestion() {
   countLabel.textContent = `Question ${questionIndex + 1} of ${questions.length}`;
   const progress = Math.round((questionIndex / questions.length) * 100);
   const options = shuffle(question.options.map((text, index) => ({ text, index })));
-  content.innerHTML = `<div class="exam-progress" aria-label="Exam progress"><span style="width:${progress}%"></span></div><p class="exam-category">${topicName(question.topic)}</p><p class="exam-question">${question.question}</p><div class="exam-options">${options.map((item) => `<button type="button" data-index="${item.index}">${item.text}</button>`).join('')}</div><p class="exam-feedback" id="exam-feedback" aria-live="polite"></p><div class="exam-actions"><button class="exam-button" id="next-question" type="button" disabled>${questionIndex === questions.length - 1 ? 'Finish exam' : 'Next question'}</button></div>`;
+  content.innerHTML = `<div class="exam-progress" aria-label="Exam progress"><span style="width:${progress}%"></span></div><p class="exam-category">${topicName(question.topic)}</p><p class="exam-question">${question.question}</p><div class="exam-options">${options.map((item) => `<button type="button" data-index="${item.index}">${item.text}</button>`).join('')}</div><p class="exam-feedback" id="exam-feedback" aria-live="polite">Select an answer to continue. Answers and explanations are shown at the end.</p><div class="exam-actions"><button class="exam-button" id="next-question" type="button" disabled>${questionIndex === questions.length - 1 ? 'Finish exam' : 'Next question'}</button></div>`;
   content.querySelectorAll('.exam-options button').forEach((button) => button.addEventListener('click', () => answerQuestion(question, button)));
   content.querySelector('#next-question').addEventListener('click', () => { questionIndex += 1; renderQuestion(); });
 }
@@ -65,15 +67,11 @@ function renderQuestion() {
 function answerQuestion(question, button) {
   const chosen = Number(button.dataset.index);
   const correct = chosen === question.answer;
-  answers[questionIndex] = { id: question.id, correct };
+  answers[questionIndex] = { id: question.id, selected: chosen, correct };
   content.querySelectorAll('.exam-options button').forEach((item) => {
     item.disabled = true;
-    if (Number(item.dataset.index) === question.answer) item.classList.add('correct');
   });
-  if (!correct) button.classList.add('wrong');
-  const feedback = content.querySelector('#exam-feedback');
-  feedback.className = `exam-feedback${correct ? '' : ' error'}`;
-  feedback.textContent = `${correct ? 'Correct.' : 'Not quite.'} ${question.explanation}`;
+  button.classList.add('selected');
   content.querySelector('#next-question').disabled = false;
 }
 
@@ -83,7 +81,13 @@ function renderResults() {
   if (window.lasProgress?.recordQuestionResults) window.lasProgress.recordQuestionResults(answers);
   countLabel.textContent = `${questions.length} questions completed`;
   const covered = config.coverage.map((pool) => pool.label);
-  content.innerHTML = `<div class="exam-result"><h2>Exam complete</h2><p>You scored <strong>${correct}/${questions.length} (${percentage}%)</strong>.</p><p>Review the topic pages for any areas that need more practice.</p><div class="exam-coverage">${covered.map((label) => `<span>${label}</span>`).join('')}</div><div class="exam-actions"><button class="exam-button" id="new-exam" type="button">Start a new exam</button><a class="exam-button secondary" href="index.html">Return to dashboard</a></div></div>`;
+  const review = questions.map((question, index) => {
+    const answer = answers[index];
+    const selected = answer ? question.options[answer.selected] : 'No answer selected';
+    const resultClass = answer?.correct ? 'correct' : 'wrong';
+    return `<article class="exam-review-item ${resultClass}"><p class="exam-review-status">Question ${index + 1} · ${answer?.correct ? 'Correct' : 'Incorrect'}</p><h3>${question.question}</h3><p><strong>Your answer:</strong> ${selected}</p><p><strong>Correct answer:</strong> ${question.options[question.answer]}</p><p class="exam-review-explanation">${question.explanation}</p></article>`;
+  }).join('');
+  content.innerHTML = `<div class="exam-result"><h2>Exam complete</h2><p>You scored <strong>${correct}/${questions.length} (${percentage}%)</strong>.</p><p>Answers and explanations are shown below now that the exam is complete.</p><div class="exam-coverage">${covered.map((label) => `<span>${label}</span>`).join('')}</div><div class="exam-actions"><button class="exam-button" id="new-exam" type="button">Start a new exam</button><a class="exam-button secondary" href="index.html">Return to dashboard</a></div></div><section class="exam-review"><h2>Answer review</h2>${review}</section>`;
   content.querySelector('#new-exam').addEventListener('click', startExam);
 }
 

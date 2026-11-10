@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Medical Exam | LAS Revision Desk</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="study-page.css">
+  <link rel="stylesheet" href="trauma-exam.css">
+</head>
+<body class="study-page trauma-exam-page" data-exam-type="medical">
+  <div class="page-shell">
+    <header class="page-header">
+      <a class="back-link" href="index.html">← Dashboard</a>
+      <span class="page-header-brand">LAS Revision Desk</span>
+      <button class="theme-toggle" id="theme-toggle" type="button" aria-pressed="false">Dark mode</button>
+    </header>
+    <p class="page-mode">MEDICAL EXAM</p>
+    <h1 class="page-title">Medical Exam</h1>
+    <p class="page-topic">50 randomly selected questions from the existing medical question bank</p>
+    <main class="page-card">
+      <div class="page-card-header">
+        <div>
+          <h1>Medical Exam</h1>
+          <p class="exam-subtitle">Coverage includes sepsis, respiratory conditions, asthma, COPD, oxygen therapy, airway management, medicines, stroke, ECG and observations.</p>
+        </div>
+        <span class="page-count" id="exam-count">Question 1 of 50</span>
+      </div>
+      <div id="exam-content" aria-live="polite"></div>
+    </main>
+  </div>
+  <script src="question-bank.js"></script>
+  <script src="progress-store.js"></script>
+  <script src="trauma-exam.js"></script>
+</body>
+</html>

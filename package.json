@@ -1,6 +1,6 @@
 {
   "name": "las-revision-desk",
-  "version": "1.0.65",
+  "version": "1.0.66",
   "description": "Desktop revision workspace for LAS AAP training",
   "main": "electron-main.cjs",
   "author": "LAS Revision Desk",
@@ -31,6 +31,7 @@
       "test.html",
       "focused-test.html",
       "trauma-exam.html",
+      "medical-exam.html",
       "quiz.html",
       "topics.html",
       "styles.css",
