@@ -80,6 +80,25 @@ body[data-theme="dark"] .course-group-toggle{color:#9ab9b5}
 body[data-theme="dark"] .course-group-toggle{background:#22363b!important;border-color:#344b4f!important;color:#9ab9b5!important}
 body[data-theme="dark"] .course-group-toggle:hover{background:#294447!important;border-color:#486f6c!important;color:#d9eeea!important}
 
+/* Keep the top bar horizontal and place the theme control at the far right. */
+.topbar{display:flex!important;flex-direction:row!important;align-items:center!important;justify-content:space-between!important;height:64px!important;padding:0 36px!important}
+.topbar .app-version{flex:0 0 auto!important}
+.topbar .breadcrumb{flex:1 1 auto!important;text-align:center!important;white-space:nowrap!important}
+.topbar .top-actions{display:flex!important;flex:0 0 auto!important;margin-left:auto!important;align-items:center!important}
+
+/* Focus-panel actions must not inherit the browser's white button styling. */
+.focus-panel .text-button{display:inline-flex!important;align-items:center!important;background:transparent!important;border:1px solid #5e8b91!important;border-radius:3px!important;color:#a5d5cd!important;padding:6px 8px!important}
+.focus-panel .text-button:hover{background:#2b5662!important;border-color:#8ac5b9!important;color:#fff!important}
+.focus-panel .focus-cta{display:block!important;background:#2b5662!important;border:1px solid #3d6871!important;color:#fff!important}
+.focus-panel .focus-cta:hover{background:#347078!important;border-color:#73c6b8!important}
+
+.exam-placeholders{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px}
+.exam-placeholders button{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:10px 14px;border:1px dashed #527477;border-radius:4px;background:#203f46;color:#b5d2ce;text-align:left;cursor:not-allowed;opacity:.82}
+.exam-placeholders button span{font-size:12px;font-weight:700}
+.exam-placeholders button small{color:#88a6a5;font-size:10px}
+body[data-theme="dark"] .exam-placeholders button{background:#203f46;border-color:#527477;color:#b5d2ce}
+@media(max-width:560px){.exam-placeholders{grid-template-columns:1fr}}
+
 /* Explicit chart layout: keep axes, gridlines, bars, and day labels in separate layers. */
 .activity-panel .chart{position:relative!important;display:flex!important;align-items:stretch!important;gap:8px!important;height:164px!important;min-height:164px!important;margin-top:18px!important}
 .activity-panel .chart-y{display:flex!important;flex:0 0 34px!important;flex-direction:column!important;justify-content:space-between!important;width:34px!important;padding:0 0 24px!important;color:#a3afae!important;font-size:10px!important;line-height:1!important}

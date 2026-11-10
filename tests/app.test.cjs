@@ -59,6 +59,8 @@ test('navigation exposes the dashboard and topic-library routes', () => {
   assert.match(app, /aria-expanded="false"/);
   assert.match(app, /\['Medical'/);
   assert.match(app, /\['Trauma'/);
+  assert.match(read('index.html'), /Medical Exam/);
+  assert.match(read('index.html'), /Trauma Exam/);
 });
 
 test('question scoring identifies the configured correct answer', () => {
