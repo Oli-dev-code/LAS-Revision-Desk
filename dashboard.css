@@ -68,9 +68,15 @@ body[data-theme="dark"] .course-item{background:#22363b!important;border-color:#
 body[data-theme="dark"] .course-item:hover{background:#294447!important;border-color:#486f6c!important;color:#d9eeea!important}
 body[data-theme="dark"] .course-item.selected{background:#294b50!important;border-color:#68b8a9!important;color:#a9e0d5!important}
 .course-group{display:grid;gap:4px}
-.course-group-label{margin:8px 8px 2px;color:#8fa9a8;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
-.course-group:first-child .course-group-label{margin-top:0}
-body[data-theme="dark"] .course-group-label{color:#9ab9b5}
+.course-group-items{display:grid;gap:4px}
+.course-group-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;margin:8px 0 2px;padding:0 8px;color:#8fa9a8;font-size:10px;font-weight:700;letter-spacing:1px;text-align:left;text-transform:uppercase}
+.course-group:first-child .course-group-toggle{margin-top:0}
+.course-group-toggle:hover{color:var(--teal)}
+.course-group-chevron{font-size:13px;line-height:1;transition:transform .18s ease}
+.course-group.collapsed .course-group-chevron{transform:rotate(180deg)}
+.course-group-items[hidden]{display:none}
+body[data-theme="dark"] .course-group-toggle{color:#9ab9b5}
+body[data-theme="dark"] .course-group-toggle:hover{color:#d9eeea}
 
 /* Explicit chart layout: keep axes, gridlines, bars, and day labels in separate layers. */
 .activity-panel .chart{position:relative!important;display:flex!important;align-items:stretch!important;gap:8px!important;height:164px!important;min-height:164px!important;margin-top:18px!important}
@@ -86,3 +92,10 @@ body[data-theme="dark"] .course-group-label{color:#9ab9b5}
 body[data-theme="dark"] .activity-panel .chart-gridlines i{background:#344b4f!important}
 body[data-theme="dark"] .activity-panel .bars>span{background:#486c6e!important}
 body[data-theme="dark"] .activity-panel .bars>span.today{background:#5db7aa!important}
+
+/* Match primary navigation buttons to the dark sidebar theme. */
+.nav-item{background:transparent!important;color:#536e73!important}
+body[data-theme="dark"] .nav-item{background:#22363b!important;border-color:#344b4f!important;color:#b2c3c2!important}
+body[data-theme="dark"] .nav-item:hover{background:#294447!important;border-color:#486f6c!important;color:#d9eeea!important}
+body[data-theme="dark"] .nav-item.active{background:#294b50!important;border-color:#68b8a9!important;color:#d9eeea!important;box-shadow:inset 3px 0 #73c6b8!important}
+body[data-theme="dark"] .nav-count{background:#365e60!important;color:#a9e0d5!important}

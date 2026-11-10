@@ -55,6 +55,8 @@ test('navigation exposes the dashboard and topic-library routes', () => {
   assert.doesNotMatch(index, /data-view="practice"|data-view="notes"/);
   const app = read('app.js');
   assert.match(app, /course-group/);
+  assert.match(app, /course-group-toggle/);
+  assert.match(app, /aria-expanded="true"/);
   assert.match(app, /\['Medical'/);
   assert.match(app, /\['Trauma'/);
 });
