@@ -60,7 +60,7 @@ function renderQuestion() {
   selectedAnswer = null;
   countLabel.textContent = `Question ${questionIndex + 1} of ${questions.length}`;
   const progress = Math.round((questionIndex / questions.length) * 100);
-  const options = shuffle(question.options.map((text, index) => ({ text, index })));
+  const options = shuffledAnswerOptions(question);
   content.innerHTML = `<div class="exam-progress" aria-label="Exam progress"><span style="width:${progress}%"></span></div><p class="exam-category">${topicName(question.topic)}</p><p class="exam-question">${question.question}</p><div class="exam-options">${options.map((item) => `<button type="button" data-index="${item.index}">${item.text}</button>`).join('')}</div><p class="exam-feedback" id="exam-feedback" aria-live="polite">Select an answer to continue. Answers and explanations are shown at the end.</p><div class="exam-actions"><button class="exam-button" id="next-question" type="button" disabled>${questionIndex === questions.length - 1 ? 'Finish exam' : 'Next question'}</button></div>`;
   content.querySelectorAll('.exam-options button').forEach((button) => button.addEventListener('click', () => selectAnswer(button)));
   content.querySelector('#next-question').addEventListener('click', () => {

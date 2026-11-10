@@ -96,7 +96,7 @@ function shuffleQuestions(items) {
   return shuffled;
 }
 function shuffledOptions(question) {
-  return shuffleQuestions(question.options.map((text, index) => ({ text, index })));
+  return shuffledAnswerOptions(question);
 }
 function savedIncorrectQuestionIds() {
   if (window.lasProgress?.questionStats) return new Set(window.lasProgress.questionStats().incorrectQuestionIds || []);

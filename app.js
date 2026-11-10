@@ -57,23 +57,14 @@ function showToast(message) {
 function questionsForSelectedTopic() {
   return dashboardQuestionDatabase.filter((question) => question.topic === selectedTopic);
 }
-function shuffleOptions(options) {
-  const shuffled = [...options];
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [shuffled[index], shuffled[swapIndex]] = [shuffled[swapIndex], shuffled[index]];
-  }
-  return shuffled;
-}
-
 function renderTestQuestion() {
   const questions = questionsForSelectedTopic();
   const question = questions.length ? questions[testIndex % questions.length] : null;
   const options = document.getElementById('test-options');
   document.getElementById('test-count').textContent = question ? `Question ${(testIndex % questions.length) + 1} of ${questions.length}` : 'No questions';
   document.getElementById('test-question').textContent = question ? question.question : 'No questions have been added for this topic yet.';
-  const shuffledOptions = question ? shuffleOptions(question.options.map((option, index) => ({ option, index }))) : [];
-  options.innerHTML = question ? shuffledOptions.map(({ option, index }) => `<button data-answer-index="${index}">${option}</button>`).join('') : '';
+  const shuffledOptions = question ? shuffledAnswerOptions(question) : [];
+  options.innerHTML = question ? shuffledOptions.map(({ text, index }) => `<button data-answer-index="${index}">${text}</button>`).join('') : '';
   const result = document.querySelector('.test-result');
   result.textContent = '';
   result.className = 'test-result';

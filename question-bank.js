@@ -1,4 +1,39 @@
 // Question database built from the supplied anatomy and physiology course materials.
+const answerPositionStorageKey = 'las-revision-answer-positions';
+function readAnswerPositions() {
+  try {
+    const stored = JSON.parse(localStorage.getItem(answerPositionStorageKey) || '{}');
+    return stored && typeof stored === 'object' ? stored : {};
+  } catch {
+    return {};
+  }
+}
+function writeAnswerPositions(positions) {
+  try { localStorage.setItem(answerPositionStorageKey, JSON.stringify(positions)); } catch { /* Optional persistence. */ }
+}
+function shuffledAnswerOptions(question) {
+  const options = question.options.map((text, index) => ({ text, index }));
+  if (options.length < 2) return options;
+  const positions = readAnswerPositions();
+  const previousPosition = Number(positions[question.id]);
+  const hasPreviousPosition = Number.isInteger(previousPosition) && previousPosition >= 0 && previousPosition < options.length;
+  const availablePositions = options.map((_, index) => index).filter((index) => !hasPreviousPosition || index !== previousPosition);
+  const correctPosition = availablePositions[Math.floor(Math.random() * availablePositions.length)];
+  const correctOption = options[question.answer];
+  const distractors = options.filter((_, index) => index !== question.answer);
+  for (let index = distractors.length - 1; index > 0; index -= 1) {
+    const swapIndex = Math.floor(Math.random() * (index + 1));
+    [distractors[index], distractors[swapIndex]] = [distractors[swapIndex], distractors[index]];
+  }
+  const arranged = [];
+  let distractorIndex = 0;
+  for (let index = 0; index < options.length; index += 1) {
+    arranged[index] = index === correctPosition ? correctOption : distractors[distractorIndex++];
+  }
+  positions[question.id] = correctPosition;
+  writeAnswerPositions(positions);
+  return arranged;
+}
 const questionDatabase = [];
 function addQuestions(topic, rows) {
   const existingCount = questionDatabase.filter((item) => item.topic === topic).length;

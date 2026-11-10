@@ -131,6 +131,27 @@ test('question scoring identifies the configured correct answer', () => {
   assert.notEqual(question.options[question.answer], question.options[(question.answer + 1) % question.options.length]);
 });
 
+test('multiple-choice answer positions do not repeat for the same question', () => {
+  const storage = new Map();
+  const context = {
+    window: {},
+    localStorage: {
+      getItem: (key) => storage.get(key) || null,
+      setItem: (key, value) => storage.set(key, value)
+    },
+    Math
+  };
+  vm.runInNewContext(`${read('question-bank.js')}`, context);
+  const question = { id: 'position-test', options: ['Wrong 1', 'Correct', 'Wrong 2', 'Wrong 3'], answer: 1 };
+  const first = context.shuffledAnswerOptions(question);
+  const second = context.shuffledAnswerOptions(question);
+  const firstCorrectPosition = first.findIndex((option) => option.index === question.answer);
+  const secondCorrectPosition = second.findIndex((option) => option.index === question.answer);
+  assert.notEqual(firstCorrectPosition, secondCorrectPosition);
+  assert.deepEqual(Array.from(first, (option) => option.index).sort(), [0, 1, 2, 3]);
+  assert.deepEqual(Array.from(second, (option) => option.index).sort(), [0, 1, 2, 3]);
+});
+
 test('progress persistence records totals, incorrect questions, and per-question history', () => {
   const { progress, localStorage } = loadProgressStore();
   progress.recordQuestionResults([
