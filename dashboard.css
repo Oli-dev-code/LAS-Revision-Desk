@@ -63,3 +63,18 @@ body[data-theme="dark"] .progress-track{background:#365258}body[data-theme="dark
 .course-progress{padding:10px 12px!important}
 .course-list{gap:4px!important;margin-top:8px!important}
 .course-item{height:30px!important;padding-inline:8px!important;font-size:11px!important}
+
+/* Explicit chart layout: keep axes, gridlines, bars, and day labels in separate layers. */
+.activity-panel .chart{position:relative!important;display:flex!important;align-items:stretch!important;gap:8px!important;height:164px!important;min-height:164px!important;margin-top:18px!important}
+.activity-panel .chart-y{display:flex!important;flex:0 0 34px!important;flex-direction:column!important;justify-content:space-between!important;width:34px!important;padding:0 0 24px!important;color:#a3afae!important;font-size:10px!important;line-height:1!important}
+.activity-panel .chart-area{position:relative!important;display:block!important;flex:1 1 auto!important;height:100%!important;min-width:0!important}
+.activity-panel .chart-gridlines{position:absolute!important;inset:0 0 24px!important;display:flex!important;flex-direction:column!important;justify-content:space-between!important;z-index:0!important}
+.activity-panel .chart-gridlines i{display:block!important;width:100%!important;height:1px!important;background:#edf1f0!important}
+.activity-panel .bars{position:absolute!important;inset:0 0 24px!important;display:flex!important;align-items:flex-end!important;justify-content:space-around!important;gap:8px!important;padding:0 8px!important;z-index:1!important}
+.activity-panel .bars>span{display:block!important;flex:1 1 0!important;width:auto!important;min-width:8px!important;max-width:30px!important;height:var(--bar-height,2%);background:#cce5df!important;border-radius:3px 3px 0 0!important;position:relative!important}
+.activity-panel .bars>span.today{background:#45a398!important}
+.activity-panel .bars>span>b{position:absolute!important;top:calc(100% + 8px)!important;left:50%!important;transform:translateX(-50%)!important;display:block!important;white-space:nowrap!important;font-size:10px!important;font-weight:500!important;color:#92a0a0!important}
+.activity-panel .chart-note{flex:0 0 auto!important;margin-top:12px!important;padding-top:12px!important}
+body[data-theme="dark"] .activity-panel .chart-gridlines i{background:#344b4f!important}
+body[data-theme="dark"] .activity-panel .bars>span{background:#486c6e!important}
+body[data-theme="dark"] .activity-panel .bars>span.today{background:#5db7aa!important}
