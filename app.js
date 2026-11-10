@@ -152,7 +152,7 @@ if (topicCatalog.length) {
     ['Trauma', topicCatalog.filter((topic) => traumaTopicIds.has(topic.id))]
   ];
   const courseList = document.querySelector('.course-list');
-  courseList.innerHTML = courseGroups.map(([label, topicsInGroup]) => `<section class="course-group" aria-label="${label} topics"><button class="course-group-toggle" type="button" aria-expanded="true"><span>${label}</span><span class="course-group-chevron" aria-hidden="true">⌃</span></button><div class="course-group-items">${topicsInGroup.map((topic) => { const index = topicCatalog.indexOf(topic); return `<button class="course-item${topic.id === selectedTopic ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${topic.id === selectedTopic ? ' current' : ''}">${index + 1}</span><span class="course-name">${topic.name}</span></button>`; }).join('')}</div></section>`).join('');
+  courseList.innerHTML = courseGroups.map(([label, topicsInGroup]) => `<section class="course-group collapsed" aria-label="${label} topics"><button class="course-group-toggle" type="button" aria-expanded="false"><span>${label}</span><span class="course-group-chevron" aria-hidden="true">⌃</span></button><div class="course-group-items" hidden>${topicsInGroup.map((topic) => { const index = topicCatalog.indexOf(topic); return `<button class="course-item${topic.id === selectedTopic ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${topic.id === selectedTopic ? ' current' : ''}">${index + 1}</span><span class="course-name">${topic.name}</span></button>`; }).join('')}</div></section>`).join('');
   courseList.addEventListener('click', (event) => {
     const toggle = event.target.closest('.course-group-toggle');
     if (!toggle) return;
