@@ -151,7 +151,18 @@ if (topicCatalog.length) {
     ['Medical', topicCatalog.filter((topic) => !traumaTopicIds.has(topic.id))],
     ['Trauma', topicCatalog.filter((topic) => traumaTopicIds.has(topic.id))]
   ];
-  document.querySelector('.course-list').innerHTML = courseGroups.map(([label, topicsInGroup]) => `<section class="course-group" aria-label="${label} topics"><h3 class="course-group-label">${label}</h3>${topicsInGroup.map((topic) => { const index = topicCatalog.indexOf(topic); return `<button class="course-item${topic.id === selectedTopic ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${topic.id === selectedTopic ? ' current' : ''}">${index + 1}</span><span class="course-name">${topic.name}</span></button>`; }).join('')}</section>`).join('');
+  const courseList = document.querySelector('.course-list');
+  courseList.innerHTML = courseGroups.map(([label, topicsInGroup]) => `<section class="course-group" aria-label="${label} topics"><button class="course-group-toggle" type="button" aria-expanded="true"><span>${label}</span><span class="course-group-chevron" aria-hidden="true">⌃</span></button><div class="course-group-items">${topicsInGroup.map((topic) => { const index = topicCatalog.indexOf(topic); return `<button class="course-item${topic.id === selectedTopic ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${topic.id === selectedTopic ? ' current' : ''}">${index + 1}</span><span class="course-name">${topic.name}</span></button>`; }).join('')}</div></section>`).join('');
+  courseList.addEventListener('click', (event) => {
+    const toggle = event.target.closest('.course-group-toggle');
+    if (!toggle) return;
+    const group = toggle.closest('.course-group');
+    const items = group.querySelector('.course-group-items');
+    const expanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!expanded));
+    group.classList.toggle('collapsed', expanded);
+    items.hidden = expanded;
+  });
   document.querySelector('.mode-intro p').innerHTML = `${topicCatalog[0].name} <span> - </span> Questions filtered to this topic`;
   document.querySelector('.mode-tab[href^="learn"]').href = `learn.html?topic=${selectedTopic}`;
   document.querySelector('.mode-tab:not([data-flagged-test])[href^="test"]').href = `test.html?topic=${selectedTopic}`;
