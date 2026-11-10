@@ -122,3 +122,9 @@ body[data-theme="dark"] .nav-item{background:#22363b!important;border-color:#344
 body[data-theme="dark"] .nav-item:hover{background:#294447!important;border-color:#486f6c!important;color:#d9eeea!important}
 body[data-theme="dark"] .nav-item.active{background:#294b50!important;border-color:#68b8a9!important;color:#d9eeea!important;box-shadow:inset 3px 0 #73c6b8!important}
 body[data-theme="dark"] .nav-count{background:#365e60!important;color:#a9e0d5!important}
+
+/* The desktop five-column mode grid must not override the mobile layout. */
+@media(max-width:700px){
+  .mode-tabs{grid-template-columns:1fr!important;gap:10px!important}
+  .mode-tab{width:100%!important;min-width:0!important;min-height:74px!important;display:grid!important;grid-template-columns:auto minmax(0,1fr) auto!important;align-items:center!important;padding:14px 12px!important}
+}
