@@ -32,7 +32,7 @@ test('source files are UTF-8 and contain no common mojibake markers', () => {
 function loadTopicCatalog() {
   const context = { window: {} };
   vm.runInNewContext(read('topic-catalog.js'), context);
-  return context.window.topicCatalog;
+  return { topics: context.window.topicCatalog, grouping: context.window.topicGrouping };
 }
 
 function loadProgressStore() {
@@ -57,8 +57,8 @@ function loadProgressStore() {
 }
 
 function filterTopics(topics, { query = '', category = 'all', status = 'all', learnt = [], history = {} } = {}) {
-  const traumaTopics = new Set(['trauma', 'chest-injuries', 'drowning', 'suspension-blast-ballistics', 'abdominal-conditions', 'cardiac-conditions', 'burns', 'extrication-light-rescue']);
-  const categoryFor = (topic) => topic.id === 'body' ? 'Foundations' : traumaTopics.has(topic.id) ? 'Trauma & emergencies' : 'Body systems';
+  const { grouping } = loadTopicCatalog();
+  const categoryFor = grouping.categoryFor;
   const statusFor = (topic) => learnt.includes(topic.id) ? 'reviewed' : Object.keys(history).some((id) => id.startsWith(`${topic.id}-`) && history[id]?.answered) ? 'in-progress' : 'not-started';
   const normalized = query.trim().toLowerCase();
   return topics.filter((topic) => {
@@ -148,13 +148,27 @@ test('progress persistence records totals, incorrect questions, and per-question
 });
 
 test('topic filtering searches content and applies category/status filters', () => {
-  const topics = loadTopicCatalog();
+  const { topics } = loadTopicCatalog();
   const respiratoryMatches = filterTopics(topics, { query: 'respiratory' });
   assert.ok(respiratoryMatches.some((topic) => topic.id === 'respiratory'));
   assert.ok(respiratoryMatches.length >= 1);
-  assert.ok(filterTopics(topics, { category: 'Trauma & emergencies' }).every((topic) => topic.id === 'trauma' || topic.id === 'burns' || topic.id === 'drowning' || topic.id === 'chest-injuries' || topic.id === 'suspension-blast-ballistics' || topic.id === 'abdominal-conditions' || topic.id === 'cardiac-conditions' || topic.id === 'extrication-light-rescue'));
+  assert.ok(filterTopics(topics, { category: 'Trauma & emergencies' }).every((topic) => topic.id !== 'body' && topic.id !== 'musculoskeletal' && topic.id !== 'cardiovascular' && topic.id !== 'respiratory' && topic.id !== 'nervous' && topic.id !== 'digestive'));
   assert.deepEqual(Array.from(filterTopics(topics, { status: 'reviewed', learnt: ['body'] }).map((topic) => topic.id)), ['body']);
   assert.deepEqual(Array.from(filterTopics(topics, { status: 'in-progress', history: { 'respiratory-01': { answered: 1 } } }).map((topic) => topic.id)), ['respiratory']);
+});
+
+test('topic numbering resets within each displayed group', () => {
+  const { topics, grouping } = loadTopicCatalog();
+  const libraryGroups = grouping.categoryOrder.map((category) => topics.filter((topic) => grouping.categoryFor(topic) === category));
+  assert.equal(libraryGroups.reduce((total, group) => total + group.length, 0), topics.length);
+  assert.ok(libraryGroups.every((group) => group.length > 0));
+  grouping.dashboardGroups.forEach((group) => {
+    const groupTopics = topics.filter(group.matches);
+    assert.ok(groupTopics.length > 0);
+    assert.equal(groupTopics[0].id, group.name === 'Medical' ? 'body' : 'trauma');
+  });
+  assert.match(read('topics-page.js'), /topic-library-group/);
+  assert.match(read('app.js'), /topicsInGroup\.map\(\(topic, index\)/);
 });
 
 test('update UI wiring includes progress and recoverable error states', () => {

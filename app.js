@@ -3,11 +3,8 @@ const modeTabs = document.querySelectorAll('.mode-tab');
 const modeViews = document.querySelectorAll('.mode-view');
 const dashboardQuestionDatabase = window.questionDatabase || [];
 const topicCatalog = window.topicCatalog || [];
-const traumaTopicIds = new Set([
-  'trauma', 'chest-injuries', 'drowning', 'suspension-blast-ballistics', 'abdominal-injuries',
-  'maxillofacial-injuries', 'head-injuries', 'wounds-and-bleeding', 'burns', 'extrication-light-rescue',
-  'musculoskeletal-injuries', 'clinical-shock', 'spinal-pelvic-injuries'
-]);
+const topicGrouping = window.topicGrouping || { dashboardGroups: [] };
+const traumaTopicIds = new Set(topicGrouping.traumaTopicIds || []);
 const themeToggle = document.getElementById('theme-toggle');
 const topicCountBadge = document.querySelector('.nav-count');
 if (topicCountBadge) topicCountBadge.textContent = topicCatalog.length;
@@ -147,12 +144,11 @@ document.getElementById('resume-topic')?.addEventListener('click', openLearnPage
 document.getElementById('view-topic')?.addEventListener('click', openLearnPage);
 
 if (topicCatalog.length) {
-  const courseGroups = [
-    ['Medical', topicCatalog.filter((topic) => !traumaTopicIds.has(topic.id))],
-    ['Trauma', topicCatalog.filter((topic) => traumaTopicIds.has(topic.id))]
-  ];
+  const courseGroups = topicGrouping.dashboardGroups?.length
+    ? topicGrouping.dashboardGroups.map((group) => [group.name, topicCatalog.filter(group.matches)])
+    : [['Medical', topicCatalog.filter((topic) => !traumaTopicIds.has(topic.id))], ['Trauma', topicCatalog.filter((topic) => traumaTopicIds.has(topic.id))]];
   const courseList = document.querySelector('.course-list');
-  courseList.innerHTML = courseGroups.map(([label, topicsInGroup]) => `<section class="course-group collapsed" aria-label="${label} topics"><button class="course-group-toggle" type="button" aria-expanded="false"><span>${label}</span><span class="course-group-chevron" aria-hidden="true">⌃</span></button><div class="course-group-items" hidden>${topicsInGroup.map((topic) => { const index = topicCatalog.indexOf(topic); return `<button class="course-item${topic.id === selectedTopic ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${topic.id === selectedTopic ? ' current' : ''}">${index + 1}</span><span class="course-name">${topic.name}</span></button>`; }).join('')}</div></section>`).join('');
+  courseList.innerHTML = courseGroups.map(([label, topicsInGroup]) => `<section class="course-group collapsed" aria-label="${label} topics"><button class="course-group-toggle" type="button" aria-expanded="false"><span>${label}</span><span class="course-group-chevron" aria-hidden="true">⌃</span></button><div class="course-group-items" hidden>${topicsInGroup.map((topic, index) => `<button class="course-item${topic.id === selectedTopic ? ' selected' : ''}" data-topic="${topic.id}"><span class="status-dot${topic.id === selectedTopic ? ' current' : ''}">${index + 1}</span><span class="course-name">${topic.name}</span></button>`).join('')}</div></section>`).join('');
   courseList.addEventListener('click', (event) => {
     const toggle = event.target.closest('.course-group-toggle');
     if (!toggle) return;
@@ -273,7 +269,10 @@ function renderDashboardFocus() {
   if (!topic) return;
   const progress = topicCompletion(topic.id);
   const topicQuestions = dashboardQuestionDatabase.filter((question) => question.topic === topic.id);
-  document.getElementById('focus-topic-number').textContent = String(topicCatalog.indexOf(topic) + 1).padStart(2, '0');
+  const focusGroup = topicGrouping.dashboardGroups?.find((group) => group.matches(topic));
+  const focusTopics = focusGroup ? topicCatalog.filter(focusGroup.matches) : topicCatalog;
+  const focusNumber = focusTopics.indexOf(topic) + 1;
+  document.getElementById('focus-topic-number').textContent = String(focusNumber).padStart(2, '0');
   document.getElementById('focus-topic-tag').textContent = topic.name.toUpperCase();
   document.getElementById('focus-topic-name').textContent = topic.name;
   document.getElementById('focus-topic-description').textContent = topic.description || 'Review the essential knowledge for this topic.';

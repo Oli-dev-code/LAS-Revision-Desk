@@ -15,8 +15,8 @@ const searchInput = document.getElementById('topic-search');
 const categorySelect = document.getElementById('topic-category');
 const statusSelect = document.getElementById('topic-status');
 const resultCount = document.getElementById('topic-result-count');
-const traumaTopics = new Set(['trauma', 'chest-injuries', 'drowning', 'suspension-blast-ballistics', 'abdominal-conditions', 'cardiac-conditions', 'burns', 'extrication-light-rescue']);
-function categoryFor(topic) { return topic.id === 'body' ? 'Foundations' : traumaTopics.has(topic.id) ? 'Trauma & emergencies' : 'Body systems'; }
+const topicGrouping = window.topicGrouping || { categoryOrder: ['Foundations', 'Body systems', 'Trauma & emergencies'], categoryFor: (topic) => topic.id === 'body' ? 'Foundations' : 'Body systems' };
+function categoryFor(topic) { return topicGrouping.categoryFor(topic); }
 function escapeHtml(value) { return String(value).replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character])); }
 function topicStatus(topic) {
   let learnt = [];
@@ -26,7 +26,7 @@ function topicStatus(topic) {
   const answered = Object.keys(history).some((id) => id.startsWith(`${topic.id}-`) && history[id]?.answered);
   return answered ? 'in-progress' : 'not-started';
 }
-function renderTopics() {
+function renderLegacyTopics() {
   const query = searchInput.value.trim().toLowerCase();
   const category = categorySelect.value;
   const status = statusSelect.value;
@@ -37,6 +37,21 @@ function renderTopics() {
   resultCount.textContent = `${filtered.length} of ${topics.length} topics`;
   topicList.innerHTML = filtered.length ? filtered.map((topic) => `<article class="topic-library-item"><div class="topic-library-number">${String(topics.indexOf(topic) + 1).padStart(2, '0')}</div><div class="topic-library-copy"><h2>${escapeHtml(topic.name)}</h2><p>${escapeHtml(topic.description)}</p><small>${escapeHtml(topic.source)}</small></div><div class="topic-library-actions"><a href="learn.html?topic=${encodeURIComponent(topic.id)}">Learn <span>→</span></a><a href="test.html?topic=${encodeURIComponent(topic.id)}">Test <span>→</span></a><a href="quiz.html?topic=${encodeURIComponent(topic.id)}">Quiz <span>→</span></a></div></article>`).join('') : '<div class="topic-empty"><strong>No topics match those filters</strong>Try a broader search or reset one of the filters.</div>';
 }
+function renderTopics() {
+  const query = searchInput.value.trim().toLowerCase();
+  const category = categorySelect.value;
+  const status = statusSelect.value;
+  const filtered = topics.filter((topic) => {
+    const matchesSearch = !query || [topic.name, topic.description, topic.source].some((value) => value.toLowerCase().includes(query));
+    return matchesSearch && (category === 'all' || categoryFor(topic) === category) && (status === 'all' || topicStatus(topic) === status);
+  });
+  resultCount.textContent = `${filtered.length} of ${topics.length} topics`;
+  const groups = topicGrouping.categoryOrder.map((groupName) => ({ groupName, topics: filtered.filter((topic) => categoryFor(topic) === groupName) })).filter((group) => group.topics.length);
+  topicList.innerHTML = groups.length ? groups.map(({ groupName, topics: groupTopics }) => {
+    const headingId = `topic-group-${groupName.replace(/[^a-z0-9]+/gi, '-').toLowerCase()}`;
+    return `<section class="topic-library-group" aria-labelledby="${headingId}"><div class="topic-library-group-heading"><h2 id="${headingId}">${escapeHtml(groupName)}</h2><span>${groupTopics.length} topic${groupTopics.length === 1 ? '' : 's'}</span></div><div class="topic-library">${groupTopics.map((topic, index) => `<article class="topic-library-item"><div class="topic-library-number">${String(index + 1).padStart(2, '0')}</div><div class="topic-library-copy"><h3>${escapeHtml(topic.name)}</h3><p>${escapeHtml(topic.description)}</p><small>${escapeHtml(topic.source)}</small></div><div class="topic-library-actions"><a href="learn.html?topic=${encodeURIComponent(topic.id)}">Learn <span>→</span></a><a href="test.html?topic=${encodeURIComponent(topic.id)}">Test <span>→</span></a><a href="quiz.html?topic=${encodeURIComponent(topic.id)}">Quiz <span>→</span></a></div></article>`).join('')}</div></section>`;
+  }).join('') : '<div class="topic-empty"><strong>No topics match those filters</strong>Try a broader search or reset one of the filters.</div>';
+}
 const categories = [...new Set(topics.map(categoryFor))].sort();
 categorySelect.insertAdjacentHTML('beforeend', categories.map((category) => `<option value="${escapeHtml(category)}">${escapeHtml(category)}</option>`).join(''));
 searchInput.addEventListener('input', renderTopics);
@@ -45,3 +60,4 @@ statusSelect.addEventListener('change', renderTopics);
 renderTopics();
 window.setTimeout(renderTopics, 0);
 document.getElementById('topic-list').innerHTML = topics.map((topic, index) => `<article class="topic-library-item"><div class="topic-library-number">${String(index + 1).padStart(2, '0')}</div><div class="topic-library-copy"><h2>${topic.name}</h2><p>${topic.description}</p><small>${topic.source}</small></div><div class="topic-library-actions"><a href="learn.html?topic=${topic.id}">Learn <span>→</span></a><a href="test.html?topic=${topic.id}">Test <span>→</span></a><a href="quiz.html?topic=${topic.id}">Quiz <span>→</span></a></div></article>`).join('');
+renderTopics();

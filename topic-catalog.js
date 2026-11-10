@@ -37,3 +37,24 @@ window.topicCatalog = [
   { id: 'lymphatic-urinary-reproductive', name: 'Lymphatic, urinary & reproductive systems', source: 'L3 Lymphatic, Urinary  Reproductive Systems v1 September 2020.pdf', description: 'Fluid drainage, immunity, waste removal and reproductive function.' },
   { id: 'digestive', name: 'Digestive system', source: 'L3 Digestive System  v1 September 2020.pdf', description: 'Digestive processes, the GI tract, accessory organs and nutrient absorption.' }
 ];
+const traumaTopicIds = [
+  'trauma', 'chest-injuries', 'drowning', 'suspension-blast-ballistics', 'abdominal-conditions',
+  'abdominal-injuries', 'cardiac-conditions', 'maxillofacial-injuries', 'head-injuries',
+  'wounds-and-bleeding', 'burns', 'extrication-light-rescue', 'musculoskeletal-injuries',
+  'clinical-shock', 'spinal-pelvic-injuries'
+];
+const topicCategoryOrder = ['Foundations', 'Body systems', 'Trauma & emergencies'];
+function topicCategoryFor(topic) {
+  if (topic.id === 'body') return 'Foundations';
+  if (traumaTopicIds.includes(topic.id)) return 'Trauma & emergencies';
+  return 'Body systems';
+}
+window.topicGrouping = {
+  traumaTopicIds,
+  categoryOrder: topicCategoryOrder,
+  categoryFor: topicCategoryFor,
+  dashboardGroups: [
+    { name: 'Medical', matches: (topic) => topicCategoryFor(topic) !== 'Trauma & emergencies' },
+    { name: 'Trauma', matches: (topic) => topicCategoryFor(topic) === 'Trauma & emergencies' }
+  ]
+};
