@@ -7,6 +7,7 @@ const themeToggle = document.getElementById('theme-toggle');
 let questions = [];
 let questionIndex = 0;
 let answers = [];
+let selectedAnswer = null;
 
 function shuffle(items) {
   const result = [...items];
@@ -56,23 +57,28 @@ function topicName(topicId) {
 function renderQuestion() {
   const question = questions[questionIndex];
   if (!question) return renderResults();
+  selectedAnswer = null;
   countLabel.textContent = `Question ${questionIndex + 1} of ${questions.length}`;
   const progress = Math.round((questionIndex / questions.length) * 100);
   const options = shuffle(question.options.map((text, index) => ({ text, index })));
   content.innerHTML = `<div class="exam-progress" aria-label="Exam progress"><span style="width:${progress}%"></span></div><p class="exam-category">${topicName(question.topic)}</p><p class="exam-question">${question.question}</p><div class="exam-options">${options.map((item) => `<button type="button" data-index="${item.index}">${item.text}</button>`).join('')}</div><p class="exam-feedback" id="exam-feedback" aria-live="polite">Select an answer to continue. Answers and explanations are shown at the end.</p><div class="exam-actions"><button class="exam-button" id="next-question" type="button" disabled>${questionIndex === questions.length - 1 ? 'Finish exam' : 'Next question'}</button></div>`;
-  content.querySelectorAll('.exam-options button').forEach((button) => button.addEventListener('click', () => answerQuestion(question, button)));
-  content.querySelector('#next-question').addEventListener('click', () => { questionIndex += 1; renderQuestion(); });
+  content.querySelectorAll('.exam-options button').forEach((button) => button.addEventListener('click', () => selectAnswer(button)));
+  content.querySelector('#next-question').addEventListener('click', () => {
+    submitAnswer(question);
+    questionIndex += 1;
+    renderQuestion();
+  });
 }
 
-function answerQuestion(question, button) {
-  const chosen = Number(button.dataset.index);
-  const correct = chosen === question.answer;
-  answers[questionIndex] = { id: question.id, selected: chosen, correct };
-  content.querySelectorAll('.exam-options button').forEach((item) => {
-    item.disabled = true;
-  });
-  button.classList.add('selected');
+function selectAnswer(button) {
+  selectedAnswer = Number(button.dataset.index);
+  content.querySelectorAll('.exam-options button').forEach((item) => item.classList.toggle('selected', item === button));
   content.querySelector('#next-question').disabled = false;
+}
+
+function submitAnswer(question) {
+  const correct = selectedAnswer === question.answer;
+  answers[questionIndex] = { id: question.id, selected: selectedAnswer, correct };
 }
 
 function renderResults() {
@@ -95,6 +101,7 @@ function startExam() {
   questions = selectExamQuestions();
   questionIndex = 0;
   answers = [];
+  selectedAnswer = null;
   renderQuestion();
 }
 

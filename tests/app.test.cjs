@@ -113,6 +113,14 @@ test('Medical Exam config selects 50 questions with requested coverage', () => {
   assert.ok(config.medicalTopics.includes('respiratory-conditions'));
 });
 
+test('Medical and Trauma exams submit answers only when advancing', () => {
+  const exam = read('trauma-exam.js');
+  assert.match(exam, /selectedAnswer = Number\(button\.dataset\.index\)/);
+  assert.match(exam, /submitAnswer\(question\)/);
+  assert.match(exam, /answers\[questionIndex\] = \{ id: question\.id, selected: selectedAnswer, correct \}/);
+  assert.doesNotMatch(exam, /item\.disabled = true/);
+});
+
 test('question scoring identifies the configured correct answer', () => {
   const questions = [];
   const context = { window: {}, questionDatabase: questions };
