@@ -54,6 +54,31 @@ function topicName(topicId) {
   return topicId.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
+function isQuestionFlagged(questionId) {
+  if (window.lasProgress?.isQuestionFlagged) return window.lasProgress.isQuestionFlagged(questionId);
+  try { return JSON.parse(localStorage.getItem('las-revision-flagged-question-ids') || '[]').includes(questionId); } catch { return false; }
+}
+
+function setQuestionFlagged(questionId, flagged) {
+  if (window.lasProgress?.setQuestionFlagged) return window.lasProgress.setQuestionFlagged(questionId, flagged);
+  try {
+    const ids = new Set(JSON.parse(localStorage.getItem('las-revision-flagged-question-ids') || '[]'));
+    if (flagged) ids.add(questionId); else ids.delete(questionId);
+    localStorage.setItem('las-revision-flagged-question-ids', JSON.stringify([...ids]));
+  } catch { /* Flags are optional when storage is unavailable. */ }
+  return flagged;
+}
+
+function bindFlagButton(question) {
+  const button = document.getElementById('flag-question');
+  if (!button) return;
+  button.addEventListener('click', () => {
+    const flagged = setQuestionFlagged(question.id, !isQuestionFlagged(question.id));
+    button.setAttribute('aria-pressed', String(flagged));
+    button.textContent = flagged ? 'Remove flag' : 'Flag question';
+  });
+}
+
 function renderQuestion() {
   const question = questions[questionIndex];
   if (!question) return renderResults();
@@ -61,7 +86,9 @@ function renderQuestion() {
   countLabel.textContent = `Question ${questionIndex + 1} of ${questions.length}`;
   const progress = Math.round((questionIndex / questions.length) * 100);
   const options = shuffledAnswerOptions(question);
-  content.innerHTML = `<div class="exam-progress" aria-label="Exam progress"><span style="width:${progress}%"></span></div><p class="exam-category">${topicName(question.topic)}</p><p class="exam-question">${question.question}</p><div class="exam-options">${options.map((item) => `<button type="button" data-index="${item.index}">${item.text}</button>`).join('')}</div><p class="exam-feedback" id="exam-feedback" aria-live="polite">Select an answer to continue. Answers and explanations are shown at the end.</p><div class="exam-actions"><button class="exam-button" id="next-question" type="button" disabled>${questionIndex === questions.length - 1 ? 'Finish exam' : 'Next question'}</button></div>`;
+  const flagged = isQuestionFlagged(question.id);
+  content.innerHTML = `<div class="exam-progress" aria-label="Exam progress"><span style="width:${progress}%"></span></div><p class="exam-category">${topicName(question.topic)}</p><p class="exam-question">${question.question}</p><div class="exam-options">${options.map((item) => `<button type="button" data-index="${item.index}">${item.text}</button>`).join('')}</div><p class="exam-feedback" id="exam-feedback" aria-live="polite">Select an answer to continue. Answers and explanations are shown at the end.</p><div class="exam-actions"><button class="exam-button exam-flag-button${flagged ? ' flagged' : ''}" id="flag-question" type="button" aria-pressed="${flagged}">${flagged ? 'Remove flag' : 'Flag question'}</button><button class="exam-button" id="next-question" type="button" disabled>${questionIndex === questions.length - 1 ? 'Finish exam' : 'Next question'}</button></div>`;
+  bindFlagButton(question);
   content.querySelectorAll('.exam-options button').forEach((button) => button.addEventListener('click', () => selectAnswer(button)));
   content.querySelector('#next-question').addEventListener('click', () => {
     submitAnswer(question);

@@ -121,6 +121,14 @@ test('Medical and Trauma exams submit answers only when advancing', () => {
   assert.doesNotMatch(exam, /item\.disabled = true/);
 });
 
+test('Medical and Trauma exams can flag questions for later review', () => {
+  const exam = read('trauma-exam.js');
+  assert.match(exam, /id="flag-question"/);
+  assert.match(exam, /setQuestionFlagged\(question\.id/);
+  assert.match(exam, /las-revision-flagged-question-ids/);
+  assert.match(exam, /Remove flag/);
+});
+
 test('question scoring identifies the configured correct answer', () => {
   const questions = [];
   const context = { window: {}, questionDatabase: questions };
