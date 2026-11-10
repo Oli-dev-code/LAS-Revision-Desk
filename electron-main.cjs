@@ -48,7 +48,7 @@ function updateCheckStatus(status, detail) {
 function updateCheckProgress(percent, speed, eta) {
   if (!updateCheckWindow || updateCheckWindow.isDestroyed()) return;
   const safePercent = Math.max(0, Math.min(100, Number(percent) || 0));
-  updateCheckWindow.webContents.executeJavaScript(`(() => { const root = document.querySelector('.window'); const track = document.querySelector('.progress-track'); const bar = track?.querySelector('span'); const label = document.querySelector('.progress-label'); const stats = document.querySelector('.download-stats'); if (!root || !track || !bar || !label || !stats) return; root.classList.remove('error'); track.classList.remove('indeterminate'); bar.style.width = ${JSON.stringify(`${safePercent.toFixed(1)}%`)}; label.textContent = ${JSON.stringify(`${safePercent.toFixed(1)}% downloaded`)}; stats.textContent = ${JSON.stringify([speed, eta].filter(Boolean).join(' · '))}; })()`).catch(() => {});
+  updateCheckWindow.webContents.executeJavaScript(`(() => { const root = document.querySelector('.window'); const track = document.querySelector('.progress-track'); const bar = track?.querySelector('span'); const label = document.querySelector('.progress-label'); const stats = document.querySelector('.download-stats'); if (!root || !track || !bar || !label || !stats) return; root.classList.remove('error'); track.classList.remove('indeterminate'); bar.style.width = ${JSON.stringify(`${safePercent.toFixed(1)}%`)}; label.textContent = ${JSON.stringify(`${safePercent.toFixed(1)}% downloaded`)}; stats.textContent = ${JSON.stringify([speed, eta].filter(Boolean).join(' - '))}; })()`).catch(() => {});
 }
 
 function updateCheckError() {
@@ -165,7 +165,7 @@ async function checkForUpdatesBeforeLaunch() {
   });
   autoUpdater.on('error', (error) => {
     console.error('LAS Revision Desk update failed:', error);
-    updateCheckStatus('Update check unavailable', 'We couldn’t check for updates. You can continue using the current version.');
+    updateCheckStatus('Update check unavailable', "We couldn't check for updates. You can continue using the current version.");
     updateCheckError();
     closeUpdateCheckWindowAfterStatus(1800);
     finishUpdateFlow(1800);
@@ -187,7 +187,7 @@ async function checkForUpdatesBeforeLaunch() {
     await waitForUpdateFlow;
   } catch (error) {
     console.error('LAS Revision Desk update check failed:', error);
-    updateCheckStatus('Update check unavailable', 'We couldn’t check for updates. You can continue using the current version.');
+    updateCheckStatus('Update check unavailable', "We couldn't check for updates. You can continue using the current version.");
     updateCheckError();
     closeUpdateCheckWindowAfterStatus(1800);
     finishUpdateFlow(1800);

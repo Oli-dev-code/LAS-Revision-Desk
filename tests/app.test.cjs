@@ -7,6 +7,28 @@ const vm = require('node:vm');
 const root = path.resolve(__dirname, '..');
 const read = (file) => fs.readFileSync(path.join(root, file), 'utf8');
 
+test('source files are UTF-8 and contain no common mojibake markers', () => {
+  const sourceExtensions = new Set(['.js', '.cjs', '.html', '.css', '.json', '.md', '.bat', '.yml', '.yaml']);
+  const ignoredDirectories = new Set(['.git', 'node_modules', '.playwright-cli', 'docs', 'assets', 'release', 'tmp-airway-management', 'tmp-meds-management']);
+  const mojibake = /[\u00c2\u00c3\u00e2\u00f0\u00ef\ufffd]/;
+  const files = [];
+  const visit = (directory) => {
+    for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+      if (ignoredDirectories.has(entry.name)) continue;
+      const filePath = path.join(directory, entry.name);
+      if (entry.isDirectory()) visit(filePath);
+      else if (sourceExtensions.has(path.extname(entry.name).toLowerCase())) files.push(filePath);
+    }
+  };
+  visit(root);
+  for (const filePath of files) {
+    const bytes = fs.readFileSync(filePath);
+    const text = bytes.toString('utf8');
+    assert.deepEqual(Buffer.from(text, 'utf8'), bytes, `${path.relative(root, filePath)} must be valid UTF-8`);
+    assert.doesNotMatch(text, mojibake, `${path.relative(root, filePath)} contains mojibake`);
+  }
+});
+
 function loadTopicCatalog() {
   const context = { window: {} };
   vm.runInNewContext(read('topic-catalog.js'), context);
