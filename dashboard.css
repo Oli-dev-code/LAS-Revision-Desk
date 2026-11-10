@@ -63,6 +63,10 @@ body[data-theme="dark"] .progress-track{background:#365258}body[data-theme="dark
 .course-progress{padding:10px 12px!important}
 .course-list{gap:4px!important;margin-top:8px!important}
 .course-item{height:30px!important;padding-inline:8px!important;font-size:11px!important}
+.course-group{display:grid;gap:4px}
+.course-group-label{margin:8px 8px 2px;color:#8fa9a8;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.course-group:first-child .course-group-label{margin-top:0}
+body[data-theme="dark"] .course-group-label{color:#9ab9b5}
 
 /* Explicit chart layout: keep axes, gridlines, bars, and day labels in separate layers. */
 .activity-panel .chart{position:relative!important;display:flex!important;align-items:stretch!important;gap:8px!important;height:164px!important;min-height:164px!important;margin-top:18px!important}

@@ -53,6 +53,10 @@ test('navigation exposes the dashboard and topic-library routes', () => {
   assert.match(index, /href="test\.html\?topic=/);
   assert.match(index, /href="quiz\.html\?topic=/);
   assert.doesNotMatch(index, /data-view="practice"|data-view="notes"/);
+  const app = read('app.js');
+  assert.match(app, /course-group/);
+  assert.match(app, /\['Medical'/);
+  assert.match(app, /\['Trauma'/);
 });
 
 test('question scoring identifies the configured correct answer', () => {
