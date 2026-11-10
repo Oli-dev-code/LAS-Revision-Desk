@@ -63,6 +63,10 @@ body[data-theme="dark"] .progress-track{background:#365258}body[data-theme="dark
 .course-progress{padding:10px 12px!important}
 .course-list{gap:4px!important;margin-top:8px!important}
 .course-item{height:30px!important;padding-inline:8px!important;font-size:11px!important}
+.course-item{background:transparent!important;color:#607477!important}
+body[data-theme="dark"] .course-item{background:#22363b!important;border-color:#344b4f!important;color:#b2c3c2!important}
+body[data-theme="dark"] .course-item:hover{background:#294447!important;border-color:#486f6c!important;color:#d9eeea!important}
+body[data-theme="dark"] .course-item.selected{background:#294b50!important;border-color:#68b8a9!important;color:#a9e0d5!important}
 .course-group{display:grid;gap:4px}
 .course-group-label{margin:8px 8px 2px;color:#8fa9a8;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase}
 .course-group:first-child .course-group-label{margin-top:0}
