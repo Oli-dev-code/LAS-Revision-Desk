@@ -44,3 +44,22 @@ body[data-theme="dark"] .progress-track{background:#365258}body[data-theme="dark
 .dashboard-grid{margin-top:16px!important;padding-top:16px!important;margin-bottom:16px!important}
 .activity-panel{min-height:240px!important;overflow:hidden}
 .activity-panel .chart{height:137px!important;min-height:137px!important}
+
+/* Final desktop cascade: keep the two dashboard panels visible at scaled widths. */
+.dashboard-grid{display:grid!important;grid-template-columns:minmax(0,1.35fr) minmax(360px,1fr)!important;gap:16px!important;align-items:stretch!important}
+.dashboard-grid>.panel{min-width:0!important}
+.focus-panel,.activity-panel{min-height:270px!important}
+.focus-panel{padding:24px!important}
+.activity-panel{display:flex!important;flex-direction:column!important;padding:24px!important}
+.activity-panel .chart{display:flex!important;flex:1 1 auto!important;min-width:0!important;min-height:150px!important;height:150px!important;margin-top:18px!important}
+.activity-panel .chart-area{min-width:0!important}
+.activity-panel .bars{min-width:0!important}
+.topic-meta{display:grid!important;grid-template-columns:minmax(0,1fr) auto!important;gap:8px 16px!important;align-items:start!important}
+.topic-meta span:first-child{min-width:0;overflow-wrap:anywhere}
+.topic-meta span:last-child{white-space:nowrap}
+.sidebar{padding:20px 12px 16px!important}
+.brand{padding-bottom:20px!important}
+.sidebar-label{margin:20px 10px 8px!important}
+.course-progress{padding:10px 12px!important}
+.course-list{gap:4px!important;margin-top:8px!important}
+.course-item{height:30px!important;padding-inline:8px!important;font-size:11px!important}
