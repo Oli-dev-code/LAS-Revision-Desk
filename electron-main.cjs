@@ -1,8 +1,13 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Notification } = require('electron');
 const { autoUpdater } = require('electron-updater');
 const path = require('node:path');
 
 let updateCheckWindow;
+let updateActionHandler;
+let periodicUpdateTimer;
+let periodicUpdateCheckInProgress = false;
+let lastNotifiedUpdateVersion;
+const UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000;
 
 function createUpdateCheckWindow() {
   updateCheckWindow = new BrowserWindow({
@@ -30,6 +35,7 @@ function createUpdateCheckWindow() {
     event.preventDefault();
     updateCheckWindow.webContents.emit('update-action', url.replace('las-revision://', ''));
   });
+  updateCheckWindow.webContents.on('update-action', (action) => updateActionHandler?.(action));
   updateCheckWindow.loadFile(path.join(__dirname, 'update-check.html'));
   return updateCheckWindow;
 }
@@ -55,6 +61,22 @@ function showUpdateReady(version) {
   updateCheckWindow.webContents.executeJavaScript(`(() => { const root = document.querySelector('.window'); const track = document.querySelector('.progress-track'); const label = document.querySelector('.progress-label'); const stats = document.querySelector('.download-stats'); const actions = document.querySelector('.ready-actions'); if (!root || !track || !label || !stats || !actions) return; root.classList.remove('error'); document.querySelector('.status').textContent = 'Update ready to install'; document.querySelector('.detail').textContent = ${JSON.stringify(`Version ${version} has been downloaded.`)}; track.classList.remove('indeterminate'); track.querySelector('span').style.width = '100%'; label.textContent = 'Download complete'; stats.textContent = ''; actions.hidden = false; })()`).catch(() => {});
 }
 
+function notifyUpdateReady(version) {
+  if (!version || version === lastNotifiedUpdateVersion || !Notification.isSupported()) return;
+  lastNotifiedUpdateVersion = version;
+  const notification = new Notification({
+    title: 'LAS Revision Desk update ready',
+    body: `Version ${version} has been downloaded. Restart to install it.`,
+    icon: path.join(__dirname, 'assets', 'las-logo-icon.png')
+  });
+  notification.on('click', () => {
+    if (!updateCheckWindow || updateCheckWindow.isDestroyed()) createUpdateCheckWindow();
+    updateCheckWindow.show();
+    updateCheckWindow.focus();
+  });
+  notification.show();
+}
+
 function closeUpdateCheckWindow() {
   if (updateCheckWindow && !updateCheckWindow.isDestroyed()) updateCheckWindow.close();
   updateCheckWindow = null;
@@ -62,6 +84,21 @@ function closeUpdateCheckWindow() {
 
 function closeUpdateCheckWindowAfterStatus(delay = 700) {
   setTimeout(closeUpdateCheckWindow, delay);
+}
+
+function startPeriodicUpdateChecks() {
+  if (periodicUpdateTimer) clearInterval(periodicUpdateTimer);
+  periodicUpdateTimer = setInterval(async () => {
+    if (periodicUpdateCheckInProgress || !app.isReady()) return;
+    periodicUpdateCheckInProgress = true;
+    try {
+      await autoUpdater.checkForUpdates();
+    } catch (error) {
+      console.error('LAS Revision Desk periodic update check failed:', error);
+    } finally {
+      periodicUpdateCheckInProgress = false;
+    }
+  }, UPDATE_CHECK_INTERVAL_MS);
 }
 
 function formatBytes(bytes) {
@@ -96,7 +133,7 @@ async function checkForUpdatesBeforeLaunch() {
 
   autoUpdater.autoDownload = true;
   autoUpdater.autoInstallOnAppQuit = !developmentBuild;
-  updateCheckWindow.webContents.on('update-action', (action) => {
+  updateActionHandler = (action) => {
     if (action === 'restart') {
       openMainWindow = false;
       autoUpdater.quitAndInstall();
@@ -105,10 +142,11 @@ async function checkForUpdatesBeforeLaunch() {
       closeUpdateCheckWindow();
       finishUpdateFlow();
     }
-  });
+  };
   autoUpdater.on('checking-for-update', () => console.log('Checking for LAS Revision Desk updates...'));
   autoUpdater.on('update-available', (info) => {
     console.log(`LAS Revision Desk update available: ${info.version}`);
+    if (!updateCheckWindow || updateCheckWindow.isDestroyed()) createUpdateCheckWindow();
     updateCheckStatus('Downloading update', `Downloading version ${info.version}...`);
     updateCheckProgress(0, '', 'Calculating time remaining...');
   });
@@ -139,7 +177,9 @@ async function checkForUpdatesBeforeLaunch() {
       finishUpdateFlow(1400);
       return;
     }
-    showUpdateReady(info?.version || 'the latest version');
+    const version = info?.version || 'the latest version';
+    showUpdateReady(version);
+    notifyUpdateReady(version);
   });
 
   try {
@@ -153,6 +193,7 @@ async function checkForUpdatesBeforeLaunch() {
     finishUpdateFlow(1800);
     await waitForUpdateFlow;
   }
+  startPeriodicUpdateChecks();
   return openMainWindow;
 }
 

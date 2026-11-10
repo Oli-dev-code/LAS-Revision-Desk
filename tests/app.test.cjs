@@ -100,6 +100,13 @@ test('update UI wiring includes progress and recoverable error states', () => {
   assert.match(updater, /We couldn.?t check for updates/);
   assert.match(updater, /forceDevUpdateConfig/);
   assert.match(updater, /showUpdateReady/);
+  assert.match(updater, /startPeriodicUpdateChecks/);
+  assert.match(updater, /UPDATE_CHECK_INTERVAL_MS = 30 \* 60 \* 1000/);
+  assert.match(updater, /setInterval\(async/);
+  assert.match(updater, /Notification/);
+  assert.match(updater, /notifyUpdateReady/);
+  assert.match(updater, /lastNotifiedUpdateVersion/);
+  assert.match(updater, /notification\.on\('click'/);
   assert.doesNotMatch(updater, /showMessageBoxSync/);
   assert.match(read('update-check.html'), /las-revision:\/\/restart/);
   assert.match(read('update-check.html'), /Restart and install/);
