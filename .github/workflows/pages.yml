@@ -1,0 +1,45 @@
+name: Deploy LAS Revision Desk PWA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Stage public PWA files only
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p site/assets/diagrams site/assets/test-diagrams
+          cp index.html learn.html test.html focused-test.html trauma-exam.html medical-exam.html quiz.html topics.html site/
+          cp styles.css dashboard.css study-page.css learn.css test.css trauma-exam.css topics.css site/
+          cp app.js dashboard-controls.js study-page.js trauma-exam.js learn-page.js topics-page.js learn-content.js nervous-content.js lymphatic-content.js question-bank.js progress-store.js topic-catalog.js pwa.js sw.js manifest.webmanifest site/
+          cp assets/las-logo.png assets/las-logo-icon.png site/assets/
+          cp assets/diagrams/*.png site/assets/diagrams/
+          cp assets/test-diagrams/*.png site/assets/test-diagrams/
+      - name: Upload PWA artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

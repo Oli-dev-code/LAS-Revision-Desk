@@ -1,0 +1,13 @@
+{
+  "name": "LAS Revision Desk",
+  "short_name": "LAS Revision",
+  "description": "Offline revision workspace for LAS AAP training.",
+  "lang": "en-GB",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fbfcfa",
+  "theme_color": "#176f6b",
+  "orientation": "portrait-primary",
+  "icons": [{"src":"assets/las-logo-icon.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}]
+}

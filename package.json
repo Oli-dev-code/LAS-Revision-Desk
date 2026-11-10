@@ -56,6 +56,9 @@
       "assets/las-logo.png",
       "assets/las-logo-icon.png",
       "app.js",
+      "pwa.js",
+      "manifest.webmanifest",
+      "sw.js",
       "electron-main.cjs",
       "package.json"
     ],
