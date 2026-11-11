@@ -259,6 +259,7 @@ test('test sessions render richer result summaries and recommendations', () => {
   assert.match(studyPage, /CONFIDENCE GAPS/);
   assert.match(studyPage, /MISSED-QUESTION CAUSES/);
   assert.match(studyPage, /Missed/);
+  assert.match(studyPage, /result-flag-row.*reportButtonMarkup|wrong-answer.*reportButtonMarkup/s);
   assert.match(studyPage, /focused-test\.html\?topic=/);
   assert.match(studyPage, /learn\.html\?topic=/);
   assert.match(styles, /\.results-summary/);
@@ -269,4 +270,5 @@ test('test sessions render richer result summaries and recommendations', () => {
   assert.match(exam, /Topic performance/);
   assert.match(exam, /Confidence gaps/);
   assert.match(exam, /Recommended follow-up/);
+  assert.match(exam, /exam-review-item.*reportButtonMarkup/s);
 });

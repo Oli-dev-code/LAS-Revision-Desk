@@ -38,6 +38,7 @@ test('starts, completes, records, and reviews a test', async ({ page }) => {
   await expect(page.locator('.confidence-gaps')).toBeVisible();
   await expect(page.locator('.missed-causes')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Review missed questions' })).toBeVisible();
+  await expect(page.locator('.wrong-answer .question-report-button').first()).toBeVisible();
   const stats = await page.evaluate(() => JSON.parse(localStorage.getItem('las-revision-question-stats')));
   expect(stats.answered).toBe(questionCount);
   expect(stats.incorrectQuestionIds.length).toBeGreaterThan(0);
@@ -58,6 +59,7 @@ async function completeFormalExam(page, url) {
   await expect(page.locator('.exam-feedback-panel').first()).toBeVisible();
   await expect(page.locator('.exam-topic-performance')).toBeVisible();
   await expect(page.locator('.exam-confidence-grid')).toBeVisible();
+  await expect(page.locator('.exam-review-item.wrong .question-report-button').first()).toBeVisible();
 }
 
 test('shows diagnostic feedback for Medical and Trauma exams', async ({ page }) => {

@@ -188,6 +188,7 @@ function renderResults() {
     return `<article class="exam-review-item ${resultClass}"><p class="exam-review-status">Question ${index + 1} · ${answer?.correct ? 'Correct' : 'Incorrect'}</p><h3>${question.question}</h3><p><strong>Your answer:</strong> ${selected}</p><p><strong>Correct answer:</strong> ${question.options[question.answer]}</p><p class="exam-review-explanation">${question.explanation}</p></article>`;
   }).join('');
   content.innerHTML = `<div class="exam-result"><h2>Exam complete</h2><p>You scored <strong>${correct}/${questions.length} (${percentage}%)</strong>.</p><p>Answers and explanations are shown below now that the exam is complete.</p><div class="exam-coverage">${covered.map((label) => `<span>${label}</span>`).join('')}</div><div class="exam-actions"><button class="exam-button" id="new-exam" type="button">Start a new exam</button><a class="exam-button secondary" href="index.html">Return to dashboard</a></div></div><section class="exam-review"><h2>Answer review</h2>${review}</section>`;
+  content.querySelectorAll('.exam-review-item').forEach((item, index) => { if (!answers[index]?.correct) item.insertAdjacentHTML('beforeend', `<div class="exam-review-actions">${reportButtonMarkup(questions[index])}</div>`); });
   content.insertAdjacentHTML('afterbegin', topicPerformance + confidence + recommendations + causeMarkup);
   content.querySelector('#new-exam').addEventListener('click', startExam);
 }
