@@ -81,7 +81,7 @@ export default {
       appVersion: clean(input.appVersion, 40),
       platform: clean(input.platform, 20)
     };
-    if (!report.questionId || !report.topicId || !report.topicName || !report.questionText || !report.appVersion || !ALLOWED_MODES.has(report.mode) || !['pwa', 'desktop'].has(report.platform)) return response({ message: 'Required report fields are missing or invalid.' }, 400, origin);
+    if (!report.questionId || !report.topicId || !report.topicName || !report.questionText || !report.appVersion || !ALLOWED_MODES.has(report.mode) || !['pwa', 'desktop'].includes(report.platform)) return response({ message: 'Required report fields are missing or invalid.' }, 400, origin);
     if (!(await verifyTurnstile(input.turnstileToken, request, env))) return response({ message: 'Verification failed. Please try again.' }, 403, origin);
 
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';

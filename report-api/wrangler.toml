@@ -5,4 +5,4 @@ compatibility_date = "2026-11-11"
 [[d1_databases]]
 binding = "REPORT_DB"
 database_name = "las-revision-question-reports"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "a0a8e58c-3064-43a9-a1e7-31f8f5e6b199"
