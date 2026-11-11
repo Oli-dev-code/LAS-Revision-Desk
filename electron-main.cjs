@@ -8,6 +8,7 @@ let updateCheckWindow;
 let updateActionHandler;
 let periodicUpdateTimer;
 let periodicUpdateCheckInProgress = false;
+let manualUpdateCheckInProgress = false;
 let lastNotifiedUpdateVersion;
 let appServer;
 let appUrl;
@@ -195,6 +196,17 @@ async function checkForUpdatesBeforeLaunch() {
       closeUpdateCheckWindow();
       finishUpdateFlow();
     }
+    if (action === 'check' && !manualUpdateCheckInProgress) {
+      manualUpdateCheckInProgress = true;
+      updateCheckWindow?.webContents.executeJavaScript('window.updateCheckUi?.showChecking()').catch(() => {});
+      updateCheckStatus('Checking for updates...', 'Looking for a newer version...');
+      autoUpdater.checkForUpdates().catch((error) => {
+        manualUpdateCheckInProgress = false;
+        console.error('LAS Revision Desk manual update check failed:', error);
+        updateCheckStatus('Update check unavailable', "We couldn't check for updates. Please try again.");
+        updateCheckError();
+      });
+    }
   };
   autoUpdater.on('checking-for-update', () => console.log('Checking for LAS Revision Desk updates...'));
   autoUpdater.on('update-available', (info) => {
@@ -212,18 +224,31 @@ async function checkForUpdatesBeforeLaunch() {
   });
   autoUpdater.on('update-not-available', (info) => {
     console.log(`LAS Revision Desk is up to date at ${info.version}.`);
+    if (manualUpdateCheckInProgress) {
+      manualUpdateCheckInProgress = false;
+      updateCheckStatus('You’re up to date', `You’re using version ${info.version}.`);
+      updateCheckWindow?.webContents.executeJavaScript('window.updateCheckUi?.showCheckComplete()').catch(() => {});
+      return;
+    }
     updateCheckStatus('No updates found', 'Starting LAS Revision Desk...');
     closeUpdateCheckWindowAfterStatus();
     finishUpdateFlow(700);
   });
   autoUpdater.on('error', (error) => {
     console.error('LAS Revision Desk update failed:', error);
+    if (manualUpdateCheckInProgress) {
+      manualUpdateCheckInProgress = false;
+      updateCheckStatus('Update check unavailable', "We couldn't check for updates. Please try again.");
+      updateCheckError();
+      return;
+    }
     updateCheckStatus('Update check unavailable', "We couldn't check for updates. You can continue using the current version.");
     updateCheckError();
     closeUpdateCheckWindowAfterStatus(1800);
     finishUpdateFlow(1800);
   });
   autoUpdater.on('update-downloaded', (info) => {
+    manualUpdateCheckInProgress = false;
     if (developmentBuild) {
       updateCheckStatus('Update downloaded', 'A development update is ready for the packaged application.');
       closeUpdateCheckWindowAfterStatus(1400);

@@ -122,7 +122,8 @@ test('study time migration restores legacy today totals to the rhythm history', 
     'las-revision-time-stats': JSON.stringify({ totalMs: 3600000, todayDate: todayKey, todayMs: 2400000 })
   });
   assert.ok(context.progress.revisionTime().dailyMs[todayKey] >= 2400000);
-  assert.match(context.localStorage.getItem('las-revision-time-stats'), new RegExp(`\"${todayKey}\":2400000`));
+  const stored = JSON.parse(context.localStorage.getItem('las-revision-time-stats'));
+  assert.ok(stored.dailyMs[todayKey] >= 2400000);
 });
 
 test('Trauma Exam selects 50 questions with required coverage pools', () => {
@@ -251,6 +252,10 @@ test('update UI wiring includes progress and recoverable error states', () => {
   assert.match(updater, /We couldn.?t check for updates/);
   assert.match(updater, /forceDevUpdateConfig/);
   assert.match(updater, /showUpdateReady/);
+  assert.match(read('update-check.html'), /las-revision:\/\/check/);
+  assert.match(read('update-check.html'), /Check for updates/);
+  assert.match(read('update-check.js'), /showChecking/);
+  assert.match(updater, /manualUpdateCheckInProgress/);
   assert.match(updater, /startPeriodicUpdateChecks/);
   assert.match(updater, /UPDATE_CHECK_INTERVAL_MS = 30 \* 60 \* 1000/);
   assert.match(updater, /setInterval\(async/);

@@ -29,6 +29,9 @@
     .ready-actions a{flex:1;padding:9px 8px;border-radius:5px;text-align:center;text-decoration:none;font-size:10px;font-weight:700}
     .restart-action{background:var(--teal);color:#fff}
     .later-action{border:1px solid var(--line);color:var(--teal)}
+    .check-actions{display:flex;margin-top:12px}
+    .check-action{width:100%;padding:8px;border:1px solid var(--line);border-radius:5px;background:#fff;color:var(--teal);font:inherit;font-size:10px;font-weight:700;cursor:pointer;text-align:center;text-decoration:none}
+    .check-action[aria-disabled="true"]{opacity:.55;pointer-events:none}
     @keyframes progress{0%{transform:translateX(-120%)}100%{transform:translateX(330%)}}
   </style>
 </head>
@@ -41,6 +44,7 @@
     <div class="progress-track indeterminate" aria-label="Update download progress"><span></span></div>
     <div class="download-meta"><span class="progress-label">Preparing...</span><span class="download-stats"></span></div>
     <div class="ready-actions" hidden><a class="restart-action" href="las-revision://restart">Restart and install</a><a class="later-action" href="las-revision://later">Later</a></div>
+    <div class="check-actions"><a class="check-action" href="las-revision://check">Check for updates</a></div>
     <div class="footer"><span>Starting securely</span><span class="secure"><i></i> Connected</span></div>
   </main>
     <script src="update-check.js"></script>
