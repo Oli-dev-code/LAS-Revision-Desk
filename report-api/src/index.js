@@ -3,6 +3,8 @@ const ALLOWED_ORIGINS = new Set([
   'null'
 ]);
 const ALLOWED_MODES = new Set(['test', 'focused-test', 'quiz', 'medical-exam', 'trauma-exam']);
+const TURNSTILE_ACTION = 'question-report';
+const TURNSTILE_HOSTNAME = 'oli-dev-code.github.io';
 const MAX_REPORTS_PER_HOUR = 5;
 
 function corsHeaders(origin) {
@@ -37,10 +39,14 @@ async function verifyTurnstile(token, request, env) {
   try {
     const result = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
     const data = await result.json();
-    if (data.success === true) return { ok: true };
-    const code = Array.isArray(data['error-codes']) ? data['error-codes'][0] || 'verification-failed' : 'verification-failed';
-    console.warn('Turnstile verification failed', { code, hostname: data.hostname || null });
-    return { ok: false, code };
+    if (data.success !== true) {
+      const code = Array.isArray(data['error-codes']) ? data['error-codes'][0] || 'verification-failed' : 'verification-failed';
+      console.warn('Turnstile verification failed', { code, hostname: data.hostname || null });
+      return { ok: false, code };
+    }
+    if (data.action !== TURNSTILE_ACTION) return { ok: false, code: 'invalid-action' };
+    if (data.hostname !== TURNSTILE_HOSTNAME) return { ok: false, code: 'invalid-hostname' };
+    return { ok: true };
   } catch {
     return { ok: false, code: 'siteverify-unavailable' };
   }
