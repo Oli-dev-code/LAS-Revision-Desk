@@ -40,17 +40,20 @@ function selectExamQuestions() {
   const topicPool = config.traumaTopics || config.medicalTopics || [];
   const examPool = database.filter((question) => topicPool.includes(question.topic));
   const examIds = new Set(examPool.map((question) => question.id));
-  const isMedicalExam = examType === 'medical';
-  const usedKey = 'las-revision-medical-exam-used-question-ids';
+  const rotationKey = examType === 'medical'
+    ? 'las-revision-medical-exam-used-question-ids'
+    : examType === 'trauma'
+      ? 'las-revision-trauma-exam-used-question-ids'
+      : '';
   let used = new Set();
-  if (isMedicalExam) {
+  if (rotationKey) {
     try {
       const stored = JSON.parse(localStorage.getItem(usedKey) || '[]');
       used = new Set(Array.isArray(stored) ? stored.filter((id) => examIds.has(id)) : []);
     } catch { used = new Set(); }
   }
   let freshPool = examPool.filter((question) => !used.has(question.id));
-  if (isMedicalExam && freshPool.length === 0) {
+  if (rotationKey && freshPool.length === 0) {
     used = new Set();
     freshPool = [...examPool];
   }
@@ -85,8 +88,8 @@ function selectExamQuestions() {
     if (selected.size < config.questionCount) selected.set(question.id, question);
   });
   const result = shuffle([...selected.values()]).slice(0, config.questionCount);
-  if (isMedicalExam) {
-    try { localStorage.setItem(usedKey, JSON.stringify([...new Set([...used, ...result.map((question) => question.id)])])); } catch { /* Exam rotation is best effort when storage is unavailable. */ }
+  if (rotationKey) {
+    try { localStorage.setItem(rotationKey, JSON.stringify([...new Set([...used, ...result.map((question) => question.id)])])); } catch { /* Exam rotation is best effort when storage is unavailable. */ }
   }
   return result;
 }
