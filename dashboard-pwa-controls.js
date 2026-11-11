@@ -4,23 +4,7 @@
   const themeToggle = document.getElementById('theme-toggle');
   if (topicCount) topicCount.textContent = String(topics.length);
 
-  const readTheme = () => {
-    try { return localStorage.getItem('las-revision-theme') || 'light'; } catch { return 'light'; }
-  };
-  const saveTheme = (theme) => {
-    try { localStorage.setItem('las-revision-theme', theme); } catch { /* Optional preference only. */ }
-  };
-  const setTheme = (theme) => {
-    const dark = theme === 'dark';
-    document.body.dataset.theme = dark ? 'dark' : 'light';
-    if (!themeToggle) return;
-    themeToggle.setAttribute('aria-pressed', String(dark));
-    const icon = themeToggle.querySelector('.theme-icon');
-    const label = themeToggle.querySelector('.theme-label');
-    if (icon) icon.textContent = String.fromCodePoint(dark ? 9728 : 9790);
-    if (label) label.textContent = dark ? 'Light mode' : 'Dark mode';
-  };
-  setTheme(readTheme());
+  window.lasUi?.bindThemeToggle(themeToggle);
 
   const stopAndHandle = (event, action) => {
     event.preventDefault();
@@ -37,11 +21,9 @@
   };
 
   document.addEventListener('click', (event) => {
-    const target = event.target.closest?.('#theme-toggle, [data-view], .course-group-toggle, .course-item');
+    const target = event.target.closest?.('[data-view], .course-group-toggle, .course-item');
     if (!target) return;
-    if (target.id === 'theme-toggle') {
-      stopAndHandle(event, () => { const next = document.body.dataset.theme === 'dark' ? 'light' : 'dark'; saveTheme(next); setTheme(next); });
-    } else if (target.matches('[data-view="topics"]')) {
+    if (target.matches('[data-view="topics"]')) {
       stopAndHandle(event, () => { window.location.assign(new URL('topics.html', window.location.href).href); });
     } else if (target.matches('[data-view="overview"]')) {
       stopAndHandle(event, () => { document.querySelectorAll('.nav-item').forEach((item) => item.classList.remove('active')); target.classList.add('active'); });

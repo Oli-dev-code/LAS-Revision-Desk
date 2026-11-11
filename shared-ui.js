@@ -22,6 +22,8 @@
   function bindThemeToggle(toggle = document.getElementById('theme-toggle')) {
     if (!toggle) return;
     applyTheme(readTheme(), toggle);
+    if (toggle.dataset.themeBound === 'true') return;
+    toggle.dataset.themeBound = 'true';
     toggle.addEventListener('click', () => {
       const next = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
       saveTheme(next);

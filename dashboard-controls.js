@@ -1,25 +1,7 @@
 (function () {
   const themeToggle = document.getElementById('theme-toggle');
   const topicLibrary = document.querySelector('[data-view="topics"]');
-  if (themeToggle) {
-    const readTheme = () => { try { return localStorage.getItem('las-revision-theme') || 'light'; } catch { return 'light'; } };
-    const saveTheme = (theme) => { try { localStorage.setItem('las-revision-theme', theme); } catch { /* Optional preference only. */ } };
-    const setTheme = (theme) => {
-      const dark = theme === 'dark';
-      document.body.dataset.theme = dark ? 'dark' : 'light';
-      themeToggle.setAttribute('aria-pressed', dark);
-      const icon = themeToggle.querySelector('.theme-icon');
-      const label = themeToggle.querySelector('.theme-label');
-      if (icon) icon.textContent = String.fromCodePoint(dark ? 9728 : 9790);
-      if (label) label.textContent = dark ? 'Light mode' : 'Dark mode';
-    };
-    setTheme(readTheme());
-    themeToggle.onclick = () => {
-      const next = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
-      saveTheme(next);
-      setTheme(next);
-    };
-  }
+  window.lasUi?.bindThemeToggle(themeToggle);
   if (topicLibrary) topicLibrary.onclick = () => { window.location.href = 'topics.html'; };
 
   const topics = window.topicCatalog || [];
