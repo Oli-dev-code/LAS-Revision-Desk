@@ -35,8 +35,9 @@ function loadTopicCatalog() {
   return { topics: context.window.topicCatalog, grouping: context.window.topicGrouping };
 }
 
-function loadProgressStore() {
+function loadProgressStore(seed = {}) {
   const values = new Map();
+  Object.entries(seed).forEach(([key, value]) => values.set(key, String(value)));
   const localStorage = {
     getItem: (key) => values.has(key) ? values.get(key) : null,
     setItem: (key, value) => values.set(key, String(value)),
@@ -90,11 +91,28 @@ test('navigation exposes the dashboard and topic-library routes', () => {
   assert.doesNotMatch(read('app.js'), /data-view===['\"](?:practice|notes)['\"]|data-view === ['\"](?:practice|notes)['\"]/);
 });
 
+test('theme preference has one shared persistent controller', () => {
+  const sharedUi = read('shared-ui.js');
+  assert.match(sharedUi, /localStorage\.setItem\('las-revision-theme'/);
+  assert.match(read('app.js'), /lasUi\?\.bindThemeToggle\(themeToggle\)/);
+  assert.match(read('dashboard-pwa-controls.js'), /lasUi\?\.bindThemeToggle\(themeToggle\)/);
+  assert.doesNotMatch(read('dashboard-pwa-controls.js'), /saveTheme|readTheme|setTheme/);
+});
+
 test('progress time keys use the local calendar date', () => {
   const progressStore = read('progress-store.js');
   assert.match(progressStore, /getFullYear\(\)/);
   assert.match(progressStore, /dateKey: localDateKey/);
   assert.doesNotMatch(progressStore, /toISOString\(\)\.slice\(0, 10\)/);
+});
+
+test('study time cards recover today\'s total from the rhythm bucket', () => {
+  const today = new Date();
+  const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const context = loadProgressStore({
+    'las-revision-time-stats': JSON.stringify({ totalMs: 3600000, todayDate: todayKey, todayMs: 0, dailyMs: { [todayKey]: 1800000 } })
+  });
+  assert.ok(context.progress.revisionTime().todayMs >= 1800000);
 });
 
 test('Trauma Exam selects 50 questions with required coverage pools', () => {
