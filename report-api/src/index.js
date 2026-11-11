@@ -30,13 +30,20 @@ async function digest(value) {
 }
 
 async function verifyTurnstile(token, request, env) {
-  if (!token || !env.TURNSTILE_SECRET_KEY) return false;
+  if (!token || !env.TURNSTILE_SECRET_KEY) return { ok: false, code: 'missing-input-response' };
   const body = new URLSearchParams({ secret: env.TURNSTILE_SECRET_KEY, response: token });
   const ip = request.headers.get('CF-Connecting-IP');
   if (ip) body.set('remoteip', ip);
-  const result = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
-  const data = await result.json();
-  return data.success === true;
+  try {
+    const result = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', { method: 'POST', body });
+    const data = await result.json();
+    if (data.success === true) return { ok: true };
+    const code = Array.isArray(data['error-codes']) ? data['error-codes'][0] || 'verification-failed' : 'verification-failed';
+    console.warn('Turnstile verification failed', { code, hostname: data.hostname || null });
+    return { ok: false, code };
+  } catch {
+    return { ok: false, code: 'siteverify-unavailable' };
+  }
 }
 
 function issueBody(report) {
@@ -82,7 +89,8 @@ export default {
       platform: clean(input.platform, 20)
     };
     if (!report.questionId || !report.topicId || !report.topicName || !report.questionText || !report.appVersion || !ALLOWED_MODES.has(report.mode) || !['pwa', 'desktop'].includes(report.platform)) return response({ message: 'Required report fields are missing or invalid.' }, 400, origin);
-    if (!(await verifyTurnstile(input.turnstileToken, request, env))) return response({ message: 'Verification failed. Please try again.' }, 403, origin);
+    const verification = await verifyTurnstile(input.turnstileToken, request, env);
+    if (!verification.ok) return response({ message: 'Verification failed. Please try again.', code: verification.code }, 403, origin);
 
     const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
     const bucket = new Date().toISOString().slice(0, 13);

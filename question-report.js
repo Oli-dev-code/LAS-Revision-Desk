@@ -100,7 +100,7 @@
         turnstileToken = '';
         if (turnstileWidget && window.turnstile?.reset) window.turnstile.reset(turnstileWidget);
         submitButton.disabled = true;
-        setStatus('Security check expired or failed. Please complete it again.', true);
+        setStatus(result.code ? `Security check failed (${result.code}). Please complete it again.` : 'Security check expired or failed. Please complete it again.', true);
         return;
       }
       enqueue(report);
@@ -128,7 +128,7 @@
       const response = await fetch(endpoint, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(report) });
       const data = await response.json().catch(() => ({}));
       if (response.ok && ['created', 'duplicate'].includes(data.status)) return { ok: true, issueUrl: data.issueUrl };
-      if (response.status === 403 && data.message === 'Verification failed. Please try again.') return { ok: false, verification: true, message: data.message };
+      if (response.status === 403 && data.message === 'Verification failed. Please try again.') return { ok: false, verification: true, code: data.code, message: data.message };
       return { ok: false, message: data.message || 'The reporting service rejected the report.' };
     } catch { return { ok: false, queued: true }; }
   }
