@@ -1,5 +1,44 @@
 (function registerPwa() {
   if (!('serviceWorker' in navigator) || !window.isSecureContext) return;
+  const stylesheet = document.createElement('link');
+  stylesheet.rel = 'stylesheet';
+  stylesheet.href = './pwa.css';
+  document.head.appendChild(stylesheet);
+
+  const sidebar = document.querySelector('.sidebar');
+  const topbar = document.querySelector('.topbar');
+  if (sidebar && topbar) {
+    const drawerId = 'pwa-topic-drawer';
+    sidebar.id = drawerId;
+    const menuToggle = document.createElement('button');
+    menuToggle.type = 'button';
+    menuToggle.className = 'pwa-menu-toggle';
+    menuToggle.setAttribute('aria-controls', drawerId);
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.innerHTML = '<span aria-hidden="true">☰</span><span>Topics</span>';
+    topbar.prepend(menuToggle);
+
+    const backdrop = document.createElement('button');
+    backdrop.type = 'button';
+    backdrop.className = 'pwa-drawer-backdrop';
+    backdrop.setAttribute('aria-label', 'Close topics menu');
+    document.body.appendChild(backdrop);
+
+    const setDrawerOpen = (open) => {
+      document.body.classList.toggle('pwa-drawer-open', open);
+      menuToggle.setAttribute('aria-expanded', String(open));
+      if (open) sidebar.querySelector('button, a')?.focus({ preventScroll: true });
+    };
+    menuToggle.addEventListener('click', () => setDrawerOpen(!document.body.classList.contains('pwa-drawer-open')));
+    backdrop.addEventListener('click', () => setDrawerOpen(false));
+    sidebar.addEventListener('click', (event) => {
+      if (event.target.closest('a, [data-view="topics"], .course-item')) setDrawerOpen(false);
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setDrawerOpen(false);
+    });
+  }
+
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js', { scope: './' }).catch((error) => {
       console.warn('LAS Revision Desk offline mode is unavailable:', error);

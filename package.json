@@ -58,6 +58,7 @@
       "app.js",
       "dashboard-pwa-controls.js",
       "pwa.js",
+      "pwa.css",
       "manifest.webmanifest",
       "sw.js",
       "electron-main.cjs",

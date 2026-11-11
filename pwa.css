@@ -1,0 +1,21 @@
+/* PWA-only mobile shell. Electron and desktop never load this file. */
+.pwa-menu-toggle,.pwa-drawer-backdrop{display:none}
+@media(max-width:700px){
+  body.pwa-drawer-open{overflow:hidden}
+  .pwa-menu-toggle{display:inline-flex!important;align-items:center;gap:7px;flex:0 0 auto;min-height:40px;margin-right:10px;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--white);color:var(--teal-dark);font:600 12px/1 'Segoe UI',Arial,sans-serif}
+  .pwa-menu-toggle:focus-visible{outline:3px solid #f5c66e;outline-offset:2px}
+  .pwa-drawer-backdrop{position:fixed;inset:0;z-index:1000;display:block;border:0;background:rgba(20,42,46,.42);opacity:0;pointer-events:none;transition:opacity .2s ease}
+  body.pwa-drawer-open .pwa-drawer-backdrop{opacity:1;pointer-events:auto}
+  .sidebar{position:fixed!important;inset:0 auto 0 0;z-index:1001;width:min(88vw,340px)!important;min-width:0!important;max-height:100dvh;display:block!important;overflow-y:auto;overscroll-behavior:contain;padding:calc(16px + env(safe-area-inset-top,0px)) 16px calc(18px + env(safe-area-inset-bottom,0px))!important;transform:translateX(-105%);transition:transform .22s ease;box-shadow:10px 0 28px rgba(20,42,46,.2)}
+  body.pwa-drawer-open .sidebar{transform:translateX(0)}
+  .sidebar .sidebar-label,.sidebar .course-progress,.sidebar .course-list,.sidebar .sidebar-footer{display:block!important}
+  .sidebar .course-list{display:grid!important;max-height:none;overflow:visible}
+  .sidebar .primary-nav{display:grid!important;overflow:visible}
+  .sidebar .nav-item{width:100%;min-height:44px}
+  .sidebar .course-item{min-height:44px}
+  .topbar{height:auto!important;min-height:58px;padding:calc(9px + env(safe-area-inset-top,0px)) 14px 9px!important}
+  .breadcrumb{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .content-wrap{padding-bottom:calc(36px + env(safe-area-inset-bottom,0px))!important}
+  .toast{bottom:calc(16px + env(safe-area-inset-bottom,0px))!important}
+}
+@media(prefers-reduced-motion:reduce){.pwa-drawer-backdrop,.sidebar{transition:none}}
