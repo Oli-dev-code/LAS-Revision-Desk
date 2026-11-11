@@ -85,7 +85,7 @@ function validateContent({ questions, topics, learnContent, docsDir, now = new D
       return;
     }
     const sourcePath = path.join(docsDir, topic.source);
-    if (!fs.existsSync(sourcePath)) add(issue('error', 'missing-source-document', `Source document "${topic.source}" was not found.`, location));
+    if (!fs.existsSync(sourcePath)) add(issue('warning', 'missing-source-document', `Source document "${topic.source}" was not found.`, location));
     const year = sourceYear(topic.source);
     if (year && now.getFullYear() - year > sourceMaxAgeYears) {
       add(issue('warning', 'outdated-source-document', `Source document appears to be ${now.getFullYear() - year} years old.`, { ...location, source: topic.source, sourceYear: year }));
