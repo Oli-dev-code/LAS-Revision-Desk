@@ -1,5 +1,7 @@
 const { app, BrowserWindow, Notification } = require('electron');
 const { autoUpdater } = require('electron-updater');
+const http = require('node:http');
+const fs = require('node:fs');
 const path = require('node:path');
 
 let updateCheckWindow;
@@ -7,7 +9,59 @@ let updateActionHandler;
 let periodicUpdateTimer;
 let periodicUpdateCheckInProgress = false;
 let lastNotifiedUpdateVersion;
+let appServer;
+let appUrl;
 const UPDATE_CHECK_INTERVAL_MS = 30 * 60 * 1000;
+
+const MIME_TYPES = {
+  '.css': 'text/css; charset=utf-8',
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.webmanifest': 'application/manifest+json; charset=utf-8'
+};
+
+function startLocalAppServer() {
+  const root = path.resolve(__dirname);
+  appServer = http.createServer(async (request, response) => {
+    if (!['GET', 'HEAD'].includes(request.method)) {
+      response.writeHead(405, { Allow: 'GET, HEAD' });
+      response.end();
+      return;
+    }
+    try {
+      const requestUrl = new URL(request.url || '/', 'http://127.0.0.1');
+      const pathname = decodeURIComponent(requestUrl.pathname);
+      const relativePath = pathname === '/' ? 'index.html' : pathname.slice(1);
+      const filePath = path.resolve(root, relativePath);
+      const relativeToRoot = path.relative(root, filePath);
+      if (relativeToRoot.startsWith('..') || path.isAbsolute(relativeToRoot)) {
+        response.writeHead(403);
+        response.end();
+        return;
+      }
+      const file = await fs.promises.readFile(filePath);
+      response.writeHead(200, {
+        'Cache-Control': 'no-store',
+        'Content-Type': MIME_TYPES[path.extname(filePath).toLowerCase()] || 'application/octet-stream'
+      });
+      if (request.method === 'HEAD') response.end();
+      else response.end(file);
+    } catch {
+      response.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+      response.end('Not found');
+    }
+  });
+  return new Promise((resolve, reject) => {
+    appServer.once('error', reject);
+    appServer.listen(0, '127.0.0.1', () => {
+      const address = appServer.address();
+      resolve(`http://127.0.0.1:${address.port}/index.html`);
+    });
+  });
+}
 
 function createUpdateCheckWindow() {
   updateCheckWindow = new BrowserWindow({
@@ -197,7 +251,7 @@ async function checkForUpdatesBeforeLaunch() {
   return openMainWindow;
 }
 
-function createWindow() {
+function createWindow(appUrl) {
   const window = new BrowserWindow({
     width: 1440,
     height: 920,
@@ -214,18 +268,29 @@ function createWindow() {
   });
 
   window.maximize();
-  window.loadFile(path.join(__dirname, 'index.html'));
+  window.loadURL(appUrl);
 }
 
 app.whenReady().then(() => {
   checkForUpdatesBeforeLaunch().then((openMainWindow) => {
-    if (openMainWindow) createWindow();
+    if (!openMainWindow) return;
+    startLocalAppServer().then((url) => {
+      appUrl = url;
+      createWindow(appUrl);
+    }).catch((error) => {
+      console.error('LAS Revision Desk local app server failed:', error);
+      app.quit();
+    });
   });
   app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+    if (BrowserWindow.getAllWindows().length === 0 && appUrl) createWindow(appUrl);
   });
 });
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit();
+});
+
+app.on('before-quit', () => {
+  appServer?.close();
 });

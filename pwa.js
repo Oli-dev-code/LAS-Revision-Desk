@@ -1,5 +1,5 @@
 (function registerPwa() {
-  if (!('serviceWorker' in navigator) || !window.isSecureContext) return;
+  if (location.hostname !== 'oli-dev-code.github.io' || !('serviceWorker' in navigator) || !window.isSecureContext) return;
   const stylesheet = document.createElement('link');
   stylesheet.rel = 'stylesheet';
   stylesheet.href = './pwa.css';

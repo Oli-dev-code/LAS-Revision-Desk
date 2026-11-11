@@ -22,7 +22,7 @@
   const decode = (value) => { try { return decodeURIComponent(value || ''); } catch { return value || ''; } };
   const selectedAnswer = () => document.querySelector('.page-options button.selected, .exam-options button.selected')?.textContent?.trim() || '';
   const appVersion = () => window.LAS_REVISION_VERSION || document.querySelector('.app-version')?.textContent?.trim() || 'unknown';
-  const platform = () => window.isSecureContext && 'serviceWorker' in navigator ? 'pwa' : 'desktop';
+  const platform = () => location.hostname === 'oli-dev-code.github.io' && window.isSecureContext && 'serviceWorker' in navigator ? 'pwa' : 'desktop';
   const fingerprint = (report) => [report.questionId, report.selectedAnswer, report.comment].map((value) => String(value || '').toLowerCase().replace(/\s+/g, ' ').trim()).join('|');
   const turnstileConfigured = () => Boolean(config.turnstileSiteKey && !config.turnstileSiteKey.startsWith('REPLACE_'));
 
