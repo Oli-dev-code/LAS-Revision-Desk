@@ -28,6 +28,9 @@ jobs:
       - name: Run automated tests
         run: npm test
 
+      - name: Validate question bank quality
+        run: npm run validate-content
+
       - name: Prepare Windows signing certificate
         shell: pwsh
         env:
