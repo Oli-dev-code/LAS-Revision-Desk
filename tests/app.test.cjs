@@ -115,6 +115,16 @@ test('study time cards recover today\'s total from the rhythm bucket', () => {
   assert.ok(context.progress.revisionTime().todayMs >= 1800000);
 });
 
+test('study time migration restores legacy today totals to the rhythm history', () => {
+  const today = new Date();
+  const todayKey = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const context = loadProgressStore({
+    'las-revision-time-stats': JSON.stringify({ totalMs: 3600000, todayDate: todayKey, todayMs: 2400000 })
+  });
+  assert.ok(context.progress.revisionTime().dailyMs[todayKey] >= 2400000);
+  assert.match(context.localStorage.getItem('las-revision-time-stats'), new RegExp(`\"${todayKey}\":2400000`));
+});
+
 test('Trauma Exam selects 50 questions with required coverage pools', () => {
   const context = { window: {} };
   vm.runInNewContext(`${read('question-bank.js')}\nwindow.loadedQuestions = questionDatabase;`, context);

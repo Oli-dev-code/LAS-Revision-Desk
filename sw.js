@@ -1,4 +1,4 @@
-const CACHE_NAME = 'las-revision-v1.0.86';
+const CACHE_NAME = 'las-revision-v1.0.89';
 const APP_SHELL = [
   './', './index.html', './learn.html', './test.html', './focused-test.html', './trauma-exam.html', './medical-exam.html', './quiz.html', './topics.html',
   './styles.css', './dashboard.css', './study-page.css', './learn.css', './test.css', './trauma-exam.css', './topics.css', './pwa.css', './pwa.js', './question-report.css', './question-report.js', './report-config.js', './manifest.webmanifest',

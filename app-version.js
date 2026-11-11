@@ -1,1 +1,1 @@
-window.lasAppVersion = '1.0.88';
+window.lasAppVersion = '1.0.89';
