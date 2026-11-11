@@ -17,5 +17,20 @@
   .breadcrumb{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .content-wrap{padding-bottom:calc(36px + env(safe-area-inset-bottom,0px))!important}
   .toast{bottom:calc(16px + env(safe-area-inset-bottom,0px))!important}
+  .dashboard-grid{grid-template-columns:1fr!important}
+  .pwa-activity-section{margin:0 0 18px;border:1px solid var(--line);border-radius:7px;background:var(--white);overflow:hidden}
+  .pwa-activity-section>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:58px;padding:12px 16px;list-style:none;cursor:pointer;color:var(--navy)}
+  .pwa-activity-section>summary::-webkit-details-marker{display:none}
+  .pwa-activity-section>summary>span:first-child{display:grid;gap:3px}
+  .pwa-activity-section summary strong{font-size:15px}
+  .pwa-activity-section summary small{color:var(--muted);font-size:10px}
+  .pwa-activity-chevron{font-size:22px;color:var(--teal);transition:transform .2s ease}
+  .pwa-activity-section[open] .pwa-activity-chevron{transform:rotate(180deg)}
+  .pwa-activity-content{display:grid;gap:12px;padding:0 12px 12px}
+  .pwa-activity-content .stats-grid{display:grid!important;grid-template-columns:1fr!important;gap:10px!important;margin:0!important;padding:0!important;border:0!important}
+  .pwa-activity-content .stats-grid:after{display:none}
+  .pwa-activity-content .stat-card{min-height:68px!important;padding:12px!important}
+  .pwa-activity-content .activity-panel{min-height:0!important;padding:18px 14px!important}
+  .pwa-activity-content .activity-panel .chart{min-height:125px!important;height:125px!important}
 }
 @media(prefers-reduced-motion:reduce){.pwa-drawer-backdrop,.sidebar{transition:none}}

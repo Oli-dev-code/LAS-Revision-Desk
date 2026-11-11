@@ -39,6 +39,23 @@
     });
   }
 
+  if (window.matchMedia?.('(max-width:700px)').matches) {
+    const stats = document.querySelector('.stats-grid');
+    const dashboardGrid = document.querySelector('.dashboard-grid');
+    const activityPanel = dashboardGrid?.querySelector('.activity-panel');
+    if (stats && dashboardGrid && activityPanel) {
+      const activitySection = document.createElement('details');
+      activitySection.className = 'pwa-activity-section';
+      const summary = document.createElement('summary');
+      summary.innerHTML = '<span><strong>Activity</strong><small>Study time, questions and topic progress</small></span><span class="pwa-activity-chevron" aria-hidden="true">⌄</span>';
+      const content = document.createElement('div');
+      content.className = 'pwa-activity-content';
+      activitySection.append(summary, content);
+      stats.parentNode.insertBefore(activitySection, stats);
+      content.append(stats, activityPanel);
+    }
+  }
+
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('./sw.js', { scope: './' }).catch((error) => {
       console.warn('LAS Revision Desk offline mode is unavailable:', error);
