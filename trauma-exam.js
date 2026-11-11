@@ -37,18 +37,58 @@ function shuffle(items) {
 
 function selectExamQuestions() {
   const byId = new Map(database.map((question) => [question.id, question]));
-  const selected = new Map();
-  config.coverage.forEach((pool) => {
-    shuffle(pool.questionIds.map((id) => byId.get(id)).filter(Boolean))
-      .slice(0, pool.minimum)
-      .forEach((question) => selected.set(question.id, question));
-  });
   const topicPool = config.traumaTopics || config.medicalTopics || [];
   const examPool = database.filter((question) => topicPool.includes(question.topic));
+  const examIds = new Set(examPool.map((question) => question.id));
+  const isMedicalExam = examType === 'medical';
+  const usedKey = 'las-revision-medical-exam-used-question-ids';
+  let used = new Set();
+  if (isMedicalExam) {
+    try {
+      const stored = JSON.parse(localStorage.getItem(usedKey) || '[]');
+      used = new Set(Array.isArray(stored) ? stored.filter((id) => examIds.has(id)) : []);
+    } catch { used = new Set(); }
+  }
+  let freshPool = examPool.filter((question) => !used.has(question.id));
+  if (isMedicalExam && freshPool.length === 0) {
+    used = new Set();
+    freshPool = [...examPool];
+  }
+  const selected = new Map();
+  const freshIds = new Set(freshPool.map((question) => question.id));
+  const coveragePools = config.coverage.map((pool) => ({
+    pool,
+    candidates: pool.questionIds.map((id) => byId.get(id)).filter((question) => question && examIds.has(question.id))
+  })).sort((left, right) => {
+    const leftFresh = left.candidates.filter((question) => freshIds.has(question.id)).length;
+    const rightFresh = right.candidates.filter((question) => freshIds.has(question.id)).length;
+    return leftFresh - rightFresh;
+  });
+  coveragePools.forEach(({ pool, candidates }) => {
+    const alreadyCovered = candidates.filter((question) => selected.has(question.id)).length;
+    const needed = Math.max(0, pool.minimum - alreadyCovered);
+    shuffle(candidates.filter((question) => freshIds.has(question.id) && !selected.has(question.id)))
+      .slice(0, needed)
+      .forEach((question) => selected.set(question.id, question));
+  });
+  coveragePools.forEach(({ pool, candidates }) => {
+    const alreadyCovered = candidates.filter((question) => selected.has(question.id)).length;
+    const needed = Math.max(0, pool.minimum - alreadyCovered);
+    shuffle(candidates.filter((question) => !selected.has(question.id)))
+      .slice(0, needed)
+      .forEach((question) => selected.set(question.id, question));
+  });
+  shuffle(freshPool).forEach((question) => {
+    if (selected.size < config.questionCount) selected.set(question.id, question);
+  });
   shuffle(examPool).forEach((question) => {
     if (selected.size < config.questionCount) selected.set(question.id, question);
   });
-  return shuffle([...selected.values()]).slice(0, config.questionCount);
+  const result = shuffle([...selected.values()]).slice(0, config.questionCount);
+  if (isMedicalExam) {
+    try { localStorage.setItem(usedKey, JSON.stringify([...new Set([...used, ...result.map((question) => question.id)])])); } catch { /* Exam rotation is best effort when storage is unavailable. */ }
+  }
+  return result;
 }
 
 function bindSharedTheme() {
