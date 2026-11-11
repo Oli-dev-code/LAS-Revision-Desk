@@ -4,5 +4,7 @@ obj/
 riderModule.iml
 /_ReSharper.Caches/
 /node_modules/
+/test-results/
+/debug.log
 /release/
 docs/Introduction to the body AAP April 2025 v2.ppsx

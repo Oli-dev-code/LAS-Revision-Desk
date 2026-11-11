@@ -96,23 +96,22 @@ function createUpdateCheckWindow() {
 
 function updateCheckStatus(status, detail) {
   if (!updateCheckWindow || updateCheckWindow.isDestroyed()) return;
-  updateCheckWindow.webContents.executeJavaScript(`document.querySelector('.status').textContent = ${JSON.stringify(status)}; document.querySelector('.detail').textContent = ${JSON.stringify(detail)};`).catch(() => {});
+  updateCheckWindow.webContents.executeJavaScript(`window.updateCheckUi?.setStatus(${JSON.stringify(status)}, ${JSON.stringify(detail)})`).catch(() => {});
 }
 
 function updateCheckProgress(percent, speed, eta) {
   if (!updateCheckWindow || updateCheckWindow.isDestroyed()) return;
-  const safePercent = Math.max(0, Math.min(100, Number(percent) || 0));
-  updateCheckWindow.webContents.executeJavaScript(`(() => { const root = document.querySelector('.window'); const track = document.querySelector('.progress-track'); const bar = track?.querySelector('span'); const label = document.querySelector('.progress-label'); const stats = document.querySelector('.download-stats'); if (!root || !track || !bar || !label || !stats) return; root.classList.remove('error'); track.classList.remove('indeterminate'); bar.style.width = ${JSON.stringify(`${safePercent.toFixed(1)}%`)}; label.textContent = ${JSON.stringify(`${safePercent.toFixed(1)}% downloaded`)}; stats.textContent = ${JSON.stringify([speed, eta].filter(Boolean).join(' - '))}; })()`).catch(() => {});
+  updateCheckWindow.webContents.executeJavaScript(`window.updateCheckUi?.setProgress(${JSON.stringify(percent)}, ${JSON.stringify(speed)}, ${JSON.stringify(eta)})`).catch(() => {});
 }
 
 function updateCheckError() {
   if (!updateCheckWindow || updateCheckWindow.isDestroyed()) return;
-  updateCheckWindow.webContents.executeJavaScript(`(() => { const root = document.querySelector('.window'); const track = document.querySelector('.progress-track'); const label = document.querySelector('.progress-label'); const stats = document.querySelector('.download-stats'); if (!root || !track || !label || !stats) return; root.classList.add('error'); track.classList.remove('indeterminate'); track.querySelector('span').style.width = '0'; label.textContent = 'Continuing with the current version'; stats.textContent = ''; })()`).catch(() => {});
+  updateCheckWindow.webContents.executeJavaScript('window.updateCheckUi?.showError()').catch(() => {});
 }
 
 function showUpdateReady(version) {
   if (!updateCheckWindow || updateCheckWindow.isDestroyed()) return;
-  updateCheckWindow.webContents.executeJavaScript(`(() => { const root = document.querySelector('.window'); const track = document.querySelector('.progress-track'); const label = document.querySelector('.progress-label'); const stats = document.querySelector('.download-stats'); const actions = document.querySelector('.ready-actions'); if (!root || !track || !label || !stats || !actions) return; root.classList.remove('error'); document.querySelector('.status').textContent = 'Update ready to install'; document.querySelector('.detail').textContent = ${JSON.stringify(`Version ${version} has been downloaded.`)}; track.classList.remove('indeterminate'); track.querySelector('span').style.width = '100%'; label.textContent = 'Download complete'; stats.textContent = ''; actions.hidden = false; })()`).catch(() => {});
+  updateCheckWindow.webContents.executeJavaScript(`window.updateCheckUi?.showReady(${JSON.stringify(version)})`).catch(() => {});
 }
 
 function notifyUpdateReady(version) {

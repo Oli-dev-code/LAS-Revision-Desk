@@ -85,6 +85,16 @@ test('navigation exposes the dashboard and topic-library routes', () => {
   assert.match(read('index.html'), /Trauma Exam/);
   assert.match(read('index.html'), /href="medical-exam\.html"/);
   assert.match(read('index.html'), /href="trauma-exam\.html"/);
+  const packageVersion = JSON.parse(read('package.json')).version;
+  assert.match(read('app-version.js'), new RegExp(`['\"]${packageVersion.replace(/\./g, '\\.') }['\"]`));
+  assert.doesNotMatch(read('app.js'), /data-view===['\"](?:practice|notes)['\"]|data-view === ['\"](?:practice|notes)['\"]/);
+});
+
+test('progress time keys use the local calendar date', () => {
+  const progressStore = read('progress-store.js');
+  assert.match(progressStore, /getFullYear\(\)/);
+  assert.match(progressStore, /dateKey: localDateKey/);
+  assert.doesNotMatch(progressStore, /toISOString\(\)\.slice\(0, 10\)/);
 });
 
 test('Trauma Exam selects 50 questions with required coverage pools', () => {
@@ -227,9 +237,18 @@ test('test sessions render richer result summaries and recommendations', () => {
   assert.match(studyPage, /let sessionStart = Date\.now\(\)/);
   assert.match(studyPage, /Time spent/);
   assert.match(studyPage, /Weak topics/);
+  assert.match(studyPage, /TOPIC PERFORMANCE/);
+  assert.match(studyPage, /CONFIDENCE GAPS/);
+  assert.match(studyPage, /MISSED-QUESTION CAUSES/);
   assert.match(studyPage, /Missed/);
   assert.match(studyPage, /focused-test\.html\?topic=/);
   assert.match(studyPage, /learn\.html\?topic=/);
   assert.match(styles, /\.results-summary/);
   assert.match(styles, /\.recommendation-card/);
+  assert.match(styles, /\.confidence-grid/);
+  assert.match(styles, /\.feedback-panel/);
+  const exam = read('trauma-exam.js');
+  assert.match(exam, /Topic performance/);
+  assert.match(exam, /Confidence gaps/);
+  assert.match(exam, /Recommended follow-up/);
 });

@@ -1,6 +1,6 @@
 {
   "name": "las-revision-desk",
-  "version": "1.0.80",
+  "version": "1.0.81",
   "description": "Desktop revision workspace for LAS AAP training",
   "main": "electron-main.cjs",
   "author": "LAS Revision Desk",
@@ -9,9 +9,13 @@
   "scripts": {
     "start": "electron .",
     "test": "node --test",
+    "test:e2e": "playwright test",
+    "validate-content": "node scripts/content-validator.cjs",
+    "validate-content:strict": "node scripts/content-validator.cjs --strict-sources",
     "package": "electron-builder --win nsis portable"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "electron": "^38.1.0",
     "electron-builder": "^26.0.12"
   },
@@ -26,7 +30,10 @@
     },
     "files": [
       "index.html",
+      "app-version.js",
+      "shared-ui.js",
       "update-check.html",
+      "update-check.js",
       "learn.html",
       "test.html",
       "focused-test.html",
@@ -41,6 +48,7 @@
       "test.css",
       "trauma-exam.css",
       "study-page.js",
+      "assessment-feedback.js",
       "trauma-exam.js",
       "learn-content.js",
       "nervous-content.js",

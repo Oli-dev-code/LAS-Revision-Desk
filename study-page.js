@@ -7,6 +7,13 @@ if (!document.querySelector('script[data-question-report-loader]')) {
 }
 const database = window.questionDatabase || [];
 const diagramDatabase = window.diagramQuestionDatabase || [];
+const assessmentFeedbackReady = window.lasAssessmentFeedback ? Promise.resolve() : new Promise((resolve) => {
+  const feedbackScript = document.createElement('script');
+  feedbackScript.src = 'assessment-feedback.js';
+  feedbackScript.onload = resolve;
+  feedbackScript.onerror = resolve;
+  document.head.appendChild(feedbackScript);
+});
 const topicCatalog = window.topicCatalog || [
   { id: 'body', name: 'Introduction to the body', source: 'Introduction to the body AAP April 2025 v2.ppsx' },
   { id: 'trauma', name: 'Trauma: process and systems', source: 'L3 - Process and Systems of Trauma v4 April 2025.ppsx' },
@@ -71,13 +78,6 @@ if (pageContent && typeof MutationObserver !== 'undefined') {
     pageContent.classList.add('content-transition');
   });
   contentObserver.observe(pageContent, { childList: true });
-}
-if (!window.lasProgress?.revisionTime) {
-  const timerStart = Date.now();
-  let timerSaved = timerStart;
-  const flushRevisionTime = () => { const elapsed = Math.max(0, Date.now() - timerSaved); if (!elapsed) return; try { const today = new Date().toISOString().slice(0, 10); const stored = JSON.parse(localStorage.getItem('las-revision-time-stats') || '{}'); const time = { totalMs: (stored.totalMs || 0) + elapsed, todayDate: today, todayMs: stored.todayDate === today ? (stored.todayMs || 0) + elapsed : elapsed }; localStorage.setItem('las-revision-time-stats', JSON.stringify(time)); } catch { /* Time tracking is optional when storage is unavailable. */ } timerSaved = Date.now(); };
-  window.setInterval(flushRevisionTime, 15000);
-  window.addEventListener('beforeunload', flushRevisionTime);
 }
 const abbreviationGlossary = {
   ATP: 'adenosine triphosphate',
@@ -158,7 +158,7 @@ function questionsForSession() {
 function recordSessionResults() {
   if (mode === 'test') saveLastTestOrder();
   const results = questions.map((question, index) => ({ id: question.id, correct: question.type === 'diagram' ? Boolean(testAnswers[index]?.correct) : testAnswers[index] === question.answer }));
-  if (window.lasProgress?.recordQuestionResults) { window.lasProgress.recordQuestionResults(results); return; }
+  if (window.lasProgress?.recordQuestionResults) { window.lasProgress.recordQuestionResults(results); return results; }
   try {
     const stats = JSON.parse(localStorage.getItem('las-revision-question-stats') || '{"answered":0,"correct":0,"incorrectQuestionIds":[]}');
     const incorrect = new Set(stats.incorrectQuestionIds || []);
@@ -168,6 +168,7 @@ function recordSessionResults() {
     stats.incorrectQuestionIds = [...incorrect];
     localStorage.setItem('las-revision-question-stats', JSON.stringify(stats));
   } catch { /* Progress is optional when storage is unavailable. */ }
+  return results;
 }
 function shuffledSessionQuestions() {
   const sessionQuestions = questionsForSession();
@@ -191,6 +192,8 @@ function shuffledSessionQuestions() {
 let questions = shuffledSessionQuestions();
 let questionIndex = 0;
 let testAnswers = [];
+let answerMeta = {};
+let questionPresentedAt = Date.now();
 let sessionStart = Date.now();
 
 function formatSessionDuration(milliseconds) {
@@ -205,20 +208,14 @@ function topicLabel(topicId) {
 }
 
 const themeToggle = document.getElementById('theme-toggle');
-function applyTheme(theme) {
-  const dark = theme === 'dark';
-  document.body.dataset.theme = dark ? 'dark' : 'light';
-  themeToggle.setAttribute('aria-pressed', dark);
-  themeToggle.textContent = dark ? 'Light mode' : 'Dark mode';
+function bindSharedTheme() {
+  if (window.lasUi) { window.lasUi.bindThemeToggle(themeToggle); return; }
+  const sharedUi = document.createElement('script');
+  sharedUi.src = 'shared-ui.js';
+  sharedUi.onload = () => window.lasUi?.bindThemeToggle(themeToggle);
+  document.head.appendChild(sharedUi);
 }
-let storedTheme = 'light';
-try { storedTheme = localStorage.getItem('las-revision-theme') || 'light'; } catch { /* File URLs may not expose storage. */ }
-applyTheme(storedTheme);
-themeToggle.addEventListener('click', () => {
-  const theme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
-  try { localStorage.setItem('las-revision-theme', theme); } catch { /* File URLs may not expose storage. */ }
-  applyTheme(theme);
-});
+bindSharedTheme();
 
 const selectedTopicRecord = topicCatalog.find((item) => item.id === topic);
 document.getElementById('page-topic').textContent = flaggedTest ? 'Questions flagged across all topics' : (selectedTopicRecord ? `${topicNames[topic]} - ${selectedTopicRecord.source}` : topicNames[topic]);
@@ -242,6 +239,7 @@ function diagramAnswerText(question, answer) {
 }
 
 function renderDiagramTest(question) {
+  questionPresentedAt = Date.now();
   const targetPoint = (label) => label.targetX === undefined ? (() => { const horizontal = label.x < 50 || label.x > 50; return horizontal ? { x: label.x < 50 ? 4 : 96, y: label.y } : { x: label.x, y: label.y < 50 ? 7 : 93 }; })() : { x: label.targetX, y: label.targetY };
   const labels = shuffleQuestions(question.diagram.labels);
   const arrows = question.diagram.labels.filter((label) => label.targetX === undefined).map((label) => {
@@ -288,6 +286,7 @@ function renderDiagramTest(question) {
   checkButton.addEventListener('click', () => {
     const correct = question.diagram.labels.every((label) => placements[label.id] === label.id);
     testAnswers[questionIndex] = { correct, placements: { ...placements } };
+    answerMeta[questionIndex] = { ...(answerMeta[questionIndex] || {}), submittedAt: Date.now(), responseMs: Date.now() - questionPresentedAt };
     document.getElementById('diagram-feedback').textContent = correct ? 'All labels are correct.' : 'Some labels are in the wrong place. Review the result at the end of the test.';
     document.getElementById('diagram-feedback').className = `page-feedback${correct ? '' : ' error'}`;
     checkButton.disabled = true;
@@ -310,37 +309,48 @@ function renderDiagramTest(question) {
 function renderTest() {
   const question = questions[questionIndex];
   if (question.type === 'diagram') { renderDiagramTest(question); return; }
+  questionPresentedAt = Date.now();
   const lastQuestion = questionIndex === questions.length - 1;
   const options = shuffledOptions(question);
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
   document.getElementById('page-content').innerHTML = `<p class="question-label">QUESTION ${(questionIndex + 1).toString().padStart(2, '0')}</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="page-options">${options.map((option) => `<button data-index="${option.index}" class="${testAnswers[questionIndex] === option.index ? 'selected' : ''}">${withAbbreviationTooltips(option.text)}</button>`).join('')}</div><p class="page-feedback" aria-live="polite">Your answer will be marked when you finish the test.</p><div class="question-actions">${flagButtonMarkup(question)}${reportButtonMarkup(question)}<button class="page-button" id="next-question" ${testAnswers[questionIndex] === undefined ? 'disabled' : ''}>${lastQuestion ? 'Submit test' : 'Next question'} <span>-></span></button></div>`;
   bindFlagButton(question);
   document.querySelectorAll('.page-options button').forEach((button) => button.addEventListener('click', () => {
-    testAnswers[questionIndex] = Number(button.dataset.index);
+    const selected = Number(button.dataset.index);
+    if (testAnswers[questionIndex] !== undefined && testAnswers[questionIndex] !== selected) answerMeta[questionIndex] = { ...(answerMeta[questionIndex] || {}), answerChanges: (answerMeta[questionIndex]?.answerChanges || 0) + 1 };
+    testAnswers[questionIndex] = selected;
     document.querySelectorAll('.page-options button').forEach((item) => item.classList.remove('selected'));
     button.classList.add('selected');
     document.getElementById('next-question').disabled = false;
   }));
   document.getElementById('next-question').addEventListener('click', () => {
+    answerMeta[questionIndex] = { ...(answerMeta[questionIndex] || {}), submittedAt: Date.now(), responseMs: Date.now() - questionPresentedAt };
     if (lastQuestion) renderTestResults();
     else { questionIndex += 1; renderTest(); }
   });
 }
 
 function renderTestResults() {
+  if (!window.lasAssessmentFeedback) { assessmentFeedbackReady.then(renderTestResults); return; }
   const score = questions.reduce((total, question, index) => total + (answerIsCorrect(question, index) ? 1 : 0), 0);
-  recordSessionResults();
+  const recordedResults = recordSessionResults();
+  const attempts = questions.map((question, index) => ({ ...(recordedResults[index] || {}), answered: testAnswers[index] !== undefined, correct: answerIsCorrect(question, index), responseMs: answerMeta[index]?.responseMs || Math.max(0, Date.now() - questionPresentedAt), answerChanges: answerMeta[index]?.answerChanges || 0 }));
+  const feedback = window.lasAssessmentFeedback.saveSessionSummary(window.lasAssessmentFeedback.summariseSession(questions, attempts, { mode, durationMs: Date.now() - sessionStart }));
   const missed = questions.filter((question, index) => !answerIsCorrect(question, index));
   const percentage = questions.length ? Math.round((score / questions.length) * 100) : 0;
   const elapsed = formatSessionDuration(Date.now() - sessionStart);
   const resultTreatment = percentage >= 80 ? 'result-success' : percentage >= 50 ? 'result-review' : 'result-warning';
   const weakTopicCounts = missed.reduce((counts, question) => { counts[question.topic] = (counts[question.topic] || 0) + 1; return counts; }, {});
   const weakTopics = Object.entries(weakTopicCounts).sort(([, left], [, right]) => right - left);
-  const recommendations = weakTopics.length ? weakTopics.slice(0, 3).map(([topicId, count]) => `<article class="recommendation-card"><div><span class="recommendation-label">WEAK TOPIC</span><strong>${topicLabel(topicId)}</strong><small>${count} missed question${count === 1 ? '' : 's'}</small></div><div class="recommendation-actions"><a class="page-button" href="learn.html?topic=${encodeURIComponent(topicId)}">Learn</a><a class="page-button page-button-secondary" href="focused-test.html?topic=${encodeURIComponent(topicId)}">Focused test</a></div></article>`).join('') : `<article class="recommendation-card recommendation-success"><div><span class="recommendation-label">NEXT STEP</span><strong>Keep your momentum</strong><small>Try another topic test or review the next uncompleted topic.</small></div><div class="recommendation-actions"><a class="page-button" href="index.html">Back to dashboard</a></div></article>`;
+  const feedbackMarkup = `<section class="feedback-panel topic-performance"><div class="results-section-heading"><div><span class="results-label">TOPIC PERFORMANCE</span><h2>Where to focus next</h2></div></div><div class="topic-performance-list">${feedback.topics.map((item) => `<div class="topic-performance-row"><span>${topicLabel(item.topicId)}</span><strong>${item.accuracy}%</strong><small>${item.correct}/${item.questions} correct · ${item.status === 'needs-review' ? 'Needs review' : item.status === 'developing' ? 'Developing' : 'Strong'}</small></div>`).join('')}</div></section><section class="feedback-panel confidence-gaps"><div class="results-section-heading"><div><span class="results-label">CONFIDENCE GAPS</span><h2>How your decisions looked</h2></div></div><p class="feedback-note">These behavior-based indicators are approximate, not a judgement of confidence.</p><div class="confidence-grid"><div><strong>${feedback.confidenceGaps.overconfident}</strong><span>Quick incorrect</span><small>Likely over-confidence</small></div><div><strong>${feedback.confidenceGaps.underconfident}</strong><span>Slow or changed correct</span><small>Likely under-confidence</small></div><div><strong>${feedback.confidenceGaps.hesitation}</strong><span>Changed incorrect</span><small>Hesitation</small></div></div></section>`;
+  const automaticCauseDetails = missed.map((question) => { const index = questions.indexOf(question); const detail = feedback.details[index]; return `<details class="feedback-cause"><summary>${topicLabel(question.topic)} · ${detail.causeLabel}</summary><p>${withAbbreviationTooltips(question.question)}</p><small>${detail.responseMs ? `${Math.round(detail.responseMs / 1000)}s response` : 'No response time recorded'}${detail.answerChanges ? ` · ${detail.answerChanges} answer change${detail.answerChanges === 1 ? '' : 's'}` : ''}</small></details>`; }).join('');
+  const causeMarkup = missed.length ? `<section class="feedback-panel missed-causes"><div class="results-section-heading"><div><span class="results-label">MISSED-QUESTION CAUSES</span><h2>Why answers were missed</h2></div></div>${automaticCauseDetails}</section>` : '';
+  const defaultRecommendations = weakTopics.length ? weakTopics.slice(0, 3).map(([topicId, count]) => `<article class="recommendation-card"><div><span class="recommendation-label">WEAK TOPIC</span><strong>${topicLabel(topicId)}</strong><small>${count} missed question${count === 1 ? '' : 's'}</small></div><div class="recommendation-actions"><a class="page-button" href="learn.html?topic=${encodeURIComponent(topicId)}">Learn</a><a class="page-button page-button-secondary" href="focused-test.html?topic=${encodeURIComponent(topicId)}">Focused test</a></div></article>`).join('') : `<article class="recommendation-card recommendation-success"><div><span class="recommendation-label">NEXT STEP</span><strong>Keep your momentum</strong><small>Try another topic test or review the next uncompleted topic.</small></div><div class="recommendation-actions"><a class="page-button" href="index.html">Back to dashboard</a></div></article>`;
+  const recommendations = feedback.recommendations.length ? feedback.recommendations.map((item) => `<article class="recommendation-card"><div><span class="recommendation-label">RECOMMENDED</span><strong>${item.topicId ? topicLabel(item.topicId) : item.title}</strong><small>${item.detail}</small></div><div class="recommendation-actions">${item.topicId ? `<a class="page-button" href="learn.html?topic=${encodeURIComponent(item.topicId)}">Learn</a><a class="page-button page-button-secondary" href="focused-test.html?topic=${encodeURIComponent(item.topicId)}">Focused test</a>` : `<a class="page-button" href="quiz.html?topic=${encodeURIComponent(topic)}">Quiz</a>`}</div></article>`).join('') : defaultRecommendations;
   document.getElementById('page-count').textContent = 'Test complete';
   const review = missed.length ? `<div class="wrong-list"><div class="review-heading"><div><span class="results-label">KNOWLEDGE CHECK</span><h2>Review missed questions</h2></div><span class="missed-count">${missed.length} to revisit</span></div>${missed.map((question) => { const index = questions.indexOf(question); const yourAnswer = question.type === 'diagram' ? diagramAnswerText(question, testAnswers[index]) : (testAnswers[index] === undefined ? 'No answer selected' : question.options[testAnswers[index]]); const correctAnswer = question.type === 'diagram' ? 'Place every label on its matching target' : question.options[question.answer]; const flagged = isQuestionFlagged(question.id); return `<article class="wrong-answer"><div class="wrong-question"><span class="question-index">Question ${index + 1}</span><p>${withAbbreviationTooltips(question.question)}</p></div><div class="answer-comparison"><div class="answer-line incorrect"><span class="answer-label">Your answer</span><strong>${withAbbreviationTooltips(yourAnswer)}</strong></div><div class="answer-line correct"><span class="answer-label">Correct answer</span><strong>${withAbbreviationTooltips(correctAnswer)}</strong></div></div><div class="explanation"><span>Why</span><p>${withAbbreviationTooltips(question.explanation)}</p></div><div class="result-flag-row"><span class="result-flag-status">${flagged ? 'Flagged for review' : 'Not flagged'}</span><button class="page-button result-flag-question" type="button" data-question-id="${question.id}" aria-pressed="${flagged}">${flagged ? 'Remove flag' : 'Flag incorrect question'}</button></div></article>`; }).join('')}</div>` : '<p class="all-correct">Excellent. You got every question right.</p>';
   const weakTopicMarkup = weakTopics.length ? `<section class="weak-topics"><div class="results-section-heading"><div><span class="results-label">FOCUS NEXT</span><h2>Weak topics</h2></div><span>${weakTopics.length} topic${weakTopics.length === 1 ? '' : 's'}</span></div><div class="weak-topic-list">${weakTopics.map(([topicId, count]) => `<div class="weak-topic-row"><span>${topicLabel(topicId)}</span><strong>${count} missed</strong></div>`).join('')}</div></section>` : '';
-  document.getElementById('page-content').innerHTML = `<section class="results-summary ${resultTreatment}"><div class="results-score"><span class="results-label">FINAL SCORE</span><strong>${score} / ${questions.length}</strong><b>${percentage}%</b><p>${score === questions.length ? 'Excellent work.' : `${questions.length - score} question${questions.length - score === 1 ? '' : 's'} to revisit.`}</p></div><div class="results-metric"><span>Time spent</span><strong>${elapsed}</strong></div><div class="results-metric"><span>Missed</span><strong>${missed.length}</strong></div><div class="results-metric"><span>Questions</span><strong>${questions.length}</strong></div></section>${weakTopicMarkup}<section class="recommendations"><div class="results-section-heading"><div><span class="results-label">RECOMMENDED</span><h2>What to do next</h2></div></div><div class="recommendation-list">${recommendations}</div></section>${review}<button class="page-button" id="retry-test">Try again <span><-</span></button>`;
+  document.getElementById('page-content').innerHTML = `<section class="results-summary ${resultTreatment}"><div class="results-score"><span class="results-label">FINAL SCORE</span><strong>${score} / ${questions.length}</strong><b>${percentage}%</b><p>${score === questions.length ? 'Excellent work.' : `${questions.length - score} question${questions.length - score === 1 ? '' : 's'} to revisit.`}</p></div><div class="results-metric"><span>Time spent</span><strong>${elapsed}</strong></div><div class="results-metric"><span>Missed</span><strong>${missed.length}</strong></div><div class="results-metric"><span>Questions</span><strong>${questions.length}</strong></div></section>${feedbackMarkup}${weakTopicMarkup}${causeMarkup}<section class="recommendations"><div class="results-section-heading"><div><span class="results-label">RECOMMENDED</span><h2>What to do next</h2></div></div><div class="recommendation-list">${recommendations}</div></section>${review}<button class="page-button" id="retry-test">Try again <span><-</span></button>`;
   document.querySelectorAll('.result-flag-question').forEach((button) => button.addEventListener('click', () => {
     const flagged = !isQuestionFlagged(button.dataset.questionId);
     setQuestionFlagged(button.dataset.questionId, flagged);
@@ -348,7 +358,7 @@ function renderTestResults() {
     button.textContent = flagged ? 'Remove flag' : 'Flag incorrect question';
     button.previousElementSibling.textContent = flagged ? 'Flagged for review' : 'Not flagged';
   }));
-  document.getElementById('retry-test').addEventListener('click', () => { questionIndex = 0; testAnswers = []; questions = shuffledSessionQuestions(); sessionStart = Date.now(); renderTest(); });
+  document.getElementById('retry-test').addEventListener('click', () => { questionIndex = 0; testAnswers = []; answerMeta = {}; questions = shuffledSessionQuestions(); sessionStart = Date.now(); renderTest(); });
 }
 
 function renderQuiz() {

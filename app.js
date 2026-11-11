@@ -7,7 +7,9 @@ const topicGrouping = window.topicGrouping || { dashboardGroups: [] };
 const dashboardTraumaTopicIds = new Set(topicGrouping.traumaTopicIds || []);
 const themeToggle = document.getElementById('theme-toggle');
 const topicCountBadge = document.querySelector('.nav-count');
+const versionLabel = document.getElementById('app-version');
 if (topicCountBadge) topicCountBadge.textContent = topicCatalog.length;
+if (versionLabel && window.lasAppVersion) versionLabel.textContent = `v${window.lasAppVersion}`;
 let selectedTopic = topicCatalog.find((topic) => !(window.lasProgress?.learntTopics?.() || []).includes(topic.id))?.id || topicCatalog[0]?.id || 'body';
 try {
   const savedTopic = localStorage.getItem('las-revision-selected-topic');
@@ -32,8 +34,7 @@ function saveTheme(theme) {
   try { localStorage.setItem('las-revision-theme', theme); } catch { /* File URLs may not expose storage. */ }
 }
 
-const savedTheme = readTheme();
-applyTheme(savedTheme);
+window.lasUi?.bindThemeToggle(themeToggle);
 const now = new Date();
 const dateLabel = document.querySelector('.welcome-row .eyebrow');
 const greeting = document.querySelector('.welcome-row h1');
@@ -42,12 +43,6 @@ if (greeting) {
   const hour = now.getHours();
   greeting.textContent = hour < 12 ? 'Good morning.' : hour < 18 ? 'Good afternoon.' : 'Good evening.';
 }
-themeToggle.addEventListener('click', () => {
-  const nextTheme = document.body.dataset.theme === 'dark' ? 'light' : 'dark';
-  saveTheme(nextTheme);
-  applyTheme(nextTheme);
-});
-
 function showToast(message) {
   toast.textContent = message;
   toast.classList.add('show');
@@ -125,7 +120,6 @@ document.querySelectorAll('[data-view]').forEach((button) => {
     const label = button.dataset.view.charAt(0).toUpperCase() + button.dataset.view.slice(1);
     document.querySelector('.breadcrumb strong').textContent = label;
     if (button.dataset.view === 'topics') selectMode('learn');
-    if (button.dataset.view === 'practice') selectMode('test');
     showToast(`${label} view selected`);
   });
 });
@@ -307,13 +301,13 @@ function renderDashboardActivity() {
     const date = new Date();
     date.setHours(12, 0, 0, 0);
     date.setDate(date.getDate() - offset);
-    const key = date.toISOString().slice(0, 10);
+    const key = window.lasProgress?.dateKey?.(date) || `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
     days.push({ key, label: date.toLocaleDateString(undefined, { weekday: 'short' }), minutes: Math.round((time.dailyMs?.[key] || 0) / 60000) });
   }
   const max = Math.max(20, Math.ceil(Math.max(...days.map((day) => day.minutes), 0) / 20) * 20);
   document.getElementById('chart-max').textContent = `${max}m`;
   document.getElementById('chart-mid').textContent = `${Math.round(max * 2 / 3)}m`;
-  const today = new Date().toISOString().slice(0, 10);
+  const today = window.lasProgress?.dateKey?.() || `${new Date().getFullYear()}-${String(new Date().getMonth() + 1).padStart(2, '0')}-${String(new Date().getDate()).padStart(2, '0')}`;
   document.getElementById('activity-bars').innerHTML = days.map((day) => `<span class="${day.key === today ? 'today' : ''}" style="height:${day.minutes ? Math.max(4, (day.minutes / max) * 100) : 2}%" title="${day.minutes} minutes"><b>${day.label}</b></span>`).join('');
   const total = days.reduce((sum, day) => sum + day.minutes, 0);
   document.getElementById('activity-summary').textContent = total ? `${total}m this week` : 'No activity recorded yet';
