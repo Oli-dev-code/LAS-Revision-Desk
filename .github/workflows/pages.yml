@@ -31,8 +31,8 @@ jobs:
           set -euo pipefail
           mkdir -p site/assets/diagrams site/assets/test-diagrams
           cp index.html learn.html test.html focused-test.html trauma-exam.html medical-exam.html quiz.html topics.html site/
-          cp styles.css dashboard.css study-page.css learn.css test.css trauma-exam.css topics.css site/
-          cp app.js dashboard-controls.js dashboard-pwa-controls.js study-page.js trauma-exam.js learn-page.js topics-page.js learn-content.js nervous-content.js lymphatic-content.js question-bank.js progress-store.js topic-catalog.js pwa.js pwa.css sw.js manifest.webmanifest site/
+          cp styles.css dashboard.css study-page.css learn.css test.css trauma-exam.css topics.css question-report.css site/
+          cp app.js dashboard-controls.js dashboard-pwa-controls.js study-page.js trauma-exam.js learn-page.js topics-page.js learn-content.js nervous-content.js lymphatic-content.js question-bank.js progress-store.js topic-catalog.js pwa.js pwa.css question-report.js report-config.js sw.js manifest.webmanifest site/
           cp assets/las-logo.png assets/las-logo-icon.png site/assets/
           cp assets/diagrams/*.png site/assets/diagrams/
           cp assets/test-diagrams/*.png site/assets/test-diagrams/

@@ -1,3 +1,10 @@
+if (!document.querySelector('script[data-question-report-loader]')) {
+  const reportConfigScript = document.createElement('script');
+  reportConfigScript.src = 'report-config.js';
+  reportConfigScript.dataset.questionReportLoader = 'true';
+  reportConfigScript.onload = () => { const reportScript = document.createElement('script'); reportScript.src = 'question-report.js'; document.head.appendChild(reportScript); };
+  document.head.appendChild(reportConfigScript);
+}
 const database = window.questionDatabase || [];
 const examType = document.body.dataset.examType || 'trauma';
 const config = window[`${examType}ExamConfig`] || { questionCount: 50, medicalTopics: [], traumaTopics: [], coverage: [] };
@@ -78,6 +85,10 @@ function bindFlagButton(question) {
     button.textContent = flagged ? 'Remove flag' : 'Flag question';
   });
 }
+function reportButtonMarkup(question) {
+  const name = topicName(question.topic);
+  return `<button class="exam-button question-report-button" type="button" data-report-question data-question-id="${encodeURIComponent(question.id)}" data-topic-id="${encodeURIComponent(question.topic)}" data-topic-name="${encodeURIComponent(name)}" data-question-text="${encodeURIComponent(question.question)}" data-mode="${examType}-exam" aria-label="Report this question">Report question</button>`;
+}
 
 function renderQuestion() {
   const question = questions[questionIndex];
@@ -87,7 +98,7 @@ function renderQuestion() {
   const progress = Math.round((questionIndex / questions.length) * 100);
   const options = shuffledAnswerOptions(question);
   const flagged = isQuestionFlagged(question.id);
-  content.innerHTML = `<div class="exam-progress" aria-label="Exam progress"><span style="width:${progress}%"></span></div><p class="exam-category">${topicName(question.topic)}</p><p class="exam-question">${question.question}</p><div class="exam-options">${options.map((item) => `<button type="button" data-index="${item.index}">${item.text}</button>`).join('')}</div><p class="exam-feedback" id="exam-feedback" aria-live="polite">Select an answer to continue. Answers and explanations are shown at the end.</p><div class="exam-actions"><button class="exam-button exam-flag-button${flagged ? ' flagged' : ''}" id="flag-question" type="button" aria-pressed="${flagged}">${flagged ? 'Remove flag' : 'Flag question'}</button><button class="exam-button" id="next-question" type="button" disabled>${questionIndex === questions.length - 1 ? 'Finish exam' : 'Next question'}</button></div>`;
+  content.innerHTML = `<div class="exam-progress" aria-label="Exam progress"><span style="width:${progress}%"></span></div><p class="exam-category">${topicName(question.topic)}</p><p class="exam-question">${question.question}</p><div class="exam-options">${options.map((item) => `<button type="button" data-index="${item.index}">${item.text}</button>`).join('')}</div><p class="exam-feedback" id="exam-feedback" aria-live="polite">Select an answer to continue. Answers and explanations are shown at the end.</p><div class="exam-actions"><button class="exam-button exam-flag-button${flagged ? ' flagged' : ''}" id="flag-question" type="button" aria-pressed="${flagged}">${flagged ? 'Remove flag' : 'Flag question'}</button>${reportButtonMarkup(question)}<button class="exam-button" id="next-question" type="button" disabled>${questionIndex === questions.length - 1 ? 'Finish exam' : 'Next question'}</button></div>`;
   bindFlagButton(question);
   content.querySelectorAll('.exam-options button').forEach((button) => button.addEventListener('click', () => selectAnswer(button)));
   content.querySelector('#next-question').addEventListener('click', () => {

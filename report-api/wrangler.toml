@@ -1,0 +1,8 @@
+name = "las-revision-question-reports"
+main = "src/index.js"
+compatibility_date = "2026-11-11"
+
+[[d1_databases]]
+binding = "REPORT_DB"
+database_name = "las-revision-question-reports"
+database_id = "REPLACE_WITH_D1_DATABASE_ID"

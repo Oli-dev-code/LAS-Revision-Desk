@@ -1,3 +1,10 @@
+if (!document.querySelector('script[data-question-report-loader]')) {
+  const reportConfigScript = document.createElement('script');
+  reportConfigScript.src = 'report-config.js';
+  reportConfigScript.dataset.questionReportLoader = 'true';
+  reportConfigScript.onload = () => { const reportScript = document.createElement('script'); reportScript.src = 'question-report.js'; document.head.appendChild(reportScript); };
+  document.head.appendChild(reportConfigScript);
+}
 const database = window.questionDatabase || [];
 const diagramDatabase = window.diagramQuestionDatabase || [];
 const topicCatalog = window.topicCatalog || [
@@ -119,6 +126,10 @@ function setQuestionFlagged(questionId, flagged) {
 function flagButtonMarkup(question) {
   const flagged = isQuestionFlagged(question.id);
   return `<button class="page-button flag-question" id="flag-question" type="button" aria-pressed="${flagged}">${flagged ? 'Remove flag' : 'Flag question'}</button>`;
+}
+function reportButtonMarkup(question, reportMode = mode) {
+  const topicName = topicLabel(question.topic);
+  return `<button class="page-button question-report-button" type="button" data-report-question data-question-id="${encodeURIComponent(question.id)}" data-topic-id="${encodeURIComponent(question.topic)}" data-topic-name="${encodeURIComponent(topicName)}" data-question-text="${encodeURIComponent(question.question)}" data-mode="${encodeURIComponent(reportMode)}" aria-label="Report this question">Report question</button>`;
 }
 function bindFlagButton(question) {
   const button = document.getElementById('flag-question');
@@ -247,7 +258,7 @@ function renderDiagramTest(question) {
   }).join('');
   const tiles = labels.map((label) => `<button class="diagram-label" draggable="true" data-label-id="${label.id}">${label.name}</button>`).join('');
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">DIAGRAM LABEL</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="diagram-layout"><div class="diagram-board"><img src="${question.diagram.image}" alt="${question.diagram.alt}"><svg class="diagram-arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="diagram-arrowhead" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d68428" /></marker></defs>${arrows}</svg>${targets}</div><div class="diagram-label-bank">${tiles}</div></div><p class="page-feedback" id="diagram-feedback" aria-live="polite">Drag every label onto a matching target.</p><div class="diagram-actions"><button class="page-button" id="check-diagram" disabled>Check labels</button><button class="page-button" id="reset-diagram" type="button">Reset diagram</button>${flagButtonMarkup(question)}<button class="page-button" id="next-question" disabled>${questionIndex === questions.length - 1 ? 'Submit test' : 'Next question'} <span>-></span></button></div>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">DIAGRAM LABEL</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="diagram-layout"><div class="diagram-board"><img src="${question.diagram.image}" alt="${question.diagram.alt}"><svg class="diagram-arrows" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="diagram-arrowhead" markerUnits="userSpaceOnUse" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="#d68428" /></marker></defs>${arrows}</svg>${targets}</div><div class="diagram-label-bank">${tiles}</div></div><p class="page-feedback" id="diagram-feedback" aria-live="polite">Drag every label onto a matching target.</p><div class="diagram-actions"><button class="page-button" id="check-diagram" disabled>Check labels</button><button class="page-button" id="reset-diagram" type="button">Reset diagram</button>${flagButtonMarkup(question)}${reportButtonMarkup(question)}<button class="page-button" id="next-question" disabled>${questionIndex === questions.length - 1 ? 'Submit test' : 'Next question'} <span>-></span></button></div>`;
   bindFlagButton(question);
   const placements = {};
   const checkButton = document.getElementById('check-diagram');
@@ -302,7 +313,7 @@ function renderTest() {
   const lastQuestion = questionIndex === questions.length - 1;
   const options = shuffledOptions(question);
   document.getElementById('page-count').textContent = `Question ${questionIndex + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">QUESTION ${(questionIndex + 1).toString().padStart(2, '0')}</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="page-options">${options.map((option) => `<button data-index="${option.index}" class="${testAnswers[questionIndex] === option.index ? 'selected' : ''}">${withAbbreviationTooltips(option.text)}</button>`).join('')}</div><p class="page-feedback" aria-live="polite">Your answer will be marked when you finish the test.</p><div class="question-actions">${flagButtonMarkup(question)}<button class="page-button" id="next-question" ${testAnswers[questionIndex] === undefined ? 'disabled' : ''}>${lastQuestion ? 'Submit test' : 'Next question'} <span>-></span></button></div>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">QUESTION ${(questionIndex + 1).toString().padStart(2, '0')}</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="page-options">${options.map((option) => `<button data-index="${option.index}" class="${testAnswers[questionIndex] === option.index ? 'selected' : ''}">${withAbbreviationTooltips(option.text)}</button>`).join('')}</div><p class="page-feedback" aria-live="polite">Your answer will be marked when you finish the test.</p><div class="question-actions">${flagButtonMarkup(question)}${reportButtonMarkup(question)}<button class="page-button" id="next-question" ${testAnswers[questionIndex] === undefined ? 'disabled' : ''}>${lastQuestion ? 'Submit test' : 'Next question'} <span>-></span></button></div>`;
   bindFlagButton(question);
   document.querySelectorAll('.page-options button').forEach((button) => button.addEventListener('click', () => {
     testAnswers[questionIndex] = Number(button.dataset.index);
@@ -343,7 +354,7 @@ function renderTestResults() {
 function renderQuiz() {
   const question = questions[questionIndex % questions.length];
   document.getElementById('page-count').textContent = `Question ${(questionIndex % questions.length) + 1} of ${questions.length}`;
-  document.getElementById('page-content').innerHTML = `<p class="question-label">THINK BEFORE REVEALING</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="question-actions"><button class="page-button" id="reveal-answer">Reveal answer</button>${flagButtonMarkup(question)}</div><div class="answer-box" id="answer-box" hidden><strong>${withAbbreviationTooltips(question.options[question.answer])}</strong><p>${withAbbreviationTooltips(question.explanation)}</p></div><button class="page-link" id="next-question">Next question <span>-></span></button>`;
+  document.getElementById('page-content').innerHTML = `<p class="question-label">THINK BEFORE REVEALING</p><p class="page-question">${withAbbreviationTooltips(question.question)}</p><div class="question-actions"><button class="page-button" id="reveal-answer">Reveal answer</button>${flagButtonMarkup(question)}${reportButtonMarkup(question)}</div><div class="answer-box" id="answer-box" hidden><strong>${withAbbreviationTooltips(question.options[question.answer])}</strong><p>${withAbbreviationTooltips(question.explanation)}</p></div><button class="page-link" id="next-question">Next question <span>-></span></button>`;
   bindFlagButton(question);
   document.getElementById('reveal-answer').addEventListener('click', () => { document.getElementById('answer-box').hidden = false; document.getElementById('reveal-answer').textContent = 'Answer revealed'; });
   document.getElementById('next-question').addEventListener('click', () => { questionIndex += 1; renderQuiz(); });
