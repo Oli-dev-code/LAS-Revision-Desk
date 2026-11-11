@@ -5,7 +5,7 @@ const ALLOWED_ORIGINS = new Set([
 ]);
 const ALLOWED_MODES = new Set(['test', 'focused-test', 'quiz', 'medical-exam', 'trauma-exam']);
 const TURNSTILE_ACTION = 'question-report';
-const MAX_REPORTS_PER_HOUR = 5;
+const MAX_REPORTS_PER_HOUR = 20;
 
 function isAllowedOrigin(origin) {
   if (ALLOWED_ORIGINS.has(origin)) return true;
