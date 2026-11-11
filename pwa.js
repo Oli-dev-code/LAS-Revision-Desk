@@ -5,6 +5,42 @@
   stylesheet.href = './pwa.css';
   document.head.appendChild(stylesheet);
 
+  let updatePromptShown = false;
+  let reloadAfterUpdate = false;
+  let activeRegistration;
+  const showUpdatePrompt = () => {
+    if (updatePromptShown || document.querySelector('.pwa-update-prompt')) return;
+    updatePromptShown = true;
+    const prompt = document.createElement('aside');
+    prompt.className = 'pwa-update-prompt';
+    prompt.setAttribute('role', 'status');
+    prompt.innerHTML = '<div><strong>Update available</strong><small>A newer version of LAS Revision Desk is ready.</small></div><div class="pwa-update-actions"><button type="button" class="pwa-update-later">Later</button><button type="button" class="pwa-update-now">Update now</button></div>';
+    prompt.querySelector('.pwa-update-later').addEventListener('click', () => prompt.remove());
+    prompt.querySelector('.pwa-update-now').addEventListener('click', () => {
+      const waiting = activeRegistration?.waiting;
+      if (!waiting) { prompt.remove(); activeRegistration?.update(); return; }
+      reloadAfterUpdate = true;
+      waiting.postMessage({ type: 'SKIP_WAITING' });
+    });
+    document.body.appendChild(prompt);
+  };
+  const watchRegistration = (registration) => {
+    activeRegistration = registration;
+    if (registration.waiting) showUpdatePrompt();
+    registration.addEventListener('updatefound', () => {
+      const installing = registration.installing;
+      if (!installing) return;
+      installing.addEventListener('statechange', () => {
+        if (installing.state === 'installed' && navigator.serviceWorker.controller) showUpdatePrompt();
+      });
+    });
+  };
+  navigator.serviceWorker.addEventListener('controllerchange', () => {
+    if (!reloadAfterUpdate) return;
+    reloadAfterUpdate = false;
+    window.location.reload();
+  });
+
   const sidebar = document.querySelector('.sidebar');
   const topbar = document.querySelector('.topbar');
   if (sidebar && topbar) {
@@ -56,10 +92,18 @@
     }
   }
 
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('./sw.js', { scope: './' }).catch((error) => {
+  window.addEventListener('load', async () => {
+    try {
+      const registration = await navigator.serviceWorker.register('./sw.js', { scope: './' });
+      watchRegistration(registration);
+      registration.update().catch(() => {});
+      window.setInterval(() => registration.update().catch(() => {}), 15 * 60 * 1000);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') registration.update().catch(() => {});
+      });
+    } catch (error) {
       console.warn('LAS Revision Desk offline mode is unavailable:', error);
-    });
+    }
   });
 
   if (window.matchMedia?.('(display-mode: standalone)').matches || window.navigator.standalone) return;

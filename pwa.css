@@ -34,3 +34,6 @@
   .pwa-activity-content .activity-panel .chart{min-height:125px!important;height:125px!important}
 }
 @media(prefers-reduced-motion:reduce){.pwa-drawer-backdrop,.sidebar{transition:none}}
+.pwa-update-prompt{position:fixed;right:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:1100;display:flex;align-items:center;gap:16px;max-width:min(420px,calc(100vw - 32px));padding:14px 16px;border:1px solid #b4d2ca;border-radius:8px;background:var(--white);color:var(--navy);box-shadow:0 8px 24px rgba(32,60,67,.18);font:13px/1.35 'Segoe UI',Arial,sans-serif}
+.pwa-update-prompt>div:first-child{display:grid;gap:3px;min-width:0}.pwa-update-prompt strong{font-size:13px}.pwa-update-prompt small{color:var(--muted);font-size:11px}.pwa-update-actions{display:flex;gap:7px;flex:0 0 auto}.pwa-update-actions button{min-height:34px;padding:7px 10px;border:1px solid #b4d2ca;border-radius:5px;background:transparent;color:var(--teal-dark);font:600 11px 'Segoe UI',Arial,sans-serif}.pwa-update-actions .pwa-update-now{border-color:var(--teal);background:var(--teal);color:#fff}.pwa-update-actions button:focus-visible{outline:3px solid #f5c66e;outline-offset:2px}
+@media(max-width:560px){.pwa-update-prompt{left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:grid;gap:10px}.pwa-update-actions{justify-content:flex-end}}
