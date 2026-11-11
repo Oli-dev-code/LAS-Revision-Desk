@@ -45,17 +45,29 @@ function selectExamQuestions() {
     : examType === 'trauma'
       ? 'las-revision-trauma-exam-used-question-ids'
       : '';
+  const otherRotationKey = examType === 'medical'
+    ? 'las-revision-trauma-exam-used-question-ids'
+    : examType === 'trauma'
+      ? 'las-revision-medical-exam-used-question-ids'
+      : '';
   let used = new Set();
   if (rotationKey) {
     try {
-      const stored = JSON.parse(localStorage.getItem(usedKey) || '[]');
+      const stored = JSON.parse(localStorage.getItem(rotationKey) || '[]');
       used = new Set(Array.isArray(stored) ? stored.filter((id) => examIds.has(id)) : []);
     } catch { used = new Set(); }
   }
-  let freshPool = examPool.filter((question) => !used.has(question.id));
+  let otherUsed = new Set();
+  if (otherRotationKey) {
+    try {
+      const stored = JSON.parse(localStorage.getItem(otherRotationKey) || '[]');
+      otherUsed = new Set(Array.isArray(stored) ? stored : []);
+    } catch { otherUsed = new Set(); }
+  }
+  let freshPool = examPool.filter((question) => !used.has(question.id) && !otherUsed.has(question.id));
   if (rotationKey && freshPool.length === 0) {
     used = new Set();
-    freshPool = [...examPool];
+    freshPool = examPool.filter((question) => !otherUsed.has(question.id));
   }
   const selected = new Map();
   const freshIds = new Set(freshPool.map((question) => question.id));
@@ -77,14 +89,17 @@ function selectExamQuestions() {
   coveragePools.forEach(({ pool, candidates }) => {
     const alreadyCovered = candidates.filter((question) => selected.has(question.id)).length;
     const needed = Math.max(0, pool.minimum - alreadyCovered);
-    shuffle(candidates.filter((question) => !selected.has(question.id)))
+    shuffle(candidates.filter((question) => !selected.has(question.id) && !otherUsed.has(question.id)))
       .slice(0, needed)
       .forEach((question) => selected.set(question.id, question));
   });
   shuffle(freshPool).forEach((question) => {
     if (selected.size < config.questionCount) selected.set(question.id, question);
   });
-  shuffle(examPool).forEach((question) => {
+  shuffle(examPool.filter((question) => !otherUsed.has(question.id))).forEach((question) => {
+    if (selected.size < config.questionCount) selected.set(question.id, question);
+  });
+  if (selected.size < config.questionCount) shuffle(examPool).forEach((question) => {
     if (selected.size < config.questionCount) selected.set(question.id, question);
   });
   const result = shuffle([...selected.values()]).slice(0, config.questionCount);
