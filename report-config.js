@@ -1,4 +1,4 @@
-window.LAS_REVISION_VERSION = '1.0.78';
+window.LAS_REVISION_VERSION = '1.0.79';
 window.LAS_REPORT_CONFIG = {
   endpoint: 'https://las-revision-question-reports.oliverjpalmer.workers.dev',
   turnstileSiteKey: '0x4AAAAAAF85_sLLRDuT75ux',

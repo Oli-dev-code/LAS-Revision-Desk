@@ -95,7 +95,7 @@
       submitButton.disabled = true;
       setStatus('Sending report…');
       const result = await sendReport({ ...report, turnstileToken });
-      if (result.ok) { modal.querySelector('.question-report-status').innerHTML = result.issueUrl ? `Report submitted. <a href="${result.issueUrl}" target="_blank" rel="noreferrer">View issue</a>` : 'Report submitted.'; submitButton.hidden = true; return; }
+      if (result.ok) { setStatus('Report submitted. Thank you for helping us improve the question.'); submitButton.hidden = true; return; }
       if (result.verification) {
         turnstileToken = '';
         if (turnstileWidget && window.turnstile?.reset) window.turnstile.reset(turnstileWidget);
