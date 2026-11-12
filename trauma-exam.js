@@ -40,6 +40,7 @@ function selectExamQuestions() {
   const topicPool = config.traumaTopics || config.medicalTopics || [];
   const examPool = database.filter((question) => topicPool.includes(question.topic));
   const examIds = new Set(examPool.map((question) => question.id));
+  const recentExamCount = Math.max(1, config.recentExamCount || 3);
   const rotationKey = examType === 'medical'
     ? 'las-revision-medical-exam-used-question-ids'
     : examType === 'trauma'
@@ -50,80 +51,97 @@ function selectExamQuestions() {
     : examType === 'trauma'
       ? 'las-revision-medical-exam-used-question-ids'
       : '';
-  let used = new Set();
-  if (rotationKey) {
+  function readRotationHistory(key, validIds) {
+    if (!key) return [];
     try {
-      const stored = JSON.parse(localStorage.getItem(rotationKey) || '[]');
-      used = new Set(Array.isArray(stored) ? stored.filter((id) => examIds.has(id)) : []);
-    } catch { used = new Set(); }
+      const stored = JSON.parse(localStorage.getItem(key) || '[]');
+      // Read the old flat list format as one legacy session so existing users
+      // get a clean transition to the three-exam rotation window.
+      const sessions = Array.isArray(stored) && stored.some(Array.isArray) ? stored : [stored];
+      return sessions
+        .filter(Array.isArray)
+        .map((session) => session.filter((id) => validIds.has(id)))
+        .slice(-recentExamCount);
+    } catch { return []; }
   }
-  let otherUsed = new Set();
-  if (otherRotationKey) {
-    try {
-      const stored = JSON.parse(localStorage.getItem(otherRotationKey) || '[]');
-      otherUsed = new Set(Array.isArray(stored) ? stored : []);
-    } catch { otherUsed = new Set(); }
+  function idsFromHistory(history) {
+    return new Set(history.flat());
   }
-  let freshPool = examPool.filter((question) => !used.has(question.id) && !otherUsed.has(question.id));
-  if (rotationKey && freshPool.length === 0) {
-    used = new Set();
-    freshPool = examPool.filter((question) => !otherUsed.has(question.id));
+  const history = readRotationHistory(rotationKey, examIds);
+  const otherHistory = readRotationHistory(otherRotationKey, new Set(database.map((question) => question.id)));
+  let recentUsed = idsFromHistory(history);
+  let otherRecent = idsFromHistory(otherHistory);
+  let freshPool = examPool.filter((question) => !recentUsed.has(question.id) && !otherRecent.has(question.id));
+
+  // Only reset the current exam's history when the eligible pool cannot fill
+  // an exam. This preserves the recent-question guarantee for normal runs.
+  if (rotationKey && freshPool.length < config.questionCount) {
+    recentUsed = new Set();
+    freshPool = examPool.filter((question) => !otherRecent.has(question.id));
+  }
+  if (freshPool.length < config.questionCount) {
+    otherRecent = new Set();
+    freshPool = examPool;
   }
   const selected = new Map();
   const freshIds = new Set(freshPool.map((question) => question.id));
   const coveragePools = config.coverage.map((pool) => ({
     pool,
     candidates: pool.questionIds.map((id) => byId.get(id)).filter((question) => question && examIds.has(question.id))
-  })).sort((left, right) => {
-    const leftFresh = left.candidates.filter((question) => freshIds.has(question.id)).length;
-    const rightFresh = right.candidates.filter((question) => freshIds.has(question.id)).length;
-    return leftFresh - rightFresh;
+  }));
+
+  // Select one rotating anchor per coverage pool. The pool minimums describe
+  // the subject importance, but no longer force most of the exam to repeat a
+  // small curated list.
+  shuffle(coveragePools).forEach(({ candidates }) => {
+    const freshCandidates = shuffle(candidates.filter((question) => freshIds.has(question.id) && !selected.has(question.id)));
+    const fallbackCandidates = shuffle(candidates.filter((question) => !selected.has(question.id) && !otherRecent.has(question.id)));
+    const question = freshCandidates[0] || fallbackCandidates[0];
+    if (question) selected.set(question.id, question);
   });
 
-  // Coverage pools are deliberately capped. Previously their minimums
-  // consumed 44/50 trauma questions and 46/50 medical questions, which made
-  // successive exams feel nearly identical despite shuffling. One question
-  // from each pool preserves breadth; the rest of the coverage budget is
-  // filled randomly before the wider exam pool supplies the remaining slots.
-  const coverageQuestionLimit = Math.min(
-    config.questionCount,
-    Math.max(coveragePools.length, config.coverageQuestionLimit || config.questionCount)
-  );
-  let coverageQuestionCount = 0;
-  shuffle(coveragePools).forEach(({ pool, candidates }) => {
-    if (coverageQuestionCount >= coverageQuestionLimit) return;
-    const candidatePool = shuffle(candidates.filter((question) => freshIds.has(question.id) && !selected.has(question.id)));
-    const question = candidatePool[0] || shuffle(candidates.filter((item) => !selected.has(item.id) && !otherUsed.has(item.id)))[0];
-    if (question) {
-      selected.set(question.id, question);
-      coverageQuestionCount += 1;
-    }
+  const topicCounts = new Map(topicPool.map((topic) => [topic, 0]));
+  selected.forEach((question) => topicCounts.set(question.topic, (topicCounts.get(question.topic) || 0) + 1));
+  const topicQuotaBuffer = Math.max(0, config.topicQuotaBuffer || 2);
+  const topicMaximum = Math.max(2, Math.ceil(config.questionCount / Math.max(1, topicPool.length)) + topicQuotaBuffer);
+  const addQuestion = (question) => {
+    if (!question || selected.has(question.id)) return false;
+    selected.set(question.id, question);
+    topicCounts.set(question.topic, (topicCounts.get(question.topic) || 0) + 1);
+    return true;
+  };
+
+  // Make sure a large topic list does not accidentally disappear from the
+  // random portion just because its coverage pool was not selected first.
+  shuffle(topicPool).forEach((topic) => {
+    if (selected.size >= config.questionCount || (topicCounts.get(topic) || 0) > 0) return;
+    addQuestion(shuffle(freshPool.filter((question) => question.topic === topic && !selected.has(question.id)))[0]);
   });
-  coveragePools.forEach(({ pool, candidates }) => {
-    if (coverageQuestionCount >= coverageQuestionLimit) return;
-    const alreadyCovered = candidates.filter((question) => selected.has(question.id)).length;
-    const available = shuffle(candidates.filter((question) => !selected.has(question.id) && !otherUsed.has(question.id)));
-    const additional = Math.min(
-      Math.max(0, pool.minimum - alreadyCovered),
-      coverageQuestionLimit - coverageQuestionCount
-    );
-    available.slice(0, additional).forEach((question) => {
-      selected.set(question.id, question);
-      coverageQuestionCount += 1;
+
+  while (selected.size < config.questionCount) {
+    let candidates = freshPool.filter((question) => !selected.has(question.id) && (topicCounts.get(question.topic) || 0) < topicMaximum);
+    if (!candidates.length) candidates = freshPool.filter((question) => !selected.has(question.id));
+    if (!candidates.length) break;
+    const lowestTopicCount = Math.min(...candidates.map((question) => topicCounts.get(question.topic) || 0));
+    const balancedCandidates = candidates.filter((question) => (topicCounts.get(question.topic) || 0) <= lowestTopicCount + 1);
+    addQuestion(shuffle(balancedCandidates)[0]);
+  }
+
+  // This fallback is only reached when recent exclusions leave too few
+  // eligible questions; it is deliberately after the full fresh pool.
+  if (selected.size < config.questionCount) {
+    shuffle(examPool.filter((question) => !selected.has(question.id) && !otherRecent.has(question.id))).forEach((question) => {
+      if (selected.size < config.questionCount) addQuestion(question);
     });
-  });
-  shuffle(freshPool).forEach((question) => {
-    if (selected.size < config.questionCount) selected.set(question.id, question);
-  });
-  shuffle(examPool.filter((question) => !otherUsed.has(question.id))).forEach((question) => {
-    if (selected.size < config.questionCount) selected.set(question.id, question);
-  });
+  }
   if (selected.size < config.questionCount) shuffle(examPool).forEach((question) => {
-    if (selected.size < config.questionCount) selected.set(question.id, question);
+    if (selected.size < config.questionCount) addQuestion(question);
   });
   const result = shuffle([...selected.values()]).slice(0, config.questionCount);
   if (rotationKey) {
-    try { localStorage.setItem(rotationKey, JSON.stringify([...new Set([...used, ...result.map((question) => question.id)])])); } catch { /* Exam rotation is best effort when storage is unavailable. */ }
+    try {
+      localStorage.setItem(rotationKey, JSON.stringify([...history, result.map((question) => question.id)].slice(-recentExamCount)));
+    } catch { /* Exam rotation is best effort when storage is unavailable. */ }
   }
   return result;
 }

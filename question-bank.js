@@ -1738,9 +1738,8 @@ window.questionDatabase = questionDatabase;
 // are filled randomly from the wider trauma question set.
 window.traumaExamConfig = {
   questionCount: 50,
-  // Keep every coverage area represented, while leaving enough of the exam
-  // for a fresh draw from the wider trauma bank on each attempt.
-  coverageQuestionLimit: 30,
+  recentExamCount: 3,
+  topicQuotaBuffer: 2,
   traumaTopics: [
     'trauma', 'chest-injuries', 'suspension-blast-ballistics', 'abdominal-injuries',
     'head-injuries', 'wounds-and-bleeding', 'burns', 'extrication-light-rescue',
@@ -1768,9 +1767,8 @@ window.traumaExamConfig = {
 };
 window.medicalExamConfig = {
   questionCount: 50,
-  // The coverage pools are anchors, not the whole exam. The remaining places
-  // are intentionally randomised across the full medical question bank.
-  coverageQuestionLimit: 30,
+  recentExamCount: 3,
+  topicQuotaBuffer: 2,
   medicalTopics: [
     'body', 'cardiovascular', 'respiratory', 'nervous', 'lymphatic-urinary-reproductive',
     'digestive', 'cardiac-conditions', 'ecg-interpretation', 'medical-gases',
