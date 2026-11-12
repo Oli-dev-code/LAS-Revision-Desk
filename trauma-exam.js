@@ -79,19 +79,38 @@ function selectExamQuestions() {
     const rightFresh = right.candidates.filter((question) => freshIds.has(question.id)).length;
     return leftFresh - rightFresh;
   });
-  coveragePools.forEach(({ pool, candidates }) => {
-    const alreadyCovered = candidates.filter((question) => selected.has(question.id)).length;
-    const needed = Math.max(0, pool.minimum - alreadyCovered);
-    shuffle(candidates.filter((question) => freshIds.has(question.id) && !selected.has(question.id)))
-      .slice(0, needed)
-      .forEach((question) => selected.set(question.id, question));
+
+  // Coverage pools are deliberately capped. Previously their minimums
+  // consumed 44/50 trauma questions and 46/50 medical questions, which made
+  // successive exams feel nearly identical despite shuffling. One question
+  // from each pool preserves breadth; the rest of the coverage budget is
+  // filled randomly before the wider exam pool supplies the remaining slots.
+  const coverageQuestionLimit = Math.min(
+    config.questionCount,
+    Math.max(coveragePools.length, config.coverageQuestionLimit || config.questionCount)
+  );
+  let coverageQuestionCount = 0;
+  shuffle(coveragePools).forEach(({ pool, candidates }) => {
+    if (coverageQuestionCount >= coverageQuestionLimit) return;
+    const candidatePool = shuffle(candidates.filter((question) => freshIds.has(question.id) && !selected.has(question.id)));
+    const question = candidatePool[0] || shuffle(candidates.filter((item) => !selected.has(item.id) && !otherUsed.has(item.id)))[0];
+    if (question) {
+      selected.set(question.id, question);
+      coverageQuestionCount += 1;
+    }
   });
   coveragePools.forEach(({ pool, candidates }) => {
+    if (coverageQuestionCount >= coverageQuestionLimit) return;
     const alreadyCovered = candidates.filter((question) => selected.has(question.id)).length;
-    const needed = Math.max(0, pool.minimum - alreadyCovered);
-    shuffle(candidates.filter((question) => !selected.has(question.id) && !otherUsed.has(question.id)))
-      .slice(0, needed)
-      .forEach((question) => selected.set(question.id, question));
+    const available = shuffle(candidates.filter((question) => !selected.has(question.id) && !otherUsed.has(question.id)));
+    const additional = Math.min(
+      Math.max(0, pool.minimum - alreadyCovered),
+      coverageQuestionLimit - coverageQuestionCount
+    );
+    available.slice(0, additional).forEach((question) => {
+      selected.set(question.id, question);
+      coverageQuestionCount += 1;
+    });
   });
   shuffle(freshPool).forEach((question) => {
     if (selected.size < config.questionCount) selected.set(question.id, question);
