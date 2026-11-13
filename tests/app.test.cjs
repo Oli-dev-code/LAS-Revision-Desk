@@ -135,8 +135,8 @@ test('Trauma Exam selects 50 questions with required coverage pools', () => {
   assert.equal(config.recentExamCount, 3);
   assert.equal(config.topicQuotaBuffer, 2);
   assert.equal(config.coverage.length, 16);
-  assert.ok(config.coverage.some((pool) => pool.id === 'cushings-triad' && pool.questionIds.includes('head-injuries-23')));
-  assert.ok(config.coverage.some((pool) => pool.id === 'retroperitoneal' && pool.questionIds.includes('abdominal-injuries-02')));
+  assert.ok(config.coverage.some((pool) => pool.id === 'cushings-triad' && pool.questionIds.length >= 5 && pool.questionIds.includes('head-injuries-34')));
+  assert.ok(config.coverage.some((pool) => pool.id === 'retroperitoneal' && pool.questionIds.length >= 5 && pool.questionIds.includes('abdominal-injuries-34')));
   assert.ok(config.coverage.some((pool) => pool.id === 'msc' && pool.questionIds.includes('musculoskeletal-injuries-17')));
   assert.ok(config.traumaTopics.includes('burns'));
   assert.ok(config.traumaTopics.includes('suspension-blast-ballistics'));
